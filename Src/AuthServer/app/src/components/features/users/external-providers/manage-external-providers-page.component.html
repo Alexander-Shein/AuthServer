@@ -1,0 +1,27 @@
+<div class="container-fluid">
+    <h1>Dashboard: manage external providers.</h1>
+    <div class="row justify-content-md-center">
+        <div class="col-12 col-md-6">
+            <div class="row" *ngIf="externalProvidersSettings.currentLogins.length">
+                <div class="col-12">
+                    <h4>Registered Logins</h4>
+                </div>
+
+                <div class="row" *ngFor="let lp of externalProvidersSettings.currentLogins">
+                    <div class="col-6"><p>{{lp.providerDisplayName}}:</p></div>
+                    <div class="col-6"><a href="#" (click)="deleteExternalLogin(lp)" *ngIf="canDeleteExternalLogin">delete</a></div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="externalProvidersSettings.otherLogins.length">
+                <div>
+                    <h4>Add another service to log in.</h4>
+                </div>
+
+                <div class="row" *ngFor="let lp of externalProvidersSettings.otherLogins">
+                    <a href="#">{{lp.displayName}}:</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

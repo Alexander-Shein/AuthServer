@@ -1,0 +1,11 @@
+<md-toolbar>
+    <button
+            *ngFor="let menuItem of menuItems; let i = index"
+            md-raised-button
+            color="primary"
+            [routerLink]="[menuItem.router]"
+            [routerLinkActive]="'active'">
+        <md-icon *ngIf="menuItem.icon">{{menuItem.icon}}</md-icon>
+        <span>{{menuItem.name}}</span>
+    </button>
+</md-toolbar>

@@ -1,0 +1,27 @@
+<div class="container-fluid">
+    <h1>Dashboard: manage your account.</h1>
+    <div class="row justify-content-md-center">
+        <div class="col-12 col-md-6">
+            <div class="row">
+                <p>Password:
+                    <a routerLink="change-password" *ngIf="userSettings.hasPassword">change password</a>
+                    <a routerLink="add-password" *ngIf="!userSettings.hasPassword">add password</a>
+                </p>
+            </div>
+            <div class="row">
+                <p>External logins: <a routerLink="manage-external-providers">manage</a></p>
+            </div>
+            <div class="row">
+                <p>Phone Number:
+                    <a routerLink="change-phone-number" *ngIf="userSettings.phoneNumber">change phone number</a>
+                    <a routerLink="add-phone-number" *ngIf="!userSettings.phoneNumber">add phone number</a>
+                </p>
+            </div>
+            <div class="row">
+                <p>
+                    <md-checkbox [(ngModel)]="userSettings.twoFactor" color="primary">Two-Factor Authentication</md-checkbox>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

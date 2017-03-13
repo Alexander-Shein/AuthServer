@@ -1,0 +1,84 @@
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-center">Log in page</h2>
+        </div>
+    </div>
+
+    <div class="row justify-content-center" *ngIf="clientSettings.enableLocalLogin">
+        <div class="col-12 col-md-6 col-lg-5 col-xl-4">
+            <form class="log-in-form row" (ngSubmit)="onSubmit()">
+                <div class="col-12">
+                    <md-input-container class="au-input">
+                        <input
+                                mdInput
+                                #email
+                                placeholder="Email"
+                                type="email"
+                                name="email"
+                                maxlength="100"
+                                required
+                                [(ngModel)]="logIn.email">
+                        <md-hint align="end">{{email.value.length}} / 100</md-hint>
+                    </md-input-container>
+                </div>
+                <div class="col-12">
+                    <md-input-container class="au-input">
+                        <input
+                                mdInput
+                                #password
+                                name="password"
+                                placeholder="Password"
+                                type="password"
+                                maxlength="100"
+                                required
+                                [(ngModel)]="logIn.password">
+                        <md-hint align="end">{{password.value.length}} / 100</md-hint>
+                    </md-input-container>
+                </div>
+
+                <div class="col-12">
+                    <div class="row au-action-container">
+                        <div class="col-8 au-remember-checkbox">
+                            <div *ngIf="clientSettings.allowRememberLogin">
+                                <md-checkbox
+                                        color="primary"
+                                        name="remember"
+                                        [(ngModel)]="logIn.rememberLogin">remember me</md-checkbox>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <button md-raised-button color="primary">log in</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <a [routerLink]="['/sign-up', {redirectUrl: redirectUrl}]">Register as a new user?</a>
+                </div>
+
+                <div class="col-12">
+                    <a [routerLink]="['/forgot-password']">Forgot your password?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-3" *ngIf="clientSettings.externalProviders.length">
+        <div class="col-12 col-md-6 col-lg-5 col-xl-4">
+            <div class="row">
+                <div class="col-12 au-external-login text-center">
+                    <button
+                            *ngFor="let sn of clientSettings.externalProviders; let i = index"
+                            md-raised-button
+                            color="primary"
+                            (click)="externalLogIn(sn)">
+                        <span>{{sn.displayName}}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
