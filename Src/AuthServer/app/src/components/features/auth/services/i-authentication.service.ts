@@ -1,10 +1,12 @@
-import {EventEmitter} from '@angular/core';
-import {LogIn} from '../models/log-in';
-import {LogInResult} from '../models/log-in-result';
-import {ExternalLogIn} from '../models/external-log-in';
+import {EventEmitter} from "@angular/core";
+import {LogIn} from "../models/log-in";
+import {LogInResult} from "../models/log-in-result";
+import {ExternalLogIn} from "../models/external-log-in";
 import {SignUp} from "../models/sign-up";
 import {ForgotPassword} from "../models/forgot-password";
 import {ResetPassword} from "../models/reset-password";
+import {Provider} from "../models/provider";
+import {TwoFactorVerification} from "../models/two-factor-verification";
 
 
 export interface IAuthenticationService {
@@ -15,7 +17,7 @@ export interface IAuthenticationService {
     logIn(logIn: LogIn): Promise<LogInResult>;
     signUp(signUp: SignUp): Promise<void>;
 
-    externalLogin(externalLogIn: ExternalLogIn): void;
+    externalLogIn(externalLogIn: ExternalLogIn): void;
     externalSignUp(signUp: SignUp): Promise<void>;
 
     logOut(): void;
@@ -23,4 +25,7 @@ export interface IAuthenticationService {
     forgotPassword(forgotPassword: ForgotPassword): Promise<void>;
     resetPassword(resetPassword: ResetPassword): Promise<void>;
 
+    getTwoFactorProviders(): Promise<Provider[]>;
+    sendCode(provider: Provider): Promise<void>;
+    verifyCode(twoFactorVerification: TwoFactorVerification): Promise<void>;
 }

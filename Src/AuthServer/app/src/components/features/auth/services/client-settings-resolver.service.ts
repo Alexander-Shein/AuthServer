@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
-import { ClientsService } from '../../clients/services/clients.service';
-import { ClientSettings } from '../../clients/models/client-settings';
+import {Injectable} from "@angular/core";
+import {Resolve, RouterStateSnapshot, ActivatedRouteSnapshot} from "@angular/router";
+import {ClientsService} from "../../clients/services/clients.service";
+import {ClientSettings} from "../../clients/models/client-settings";
 
 
 @Injectable()

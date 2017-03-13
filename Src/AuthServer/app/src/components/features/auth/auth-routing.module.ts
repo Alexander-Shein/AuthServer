@@ -6,6 +6,8 @@ import {ClientSettingsResolver} from "./services/client-settings-resolver.servic
 import {ForgotPasswordPageComponent} from "./password/forgot-password-page.component";
 import {ResetPasswordPageComponent} from "./password/reset-password-page.component";
 import {EmailConfirmationPageComponent} from "./external-log-in/email-confirmation-page.component";
+import {TwoFactorProvidersResolver} from "./services/two-factor-providers-resolver.service";
+import {TwoFactorPageComponent} from "./two-factor/two-factor-page.component";
 
 
 const appRoutes: Routes = [
@@ -16,10 +18,17 @@ const appRoutes: Routes = [
             clientSettings: ClientSettingsResolver
         }
     },
-    { path: 'sign-up', component: SignUpPageComponent },
-    { path: 'forgot-password', component: ForgotPasswordPageComponent },
-    { path: 'reset-password', component: ResetPasswordPageComponent },
-    { path: 'email-confirmation', component: EmailConfirmationPageComponent }
+    {path: 'sign-up', component: SignUpPageComponent},
+    {path: 'forgot-password', component: ForgotPasswordPageComponent},
+    {path: 'reset-password', component: ResetPasswordPageComponent},
+    {path: 'email-confirmation', component: EmailConfirmationPageComponent},
+    {
+        path: 'two-factor',
+        component: TwoFactorPageComponent,
+        resolve: {
+            providers: TwoFactorProvidersResolver
+        }
+    }
 ];
 
 @NgModule({

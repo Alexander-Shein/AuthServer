@@ -6,7 +6,8 @@ import {ExternalLogIn} from "../models/external-log-in";
 import {SignUp} from "../models/sign-up";
 import {ForgotPassword} from "../models/forgot-password";
 import {ResetPassword} from "../models/reset-password";
-import {EmailConfirmation} from "../models/email-confirmation";
+import {Provider} from "../models/provider";
+import {TwoFactorVerification} from "../models/two-factor-verification";
 
 
 @Injectable()
@@ -21,30 +22,44 @@ export class AuthenticationService implements IAuthenticationService {
     }
 
     public logIn(logIn:LogIn): Promise<LogInResult> {
-        return Promise.resolve<LogInResult>(new LogInResult(false, true, false));
+        return Promise.resolve<LogInResult>(new LogInResult(false, true));
     }
 
-    public confirmEmail(emailConfirmation: EmailConfirmation): Promise<void> {
-        return Promise.resolve();
-    }
-
-    public logOut(): void {
+    public externalLogIn(externalLogIn: ExternalLogIn): void {
+        window.location.href = 'http://localhost:8080/dashboard';
     }
 
     public signUp(signUp: SignUp): Promise<void> {
         return Promise.resolve();
     }
 
+    public externalSignUp(signUp: SignUp): Promise<void> {
+        return Promise.resolve();
+    }
+
+    public logOut(): void {
+    }
+
     public forgotPassword(forgotPassword: ForgotPassword): Promise<void> {
         return Promise.resolve();
     }
 
-    public externalLogin(externalLogIn: ExternalLogIn): void {
-      window.location.href = 'http://localhost:8080/dashboard';
-        //redirect to /Account/ExternalLogin
+    public resetPassword(resetPassword: ResetPassword): Promise<void> {
+        return Promise.resolve();
     }
 
-    public resetPassword(resetPassword: ResetPassword): Promise<void> {
+    public getTwoFactorProviders(): Promise<Provider[]> {
+        return Promise.resolve([
+            new Provider('Phone', 'Phone'),
+            new Provider('Email', 'Email')
+        ]);
+    }
+
+    public sendCode(provider: Provider): Promise<void> {
+        return Promise.resolve();
+    }
+
+    public verifyCode(twoFactorVerification: TwoFactorVerification): Promise<void> {
         return Promise.resolve();
     }
 

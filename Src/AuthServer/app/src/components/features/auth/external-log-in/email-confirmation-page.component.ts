@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router, Params} from "@angular/router";
 import {AuthenticationService} from "../services/authentication.service";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {NotificationsService} from "angular2-notifications";
-import {EmailConfirmation} from "../models/email-confirmation";
+import {SignUp} from "../models/sign-up";
+import {AuthBaseComponent} from "../auth-base.component";
 
 
 @Component({
@@ -11,15 +12,17 @@ import {EmailConfirmation} from "../models/email-confirmation";
     templateUrl: './email-confirmation-page.component.html',
     styleUrls: ['../auth.scss', './email-confirmation-page.component.scss']
 })
-export class EmailConfirmationPageComponent implements OnInit {
+export class EmailConfirmationPageComponent extends AuthBaseComponent implements OnInit{
 
     constructor(
         private route: ActivatedRoute,
-        private router: Router,
         private authenticationService: AuthenticationService,
-        private notificationsService: NotificationsService,
-        private spinnerService: SpinnerService
-    ) {}
+        router: Router,
+        notificationsService: NotificationsService,
+        spinnerService: SpinnerService
+    ) {
+        super(router, notificationsService, spinnerService);
+    }
 
     public loginProvider: string = '';
 
@@ -27,34 +30,20 @@ export class EmailConfirmationPageComponent implements OnInit {
         this.route
             .params
             .subscribe((params: Params) => {
-                this.emailConfirmation.email = params['email'] || '';
+                this.signUp.email = params['email'] || '';
                 this.loginProvider = params['loginProvider'];
+                this.redirectUrl = params['redirectUrl'] || '';
             });
     }
 
-    public emailConfirmation: EmailConfirmation = new EmailConfirmation('');
+    public signUp: SignUp = new SignUp('', null, null);
 
     public onSubmit(): void {
         this.spinnerService.show();
 
         this.authenticationService
-            .confirmEmailForExternalLogIn(this.emailConfirmation)
-            .then(() => this.handle())
+            .externalSignUp(this.signUp)
+            .then(() => this.redirectAfterLogin())
             .catch((error) => this.handleError(error));
     }
-
-    private handle(): void {
-        this.router.navigate(['/dashboard']);
-        this.spinnerService.hide();
-    }
-
-    private handleError(error: any): void {
-        let message = error || error.message || '';
-
-        this.notificationsService
-            .error('Failed.', message);
-
-        this.spinnerService.hide();
-    }
-
 }

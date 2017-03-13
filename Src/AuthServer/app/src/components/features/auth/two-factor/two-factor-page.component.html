@@ -1,0 +1,59 @@
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-center">Two factor page</h2>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-5 col-xl-4">
+            <form class="send-code-form row" (ngSubmit)="sendCode()" *ngIf="!isCodeSent">
+                <div class="col-6">
+                    <md-select
+                            placeholder="Provider"
+                            [(ngModel)]="twoFactorVerification.provider"
+                            name="provider"
+                            class="au-select">
+                        <md-option *ngFor="let provider of providers" [value]="provider.value">{{ provider.name }}</md-option>
+                    </md-select>
+                </div>
+
+                <div class="col-6 au-action-container">
+                    <button md-raised-button color="primary">send code</button>
+                </div>
+            </form>
+
+            <form class="verify-code-form row" (ngSubmit)="verifyCode()" *ngIf="isCodeSent">
+                <div class="col-12">
+                    <md-input-container class="au-input">
+                        <input
+                                mdInput
+                                #code
+                                placeholder="Code"
+                                type="text"
+                                name="code"
+                                maxlength="100"
+                                required
+                                [(ngModel)]="twoFactorVerification.code">
+                        <md-hint align="end">{{code.value.length}} / 100</md-hint>
+                    </md-input-container>
+                </div>
+
+                <div class="col-12">
+                    <div class="row au-action-container">
+                        <div class="col-8 au-remember-checkbox">
+                            <md-checkbox
+                                    color="primary"
+                                    name="remember"
+                                    [(ngModel)]="twoFactorVerification.rememberBrowser">remember browser</md-checkbox>
+                        </div>
+                        <div class="col-4">
+                            <button md-raised-button color="primary">verify code</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
