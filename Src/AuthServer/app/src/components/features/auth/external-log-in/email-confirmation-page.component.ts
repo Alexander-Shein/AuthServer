@@ -1,10 +1,11 @@
-import {Component, OnInit} from "@angular/core";
+import {Component} from "@angular/core";
 import {ActivatedRoute, Router, Params} from "@angular/router";
 import {AuthenticationService} from "../services/authentication.service";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {NotificationsService} from "angular2-notifications";
 import {SignUp} from "../models/sign-up";
 import {AuthBaseComponent} from "../auth-base.component";
+import {Consts} from "../../../consts";
 
 
 @Component({
@@ -12,16 +13,16 @@ import {AuthBaseComponent} from "../auth-base.component";
     templateUrl: './email-confirmation-page.component.html',
     styleUrls: ['../auth.scss', './email-confirmation-page.component.scss']
 })
-export class EmailConfirmationPageComponent extends AuthBaseComponent implements OnInit{
+export class EmailConfirmationPageComponent extends AuthBaseComponent {
 
     constructor(
-        private route: ActivatedRoute,
         private authenticationService: AuthenticationService,
+        route: ActivatedRoute,
         router: Router,
         notificationsService: NotificationsService,
         spinnerService: SpinnerService
     ) {
-        super(router, notificationsService, spinnerService);
+        super(route, router, notificationsService, spinnerService);
     }
 
     public loginProvider: string = '';
@@ -30,10 +31,11 @@ export class EmailConfirmationPageComponent extends AuthBaseComponent implements
         this.route
             .params
             .subscribe((params: Params) => {
-                this.signUp.email = params['email'] || '';
-                this.loginProvider = params['loginProvider'];
-                this.redirectUrl = params['redirectUrl'] || '';
+                this.signUp.email = params[Consts.Email] || '';
+                this.loginProvider = params[Consts.LoginProvider];
             });
+
+        super.ngOnInit();
     }
 
     public signUp: SignUp = new SignUp('', null, null);

@@ -1,10 +1,11 @@
-import {Component, OnInit} from "@angular/core";
+import {Component} from "@angular/core";
 import {ActivatedRoute, Router, Params} from "@angular/router";
 import {AuthenticationService} from "../services/authentication.service";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {NotificationsService} from "angular2-notifications";
 import {ResetPassword} from "../models/reset-password";
 import {AuthBaseComponent} from "../auth-base.component";
+import {Consts} from "../../../consts";
 
 
 @Component({
@@ -12,25 +13,26 @@ import {AuthBaseComponent} from "../auth-base.component";
     templateUrl: './reset-password-page.component.html',
     styleUrls: ['../auth.scss', './forgot-password-page.component.scss']
 })
-export class ResetPasswordPageComponent extends AuthBaseComponent implements OnInit{
+export class ResetPasswordPageComponent extends AuthBaseComponent {
 
     constructor(
-        private route: ActivatedRoute,
         private authenticationService: AuthenticationService,
+        route: ActivatedRoute,
         router: Router,
         notificationsService: NotificationsService,
         spinnerService: SpinnerService
     ) {
-        super(router, notificationsService, spinnerService);
+        super(route, router, notificationsService, spinnerService);
     }
 
     public ngOnInit(): void {
         this.route
-            .params
+            .queryParams
             .subscribe((params: Params) => {
-                this.redirectUrl = params['redirectUrl'] || '';
-                this.resetPassword.code = params['code'];
+                this.resetPassword.code = params[Consts.Code];
             });
+
+        super.ngOnInit();
     }
 
     public resetPassword: ResetPassword = new ResetPassword('', '', '', null);

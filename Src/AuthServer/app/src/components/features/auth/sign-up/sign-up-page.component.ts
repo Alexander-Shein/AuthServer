@@ -1,6 +1,6 @@
-import {Component, OnInit} from "@angular/core";
+import {Component} from "@angular/core";
 import {SignUp} from "../models/sign-up";
-import {ActivatedRoute, Router, Params} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {AuthenticationService} from "../services/authentication.service";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {NotificationsService} from "angular2-notifications";
@@ -12,24 +12,16 @@ import {AuthBaseComponent} from "../auth-base.component";
     templateUrl: './sign-up-page.component.html',
     styleUrls: ['../auth.scss', './sign-up-page.component.scss']
 })
-export class SignUpPageComponent extends AuthBaseComponent implements OnInit{
+export class SignUpPageComponent extends AuthBaseComponent {
 
     constructor(
-        private route: ActivatedRoute,
         private authenticationService: AuthenticationService,
+        route: ActivatedRoute,
         router: Router,
         notificationsService: NotificationsService,
         spinnerService: SpinnerService
     ) {
-        super(router, notificationsService, spinnerService);
-    }
-
-    public ngOnInit(): void {
-        this.route
-            .params
-            .subscribe((params: Params) => {
-                this.redirectUrl = params['redirectUrl'] || '';
-            });
+        super(route, router, notificationsService, spinnerService);
     }
 
     public signUp: SignUp = new SignUp('', '', '');

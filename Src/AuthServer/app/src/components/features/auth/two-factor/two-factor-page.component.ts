@@ -6,6 +6,7 @@ import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {Provider} from "../models/provider";
 import {TwoFactorVerification} from "../models/two-factor-verification";
 import {AuthBaseComponent} from "../auth-base.component";
+import {Consts} from "../../../consts";
 
 
 @Component({
@@ -13,16 +14,16 @@ import {AuthBaseComponent} from "../auth-base.component";
     templateUrl: './two-factor-page.component.html',
     styleUrls: ['../auth.scss', './two-factor-page.component.scss']
 })
-export class TwoFactorPageComponent extends AuthBaseComponent implements OnInit{
+export class TwoFactorPageComponent extends AuthBaseComponent {
 
     constructor(
-        private route: ActivatedRoute,
         private authenticationService: AuthenticationService,
+        route: ActivatedRoute,
         router: Router,
         notificationsService: NotificationsService,
         spinnerService: SpinnerService
     ) {
-        super(router, notificationsService, spinnerService);
+        super(route, router, notificationsService, spinnerService);
     }
 
     public ngOnInit(): void {
@@ -36,9 +37,10 @@ export class TwoFactorPageComponent extends AuthBaseComponent implements OnInit{
         this.route
             .params
             .subscribe((params: Params) => {
-                this.redirectUrl = params['redirectUrl'] || '';
-                this.twoFactorVerification.rememberLogin = params['rememberLogin'] || false;
+                this.twoFactorVerification.rememberLogin = params[Consts.RememberLogin] || false;
             });
+
+        super.ngOnInit();
     }
 
     public providers: Provider[];

@@ -8,7 +8,7 @@ import {ErrorPageComponent} from "./common/error-page.component";
 
 
 const appRoutes = [
-    {path: 'home', redirectTo: '/', pathMatch: 'full'},
+    {path: 'home', redirectTo: '', pathMatch: 'full'},
     {path: '', component: HomePageComponent},
     {path: 'landing', component: LandingPageComponent},
     {path: 'support', component: SupportPageComponent},

@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Params, Router} from "@angular/router";
+import {Component} from '@angular/core';
+import {ActivatedRoute, Router} from "@angular/router";
 import {AuthenticationService} from "../services/authentication.service";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {NotificationsService} from "angular2-notifications";
@@ -12,27 +12,19 @@ import {AuthBaseComponent} from "../auth-base.component";
     templateUrl: './forgot-password-page.component.html',
     styleUrls: ['../auth.scss', './forgot-password-page.component.scss']
 })
-export class ForgotPasswordPageComponent extends AuthBaseComponent implements OnInit{
+export class ForgotPasswordPageComponent extends AuthBaseComponent {
 
     constructor(
-        private route: ActivatedRoute,
         private authenticationService: AuthenticationService,
+        route: ActivatedRoute,
         router: Router,
         notificationsService: NotificationsService,
         spinnerService: SpinnerService
     ) {
-        super(router, notificationsService, spinnerService);
+        super(route, router, notificationsService, spinnerService);
     }
 
     private isEmailSent: boolean = false;
-
-    public ngOnInit(): void {
-        this.route
-            .params
-            .subscribe((params: Params) => {
-                this.redirectUrl = params['redirectUrl'] || '';
-            });
-    }
 
     public forgotPassword: ForgotPassword = new ForgotPassword('');
 

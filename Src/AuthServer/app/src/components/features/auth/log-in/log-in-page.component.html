@@ -55,11 +55,11 @@
                 </div>
 
                 <div class="col-12">
-                    <a [routerLink]="['/sign-up', {redirectUrl: redirectUrl}]">Register as a new user?</a>
+                    <a [routerLink]="['/sign-up']" [queryParams]="{redirectUrl: redirectUrl}">Register as a new user?</a>
                 </div>
 
                 <div class="col-12">
-                    <a [routerLink]="['/forgot-password', {redirectUrl: redirectUrl}]">Forgot your password?</a>
+                    <a [routerLink]="['/forgot-password']" [queryParams]="{redirectUrl: redirectUrl}">Forgot your password?</a>
                 </div>
             </form>
         </div>

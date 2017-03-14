@@ -57,7 +57,7 @@
                 </div>
 
                 <div class="col-12">
-                    <a [routerLink]="['/log-in', {redirectUrl: redirectUrl}]">Have an account?</a>
+                    <a [routerLink]="['/log-in']" [queryParams]="{redirectUrl: redirectUrl}">Have an account?</a>
                 </div>
             </form>
         </div>

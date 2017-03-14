@@ -1,5 +1,5 @@
-import {Component, OnInit} from "@angular/core";
-import {ActivatedRoute, Router, Params} from "@angular/router";
+import {Component} from "@angular/core";
+import {ActivatedRoute, Router} from "@angular/router";
 import {AuthBaseComponent} from '../auth-base.component';
 import {ClientSettings} from "../../clients/models/client-settings";
 import {AuthenticationService} from "../services/authentication.service";
@@ -16,16 +16,16 @@ import {ExternalLogIn} from "../models/external-log-in";
     templateUrl: './log-in-page.component.html',
     styleUrls: ['../auth.scss', './log-in-page.component.scss']
 })
-export class LogInPageComponent extends AuthBaseComponent implements OnInit{
+export class LogInPageComponent extends AuthBaseComponent {
 
     constructor(
-        private route: ActivatedRoute,
         private authenticationService: AuthenticationService,
+        route: ActivatedRoute,
         router: Router,
         notificationsService: NotificationsService,
         spinnerService: SpinnerService
     ) {
-        super(router, notificationsService, spinnerService);
+        super(route, router, notificationsService, spinnerService);
     }
 
     public ngOnInit(): void {
@@ -35,11 +35,7 @@ export class LogInPageComponent extends AuthBaseComponent implements OnInit{
                 this.clientSettings = data.clientSettings;
             });
 
-        this.route
-            .params
-            .subscribe((params: Params) => {
-                this.redirectUrl = params['redirectUrl'] || '';
-            });
+        super.ngOnInit();
     }
 
     public clientSettings: ClientSettings;

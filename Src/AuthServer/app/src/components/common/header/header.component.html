@@ -1,4 +1,4 @@
-<md-toolbar>
+<md-toolbar *ngIf="display">
     <button
             *ngFor="let menuItem of menuItems; let i = index"
             md-raised-button
