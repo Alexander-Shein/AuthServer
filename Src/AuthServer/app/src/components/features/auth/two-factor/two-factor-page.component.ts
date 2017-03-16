@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component} from "@angular/core";
 import {ActivatedRoute, Router, Params} from "@angular/router";
 import {AuthenticationService} from "../services/authentication.service";
 import {NotificationsService} from "angular2-notifications";

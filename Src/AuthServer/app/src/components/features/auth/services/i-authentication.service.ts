@@ -7,6 +7,9 @@ import {ForgotPassword} from "../models/forgot-password";
 import {ResetPassword} from "../models/reset-password";
 import {Provider} from "../models/provider";
 import {TwoFactorVerification} from "../models/two-factor-verification";
+import {ChangePassword} from "../models/change-password";
+import {AddPassword} from "../models/add-password";
+import {AddPhoneNumber} from "../models/add-phone-number";
 
 
 export interface IAuthenticationService {
@@ -24,6 +27,12 @@ export interface IAuthenticationService {
 
     forgotPassword(forgotPassword: ForgotPassword): Promise<void>;
     resetPassword(resetPassword: ResetPassword): Promise<void>;
+    changePassword(changePassword: ChangePassword): Promise<void>;
+    addPassword(addPassword: AddPassword): Promise<void>;
+
+    sendVerificationCode(addPhoneNumber: AddPhoneNumber): Promise<void>;
+    deletePhoneNumber(): Promise<void>;
+    addPhoneNumber(addPhoneNumber: AddPhoneNumber): Promise<void>;
 
     getTwoFactorProviders(): Promise<Provider[]>;
     sendCode(provider: Provider): Promise<void>;

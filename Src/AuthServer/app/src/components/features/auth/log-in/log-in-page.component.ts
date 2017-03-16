@@ -62,10 +62,15 @@ export class LogInPageComponent extends AuthBaseComponent {
 
         if (result.requiresTwoFactor) {
             this.router
-                .navigate(['/two-factor', {
-                    redirectUrl: this.redirectUrl,
-                    rememberLogin: this.logIn.rememberLogin
-                }]);
+                .navigate(['/two-factor',
+                    {
+                        rememberLogin: this.logIn.rememberLogin
+                    }],
+                    {
+                        queryParams: {
+                            redirectUrl: this.redirectUrl
+                        }
+                    });
         }
 
         this.spinnerService.hide();

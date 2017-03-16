@@ -8,24 +8,32 @@ import {ResetPasswordPageComponent} from "./password/reset-password-page.compone
 import {EmailConfirmationPageComponent} from "./external-log-in/email-confirmation-page.component";
 import {TwoFactorProvidersResolver} from "./services/two-factor-providers-resolver.service";
 import {TwoFactorPageComponent} from "./two-factor/two-factor-page.component";
+import {ChangePasswordPageComponent} from "./password/change-password-page.component";
+import {AddPasswordPageComponent} from "./password/add-password-page.component";
+import {AddPhonePageComponent} from "./phone/add-phone-page.component";
 
 
 const appRoutes: Routes = [
     {
         path: 'log-in',
         component: LogInPageComponent,
-        resolve: {
+        resolve:
+        {
             clientSettings: ClientSettingsResolver
         }
     },
     {path: 'sign-up', component: SignUpPageComponent},
     {path: 'forgot-password', component: ForgotPasswordPageComponent},
     {path: 'reset-password', component: ResetPasswordPageComponent},
+    {path: 'change-password', component: ChangePasswordPageComponent},
+    {path: 'add-password', component: AddPasswordPageComponent},
+    {path: 'add-phone', component: AddPhonePageComponent},
     {path: 'email-confirmation', component: EmailConfirmationPageComponent},
     {
         path: 'two-factor',
         component: TwoFactorPageComponent,
-        resolve: {
+        resolve:
+        {
             providers: TwoFactorProvidersResolver
         }
     }

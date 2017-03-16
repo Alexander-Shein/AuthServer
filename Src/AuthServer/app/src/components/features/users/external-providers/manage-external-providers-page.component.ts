@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router'
-import { ExternalProvidersSettings } from '../models/external-providers-settings';
+import {Component, OnInit} from "@angular/core";
+import {ActivatedRoute} from "@angular/router"
+import {ExternalProvidersSettings} from "../models/external-providers-settings";
+
 
 @Component({
     selector: 'au-manage-external-providers',

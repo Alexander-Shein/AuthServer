@@ -13,6 +13,9 @@ import {ResetPasswordPageComponent} from "./password/reset-password-page.compone
 import {EmailConfirmationPageComponent} from "./external-log-in/email-confirmation-page.component";
 import {TwoFactorProvidersResolver} from "./services/two-factor-providers-resolver.service";
 import {TwoFactorPageComponent} from "./two-factor/two-factor-page.component";
+import {ChangePasswordPageComponent} from "./password/change-password-page.component";
+import {AddPasswordPageComponent} from "./password/add-password-page.component";
+import {AddPhonePageComponent} from "./phone/add-phone-page.component";
 
 
 @NgModule({
@@ -28,7 +31,10 @@ import {TwoFactorPageComponent} from "./two-factor/two-factor-page.component";
         ForgotPasswordPageComponent,
         ResetPasswordPageComponent,
         EmailConfirmationPageComponent,
-        TwoFactorPageComponent
+        TwoFactorPageComponent,
+        ChangePasswordPageComponent,
+        AddPasswordPageComponent,
+        AddPhonePageComponent
     ],
     providers: [
         ClientSettingsResolver,

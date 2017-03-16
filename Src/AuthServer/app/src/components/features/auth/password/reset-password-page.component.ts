@@ -48,7 +48,12 @@ export class ResetPasswordPageComponent extends AuthBaseComponent {
 
     private handle(): void {
         this.router
-            .navigate(['/log-in', {redirectUrl: this.redirectUrl}]);
+            .navigate(['/log-in'],
+            {
+                queryParams: {
+                    redirectUrl: this.redirectUrl
+                }
+            });
 
         this.spinnerService.hide();
     }

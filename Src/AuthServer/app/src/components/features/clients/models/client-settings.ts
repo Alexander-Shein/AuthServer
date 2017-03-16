@@ -1,6 +1,7 @@
-import {ExternalProvider} from './external-provider';
+import {ExternalProvider} from "./external-provider";
 
-export class ClientSettings{
+
+export class ClientSettings {
     constructor(
         public allowRememberLogin:boolean,
         public enableLocalLogin:boolean,

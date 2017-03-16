@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
-import { IClientsService } from './i-clients.service';
-import { ClientSettings } from '../models/client-settings';
-import { ExternalProvider } from '../models/external-provider';
+import {Injectable} from "@angular/core";
+import {IClientsService} from "./i-clients.service";
+import {ClientSettings} from "../models/client-settings";
+import {ExternalProvider} from "../models/external-provider";
+
 
 @Injectable()
 export class ClientsService implements IClientsService {
