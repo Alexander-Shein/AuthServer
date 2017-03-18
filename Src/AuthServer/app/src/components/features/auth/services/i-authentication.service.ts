@@ -10,6 +10,9 @@ import {TwoFactorVerification} from "../models/two-factor-verification";
 import {ChangePassword} from "../models/change-password";
 import {AddPassword} from "../models/add-password";
 import {AddPhoneNumber} from "../models/add-phone-number";
+import {ExternalProvidersSettings} from "../models/external-providers-settings";
+import {UserLoginInfo} from "../models/user-login-info";
+import {UserSettings} from "../models/user-settings";
 
 
 export interface IAuthenticationService {
@@ -37,4 +40,13 @@ export interface IAuthenticationService {
     getTwoFactorProviders(): Promise<Provider[]>;
     sendCode(provider: Provider): Promise<void>;
     verifyCode(twoFactorVerification: TwoFactorVerification): Promise<void>;
+    enableTwoFactor(): Promise<void>;
+    disableTwoFactor(): Promise<void>;
+
+    getExternalProvidersSettings(): Promise<ExternalProvidersSettings>;
+    linkExternalLogin(provider: string): void;
+    deleteExternalLogin(userLoginInfo: UserLoginInfo): Promise<void>;
+
+    getUserSettings(): Promise<UserSettings>;
+
 }

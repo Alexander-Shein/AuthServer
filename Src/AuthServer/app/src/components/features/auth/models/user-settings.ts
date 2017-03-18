@@ -1,4 +1,5 @@
-import { UserLoginInfo } from './user-login-info';
+import {UserLoginInfo} from "../../auth/models/user-login-info";
+
 
 export class UserSettings {
     constructor(

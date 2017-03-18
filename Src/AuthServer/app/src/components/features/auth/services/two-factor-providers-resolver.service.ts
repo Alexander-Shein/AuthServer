@@ -11,7 +11,7 @@ export class TwoFactorProvidersResolver implements Resolve<Provider[]> {
 
     constructor(private authenticationService: AuthenticationService) {}
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<Provider[]> {
+    public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<Provider[]> {
         return this.authenticationService.getTwoFactorProviders();
     }
 

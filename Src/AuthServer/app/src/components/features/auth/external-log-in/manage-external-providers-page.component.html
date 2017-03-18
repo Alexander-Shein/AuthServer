@@ -1,0 +1,47 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-center">Manage external providers.</h2>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-5 col-xl-4">
+            <div class="row" *ngIf="externalProvidersSettings.currentLogIns.length">
+                <div class="col-12">
+                    <h5 class="text-center">Registered external log ins:</h5>
+                </div>
+                <div class="col-12">
+                    <div class="row" *ngFor="let lp of externalProvidersSettings.currentLogIns">
+                        <div class="col-6"><p class="text-right pt-1">{{lp.providerDisplayName}}:</p></div>
+                        <div class="col-6">
+                            <button
+                                    *ngIf="canDeleteExternalLogin"
+                                    md-raised-button
+                                    color="warn"
+                                    (click)="deleteExternalLogin(lp)">
+                                <span>delete</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="externalProvidersSettings.otherLogIns.length">
+                <div class="col-12">
+                    <h5 class="text-center">Add another service to log in.</h5>
+                </div>
+
+                <div class="col-12 au-external-login">
+                    <button
+                            *ngFor="let sn of externalProvidersSettings.otherLogIns"
+                            md-raised-button
+                            color="primary"
+                            (click)="linkExternalLogin(sn)">
+                        <span>{{sn.displayName}}</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

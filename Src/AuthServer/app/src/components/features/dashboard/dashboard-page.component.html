@@ -1,0 +1,58 @@
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-center">Dashboard.</h2>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-5 col-xl-4">
+            <div class="row">
+                <div class="col-12">
+                    <md-card>
+                        <md-card-title class="text-center">
+                            My user account settings
+                        </md-card-title>
+                        <md-card-content>
+                            <div class="row">
+                                <p>Password:
+                                    <a routerLink="/change-password" *ngIf="userSettings.hasPassword">change password</a>
+                                    <a routerLink="/add-password" *ngIf="!userSettings.hasPassword">add password</a>
+                                </p>
+                            </div>
+                            <div class="row">
+                                <p>External log ins: <a routerLink="/external-providers">manage</a></p>
+                            </div>
+                            <div class="row">
+                                <p>Phone Number:
+                                    <a (click)="deletePhoneNumber()" *ngIf="userSettings.phoneNumber">delete phone number</a>
+                                    <a routerLink="/add-phone" *ngIf="!userSettings.phoneNumber">add phone number</a>
+                                </p>
+                            </div>
+                            <div class="row">
+                                <p>
+                                    <md-checkbox
+                                            [(ngModel)]="userSettings.twoFactor"
+                                            color="primary"
+                                            (click)="toggleTwoFactor()"
+                                    >Two-Factor Authentication</md-checkbox>
+                                </p>
+                            </div>
+                        </md-card-content>
+                    </md-card>
+                </div>
+                <div class="col-12 mt-3">
+                    <md-card>
+                        <md-card-title class="text-center">
+                            My business apps
+                        </md-card-title>
+                        <md-card-content>
+
+                        </md-card-content>
+                    </md-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

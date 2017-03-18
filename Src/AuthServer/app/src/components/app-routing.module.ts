@@ -5,6 +5,8 @@ import {LandingPageComponent} from './features/landing/landing-page.component';
 import {HomePageComponent} from './features/home/home-page.component';
 import {SupportPageComponent} from './features/support/support-page.component';
 import {ErrorPageComponent} from "./common/error-page.component";
+import {DashboardPageComponent} from "./features/dashboard/dashboard-page.component";
+import {UserSettingsResolver} from "./features/auth/services/user-settings-resolver.service";
 
 
 const appRoutes = [
@@ -12,6 +14,14 @@ const appRoutes = [
     {path: '', component: HomePageComponent},
     {path: 'landing', component: LandingPageComponent},
     {path: 'support', component: SupportPageComponent},
+    {
+        path: 'dashboard',
+        component: DashboardPageComponent,
+        resolve:
+            {
+                userSettings: UserSettingsResolver
+            }
+    },
     {path: 'error', component: ErrorPageComponent},
     {path: '**', component: PageNotFoundComponent}
 ];

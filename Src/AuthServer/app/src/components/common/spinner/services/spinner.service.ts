@@ -1,5 +1,6 @@
-import {Injectable, EventEmitter} from '@angular/core';
-import {ISpinnerService} from './i-spinner.service';
+import {Injectable, EventEmitter} from "@angular/core";
+import {ISpinnerService} from "./i-spinner.service";
+
 
 @Injectable()
 export class SpinnerService implements ISpinnerService {
@@ -23,5 +24,9 @@ export class SpinnerService implements ISpinnerService {
 
         this.visible = false;
         this.visibility.emit(this.visible);
+    }
+
+    public isInProgress(): boolean {
+        return this.visible;
     }
 }

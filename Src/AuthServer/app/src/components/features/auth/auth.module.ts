@@ -16,6 +16,8 @@ import {TwoFactorPageComponent} from "./two-factor/two-factor-page.component";
 import {ChangePasswordPageComponent} from "./password/change-password-page.component";
 import {AddPasswordPageComponent} from "./password/add-password-page.component";
 import {AddPhonePageComponent} from "./phone/add-phone-page.component";
+import {ManageExternalProvidersPageComponent} from "./external-log-in/manage-external-providers-page.component";
+import {ExternalProvidersSettingsResolver} from "./services/external-providers-settings-resolver.service";
 
 
 @NgModule({
@@ -34,13 +36,15 @@ import {AddPhonePageComponent} from "./phone/add-phone-page.component";
         TwoFactorPageComponent,
         ChangePasswordPageComponent,
         AddPasswordPageComponent,
-        AddPhonePageComponent
+        AddPhonePageComponent,
+        ManageExternalProvidersPageComponent
     ],
     providers: [
         ClientSettingsResolver,
         ClientsService,
         AuthenticationService,
-        TwoFactorProvidersResolver
+        TwoFactorProvidersResolver,
+        ExternalProvidersSettingsResolver
     ]
 })
 export class AuthModule { }

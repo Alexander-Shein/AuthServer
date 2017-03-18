@@ -11,6 +11,10 @@ import {TwoFactorVerification} from "../models/two-factor-verification";
 import {ChangePassword} from "../models/change-password";
 import {AddPassword} from "../models/add-password";
 import {AddPhoneNumber} from "../models/add-phone-number";
+import {ExternalProvidersSettings} from "../models/external-providers-settings";
+import {UserLoginInfo} from "../models/user-login-info";
+import {ExternalProvider} from "../models/external-provider";
+import {UserSettings} from "../models/user-settings";
 
 
 @Injectable()
@@ -84,6 +88,35 @@ export class AuthenticationService implements IAuthenticationService {
 
     public verifyCode(twoFactorVerification: TwoFactorVerification): Promise<void> {
         return Promise.resolve();
+    }
+
+    public enableTwoFactor(): Promise<void> {
+        return Promise.resolve();
+    }
+
+    public disableTwoFactor(): Promise<void> {
+        return Promise.resolve();
+    }
+
+    public getExternalProvidersSettings():Promise<ExternalProvidersSettings> {
+        return Promise.resolve(new ExternalProvidersSettings([
+            new UserLoginInfo('login', 'key', 'twitter'),
+            new UserLoginInfo('login', 'key', 'facebook')
+        ], [
+            new ExternalProvider('vk', 'Vk'),
+            new ExternalProvider('google', 'google')
+        ], true));
+    }
+
+    public linkExternalLogin(provider: string): void {
+    }
+
+    public deleteExternalLogin(userLoginInfo: UserLoginInfo): Promise<void> {
+        return Promise.resolve();
+    }
+
+    public getUserSettings():Promise<UserSettings> {
+        return Promise.resolve(new UserSettings(true, '', true, [], true));
     }
 
 }
