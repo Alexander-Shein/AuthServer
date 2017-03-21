@@ -14,7 +14,8 @@ export class HeaderComponent implements OnInit {
     public menuItems: MenuItem[] = [
         new MenuItem('home', 'home', 'home'),
         new MenuItem('support', 'contact_phone', 'support'),
-        new MenuItem('log in', '', 'log-in')
+        new MenuItem('log in', '', 'log-in'),
+        new MenuItem('dashboard', '', 'dashboard')
     ];
 
     constructor(private route: ActivatedRoute) {

@@ -15,10 +15,10 @@
                         <div class="col-6"><p class="text-right pt-1">{{lp.providerDisplayName}}:</p></div>
                         <div class="col-6">
                             <button
-                                    *ngIf="canDeleteExternalLogin"
+                                    *ngIf="canDeleteExternalLogIn"
                                     md-raised-button
                                     color="warn"
-                                    (click)="deleteExternalLogin(lp)">
+                                    (click)="deleteExternalLogIn(lp)">
                                 <span>delete</span>
                             </button>
                         </div>
@@ -36,9 +36,13 @@
                             *ngFor="let sn of externalProvidersSettings.otherLogIns"
                             md-raised-button
                             color="primary"
-                            (click)="linkExternalLogin(sn)">
+                            (click)="linkExternalLogIn(sn)">
                         <span>{{sn.displayName}}</span>
                     </button>
+                </div>
+
+                <div class="col-12">
+                    <a [routerLink]="['/dashboard']">Back</a>
                 </div>
 
             </div>

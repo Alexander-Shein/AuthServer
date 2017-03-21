@@ -1,12 +1,12 @@
-import {UserLoginInfo} from "../../auth/models/user-login-info";
+import {UserLogInInfo} from "../external-log-in/models/user-log-in-info";
 
 
 export class UserSettings {
-    constructor(
-        public hasPassword: boolean,
-        public phoneNumber: string,
-        public twoFactor: boolean,
-        public logins: UserLoginInfo[],
-        public browserRemembered: boolean
-    ) {}
+
+    public hasPassword: boolean;
+    public phoneNumber: string;
+    public twoFactor: boolean;
+    public logIns: UserLogInInfo[];
+    public browserRemembered: boolean;
+
 }

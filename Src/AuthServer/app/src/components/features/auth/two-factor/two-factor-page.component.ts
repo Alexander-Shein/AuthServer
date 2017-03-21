@@ -1,12 +1,12 @@
 import {Component} from "@angular/core";
 import {ActivatedRoute, Router, Params} from "@angular/router";
-import {AuthenticationService} from "../services/authentication.service";
 import {NotificationsService} from "angular2-notifications";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
-import {Provider} from "../models/provider";
-import {TwoFactorVerification} from "../models/two-factor-verification";
 import {AuthBaseComponent} from "../auth-base.component";
 import {Consts} from "../../../consts";
+import {TwoFactorService} from "./services/two-factor.service";
+import {Provider} from "./models/provider";
+import {TwoFactorVerification} from "./models/two-factor-verification";
 
 
 @Component({
@@ -17,7 +17,7 @@ import {Consts} from "../../../consts";
 export class TwoFactorPageComponent extends AuthBaseComponent {
 
     constructor(
-        private authenticationService: AuthenticationService,
+        private twoFactorService: TwoFactorService,
         route: ActivatedRoute,
         router: Router,
         notificationsService: NotificationsService,
@@ -45,10 +45,10 @@ export class TwoFactorPageComponent extends AuthBaseComponent {
 
     public providers: Provider[];
     public isCodeSent: boolean = false;
-    public twoFactorVerification: TwoFactorVerification = new TwoFactorVerification(null, '', false, false);
+    public twoFactorVerification: TwoFactorVerification = new TwoFactorVerification();
 
     public sendCode(): void {
-        this.authenticationService
+        this.twoFactorService
             .sendCode(this.twoFactorVerification.provider)
             .then(() => {
                 this.isCodeSent = true;
@@ -60,7 +60,7 @@ export class TwoFactorPageComponent extends AuthBaseComponent {
     public verifyCode(): void {
         this.spinnerService.show();
 
-        this.authenticationService
+        this.twoFactorService
             .verifyCode(this.twoFactorVerification)
             .then(() => this.redirectAfterLogin())
             .catch((error: any) => this.handleError(error));

@@ -3,16 +3,19 @@ import {NotificationsService} from "angular2-notifications";
 import {Router, ActivatedRoute, Params} from "@angular/router";
 import {OnInit} from "@angular/core";
 import {Consts} from "../../consts";
+import {BaseComponent} from "../../common/base.component";
 
 
-export abstract class AuthBaseComponent implements OnInit {
+export abstract class AuthBaseComponent extends BaseComponent  implements OnInit {
 
     constructor(
         protected route: ActivatedRoute,
         protected router: Router,
-        protected notificationsService: NotificationsService,
-        protected spinnerService: SpinnerService
-    ) {}
+        notificationsService: NotificationsService,
+        spinnerService: SpinnerService
+    ) {
+        super(notificationsService, spinnerService);
+    }
 
     public redirectUrl: string;
 

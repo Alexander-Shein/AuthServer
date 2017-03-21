@@ -1,0 +1,7 @@
+.au-app-status {
+    color: red;
+
+    &.au-active {
+        color: green;
+    }
+}

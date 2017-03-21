@@ -1,0 +1,131 @@
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-center">Edit business app.</h2>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <form class="col-12 col-lg-6 col-xl-5" (submit)="save()">
+            <div class="row">
+                <md-input-container class="col-12">
+                    <input
+                            mdInput
+                            #name
+                            placeholder="App name"
+                            type="text"
+                            name="name"
+                            maxlength="100"
+                            required
+                            [(ngModel)]="vm.name">
+                    <md-hint align="end">{{name.value.length}} / 100</md-hint>
+                </md-input-container>
+            </div>
+            <div class="row pt-4">
+                    <md-icon color="primary" class="col-1">lock</md-icon>
+                    <md-checkbox
+                            class="col-11"
+                            md-line
+                            labelPosition="before"
+                            color="primary"
+                            name="isLocalAccountEnabled"
+                            [(ngModel)]="vm.isLocalAccountEnabled">
+                        <span>Enable local email/password accounts</span>
+                    </md-checkbox>
+            </div>
+            <div class="row pt-4">
+                <md-icon color="primary" class="col-1">power_settings_new</md-icon>
+                <md-checkbox
+                        class="col-11"
+                        md-line
+                        labelPosition="before"
+                        color="primary"
+                        name="isActive"
+                        [(ngModel)]="vm.isActive">
+                    <span>Is app active</span>
+                </md-checkbox>
+            </div>
+            <div class="row pt-4">
+                <md-icon color="primary" class="col-1">plus_one</md-icon>
+                <md-select
+                        *ngIf="externalProviders.length"
+                        class="col-11"
+                        placeholder="Add external log in"
+                        name="externalLogIns"
+                        (change)="addExternalProvider($event.value)">
+                    <md-option *ngFor="let pr of externalProviders" [value]="pr">
+                        {{pr.displayName}}
+                    </md-option>
+                </md-select>
+                <p class="col-11" *ngIf="!externalProviders.length">All external providers are enabled.</p>
+                <md-chip-list class="offset-1 col-11 pt-1">
+                    <md-chip
+                            *ngFor="let sn of vm.externalProviders"
+                            color="primary"
+                            class="au-external-provider-chip"
+                            (click)="removeExternalProvider(sn)"
+                    >{{sn.displayName}} &#10006;</md-chip>
+                </md-chip-list>
+            </div>
+            <div class="row pt-4">
+                <md-icon color="primary" class="col-1">link</md-icon>
+                <md-input-container class="col-11">
+                    <input
+                            mdInput
+                            #redirectUrl
+                            placeholder="Redirect url"
+                            type="url"
+                            name="redirectUrl"
+                            maxlength="100"
+                            required
+                            [(ngModel)]="vm.redirectUrls[0]">
+                    <md-hint align="end">{{redirectUrl.value.length}} / 100</md-hint>
+                </md-input-container>
+            </div>
+            <div class="row pt-4">
+                <md-icon color="primary" class="col-1">security</md-icon>
+                <p class="col-11">Credentials:</p>
+                <div class="offset-1 col-11">
+                    <div class="row">
+                        <md-input-container class="col-6">
+                            <input
+                                    mdInput
+                                    #id
+                                    placeholder="Id"
+                                    type="text"
+                                    name="id"
+                                    maxlength="100"
+                                    required
+                                    [(ngModel)]="vm.appCredentials.id">
+                            <md-hint align="end">{{id.value.length}} / 100</md-hint>
+                        </md-input-container>
+                        <md-input-container class="col-6">
+                            <input
+                                    mdInput
+                                    #secret
+                                    placeholder="Secret"
+                                    type="text"
+                                    name="secret"
+                                    maxlength="100"
+                                    required
+                                    [(ngModel)]="vm.appCredentials.secret">
+                            <md-hint align="end">{{secret.value.length}} / 100</md-hint>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 pt-4 au-actions">
+                <button md-raised-button color="primary">save</button>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="col-12">
+                <a [routerLink]="['/dashboard']">Back</a>
+            </div>
+        </form>
+
+    </div>
+
+</div>

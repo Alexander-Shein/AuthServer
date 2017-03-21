@@ -7,49 +7,66 @@
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-12 col-md-6 col-lg-5 col-xl-4">
+        <div class="col-12 col-lg-6 col-xl-5">
             <div class="row">
-                <div class="col-12">
+                <div class="col-12 au-user-account">
                     <md-card>
                         <md-card-title class="text-center">
                             My user account settings
                         </md-card-title>
                         <md-card-content>
-                            <div class="row">
-                                <p>Password:
-                                    <a routerLink="/change-password" *ngIf="userSettings.hasPassword">change password</a>
-                                    <a routerLink="/add-password" *ngIf="!userSettings.hasPassword">add password</a>
-                                </p>
-                            </div>
-                            <div class="row">
-                                <p>External log ins: <a routerLink="/external-providers">manage</a></p>
-                            </div>
-                            <div class="row">
-                                <p>Phone Number:
-                                    <a (click)="deletePhoneNumber()" *ngIf="userSettings.phoneNumber">delete phone number</a>
-                                    <a routerLink="/add-phone" *ngIf="!userSettings.phoneNumber">add phone number</a>
-                                </p>
-                            </div>
-                            <div class="row">
-                                <p>
-                                    <md-checkbox
-                                            [(ngModel)]="userSettings.twoFactor"
-                                            color="primary"
-                                            (click)="toggleTwoFactor()"
-                                    >Two-Factor Authentication</md-checkbox>
-                                </p>
-                            </div>
+                            <md-list>
+                                <md-list-item>
+                                    <md-icon md-list-avatar color="primary">lock</md-icon>
+                                    <p md-line>Password:
+                                        <a routerLink="/change-password" *ngIf="userSettings.hasPassword">change</a>
+                                        <a routerLink="/add-password" *ngIf="!userSettings.hasPassword">add</a>
+                                    </p>
+                                </md-list-item>
+                                <md-divider></md-divider>
+                                <md-list-item>
+                                    <md-icon md-list-avatar color="primary">plus_one</md-icon>
+                                    <p md-line>External log ins: <a routerLink="/external-providers">manage</a></p>
+                                </md-list-item>
+                                <md-divider></md-divider>
+                                <md-list-item>
+                                    <md-icon md-list-avatar color="primary">phone</md-icon>
+                                    <p md-line>Phone: {{userSettings.phoneNumber}}
+                                        <a href="#" (click)="deletePhoneNumber()" *ngIf="userSettings.phoneNumber">delete</a>
+                                        <a routerLink="/add-phone" *ngIf="!userSettings.phoneNumber">add</a>
+                                    </p>
+                                </md-list-item>
+                                <md-divider></md-divider>
+                                <md-list-item>
+                                        <md-checkbox
+                                                [(ngModel)]="userSettings.twoFactor"
+                                                color="primary"
+                                                (click)="toggleTwoFactor()"
+                                                class="mt-3 au-two-factor-checkbox"
+                                        ><span>Two-Factor Authentication</span></md-checkbox>
+                                </md-list-item>
+                            </md-list>
                         </md-card-content>
                     </md-card>
                 </div>
-                <div class="col-12 mt-3">
+                <div class="col-12 mt-3 au-business-apps">
                     <md-card>
                         <md-card-title class="text-center">
                             My business apps
                         </md-card-title>
                         <md-card-content>
-
+                            <p *ngIf="!businessApps.length">You have no apps yet. Click 'create' button.</p>
+                            <md-list *ngIf="businessApps.length">
+                                <md-list-item *ngFor="let app of businessApps" [routerLink]="['/business-apps/' + app.name]">
+                                    <md-icon color="primary">settings_applications</md-icon>
+                                    <h4 md-line>Name: <strong>{{app.name}}</strong></h4>
+                                    <p md-line>Users count: <strong>{{app.usersCount | number}}</strong></p>
+                                </md-list-item>
+                            </md-list>
                         </md-card-content>
+                        <md-card-actions>
+                            <button md-raised-button color="primary">create</button>
+                        </md-card-actions>
                     </md-card>
                 </div>
             </div>

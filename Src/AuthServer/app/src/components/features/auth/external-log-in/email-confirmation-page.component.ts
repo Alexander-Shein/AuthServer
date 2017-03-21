@@ -38,7 +38,7 @@ export class EmailConfirmationPageComponent extends AuthBaseComponent {
         super.ngOnInit();
     }
 
-    public signUp: SignUp = new SignUp('', null, null);
+    public signUp: SignUp = new SignUp();
 
     public onSubmit(): void {
         this.spinnerService.show();

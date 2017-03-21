@@ -1,12 +1,12 @@
 import {Component} from "@angular/core";
-import {ActivatedRoute, Router} from "@angular/router"
-import {ExternalProvidersSettings} from "../models/external-providers-settings";
-import {AuthenticationService} from "../services/authentication.service";
-import {UserLoginInfo} from "../models/user-login-info";
+import {ActivatedRoute, Router} from "@angular/router";
 import {NotificationsService} from "angular2-notifications";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {AuthBaseComponent} from "../auth-base.component";
-import {ExternalProvider} from "../models/external-provider";
+import {ExternalProvidersService} from "./services/external-providers.service";
+import {UserLogInInfo} from "./models/user-log-in-info";
+import {ExternalProvider} from "./models/external-provider";
+import {ExternalProvidersSettings} from "./models/external-providers-settings";
 
 
 @Component({
@@ -17,7 +17,7 @@ import {ExternalProvider} from "../models/external-provider";
 export class ManageExternalProvidersPageComponent extends AuthBaseComponent {
 
     constructor(
-        private authenticationService: AuthenticationService,
+        private externalProvidersService: ExternalProvidersService,
         route: ActivatedRoute,
         router: Router,
         notificationsService: NotificationsService,
@@ -27,38 +27,38 @@ export class ManageExternalProvidersPageComponent extends AuthBaseComponent {
     }
 
     public externalProvidersSettings: ExternalProvidersSettings;
-    public canDeleteExternalLogin: boolean;
+    public canDeleteExternalLogIn: boolean;
 
     public ngOnInit(): void {
         this.route.data
             .subscribe((data: { externalProvidersSettings: ExternalProvidersSettings }) => {
                 let stgs = this.externalProvidersSettings = data.externalProvidersSettings;
 
-                this.canDeleteExternalLogin = stgs.hasPassword || stgs.currentLogIns.length > 1;
+                this.canDeleteExternalLogIn = stgs.hasPassword || stgs.currentLogIns.length > 1;
             });
     }
 
-    public deleteExternalLogin(userLoginInfo: UserLoginInfo): void {
+    public deleteExternalLogIn(userLogInInfo: UserLogInInfo): void {
         this.spinnerService.show();
 
-        this.authenticationService
-            .deleteExternalLogin(userLoginInfo)
+        this.externalProvidersService
+            .deleteExternalLogIn(userLogInInfo)
             .then(() => {
                 let stgs = this.externalProvidersSettings;
 
-                stgs.currentLogIns = stgs.currentLogIns.filter(x => x !== userLoginInfo);
-                this.canDeleteExternalLogin = stgs.hasPassword || stgs.currentLogIns.length > 1;
+                stgs.currentLogIns = stgs.currentLogIns.filter((x: UserLogInInfo) => x !== userLogInInfo);
+                this.canDeleteExternalLogIn = stgs.hasPassword || stgs.currentLogIns.length > 1;
 
                 this.spinnerService.hide();
             })
             .catch((e) => this.handleError(e));
     }
 
-    public linkExternalLogin(externalProvider: ExternalProvider): void {
+    public linkExternalLogIn(externalProvider: ExternalProvider): void {
         this.spinnerService.show();
 
-        this.authenticationService
-            .linkExternalLogin(externalProvider.authenticationScheme);
+        this.externalProvidersService
+            .linkExternalLogIn(externalProvider.authenticationScheme);
 
         this.spinnerService.hide();
     }

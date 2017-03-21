@@ -7,6 +7,7 @@ import {SupportPageComponent} from './features/support/support-page.component';
 import {ErrorPageComponent} from "./common/error-page.component";
 import {DashboardPageComponent} from "./features/dashboard/dashboard-page.component";
 import {UserSettingsResolver} from "./features/auth/services/user-settings-resolver.service";
+import {BusinessAppsResolver} from "./features/business/business-apps/services/business-apps-resolver.service";
 
 
 const appRoutes = [
@@ -19,7 +20,8 @@ const appRoutes = [
         component: DashboardPageComponent,
         resolve:
             {
-                userSettings: UserSettingsResolver
+                userSettings: UserSettingsResolver,
+                businessApps: BusinessAppsResolver
             }
     },
     {path: 'error', component: ErrorPageComponent},

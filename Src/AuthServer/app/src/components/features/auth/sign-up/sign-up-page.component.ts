@@ -24,7 +24,7 @@ export class SignUpPageComponent extends AuthBaseComponent {
         super(route, router, notificationsService, spinnerService);
     }
 
-    public signUp: SignUp = new SignUp('', '', '');
+    public signUp: SignUp = new SignUp();
 
     public onSubmit(): void {
         this.spinnerService.show();

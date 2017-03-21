@@ -1,0 +1,6 @@
+<h1 md-dialog-title>Warning!</h1>
+<div md-dialog-content>Are you sure?</div>
+<div md-dialog-actions>
+    <button md-button (click)="dialogRef.close(false)">Cancel</button>
+    <button md-raised-button color="primary" (click)="dialogRef.close(true)" class="ml-3">Yes</button>
+</div>

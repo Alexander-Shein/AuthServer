@@ -1,14 +1,13 @@
 import {Component} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AuthBaseComponent} from '../auth-base.component';
-import {ClientSettings} from "../../clients/models/client-settings";
 import {AuthenticationService} from "../services/authentication.service";
 import {LogIn} from "../models/log-in";
 import {LogInResult} from "../models/log-in-result";
 import {NotificationsService} from "angular2-notifications";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
-import {ExternalProvider} from "../../clients/models/external-provider";
-import {ExternalLogIn} from "../models/external-log-in";
+import {ClientSettings} from "../../business/models/client-settings";
+import {ExternalProvider} from "../external-log-in/models/external-provider";
 
 
 @Component({
@@ -39,7 +38,7 @@ export class LogInPageComponent extends AuthBaseComponent {
     }
 
     public clientSettings: ClientSettings;
-    public logIn: LogIn = new LogIn('', '', false);
+    public logIn: LogIn = new LogIn();
 
     public onSubmit(): void {
         this.spinnerService.show();
@@ -50,9 +49,13 @@ export class LogInPageComponent extends AuthBaseComponent {
             .catch((error: any) => this.handleError(error));
     }
 
-    public externalLogIn(externalProvider:ExternalProvider): void {
+    public externalLogIn(externalProvider: ExternalProvider): void {
         this.authenticationService
-            .externalLogIn(new ExternalLogIn(this.redirectUrl, externalProvider.authenticationScheme));
+            .externalLogIn(
+                {
+                    redirectUrl: this.redirectUrl,
+                    authenticationScheme: externalProvider.authenticationScheme
+                });
     }
 
     private handle(result: LogInResult): void {

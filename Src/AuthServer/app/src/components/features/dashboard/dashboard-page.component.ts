@@ -4,6 +4,9 @@ import {UserSettings} from "../auth/models/user-settings";
 import {AuthenticationService} from "../auth/services/authentication.service";
 import {SpinnerService} from "../../common/spinner/services/spinner.service";
 import {NotificationsService} from "angular2-notifications";
+import {PhonesService} from "../auth/manage-phones/services/phones.service";
+import {TwoFactorService} from "../auth/two-factor/services/two-factor.service";
+import {BusinessApp} from "../business/business-apps/models/business-app";
 
 
 @Component({
@@ -18,27 +21,37 @@ export class DashboardPageComponent implements OnInit {
         private router: Router,
         private authenticationService: AuthenticationService,
         private notificationsService: NotificationsService,
-        private spinnerService: SpinnerService) {}
+        private spinnerService: SpinnerService,
+        private phonesService: PhonesService,
+        private twoFactorService: TwoFactorService) {}
 
     public userSettings: UserSettings;
+    public businessApps: BusinessApp[];
 
     public ngOnInit(): void {
         this.route.data
-            .subscribe((data: { userSettings: UserSettings }) => {
+            .subscribe((data:
+                            {
+                                userSettings: UserSettings,
+                                businessApps: BusinessApp[]
+                            }) => {
                 this.userSettings = data.userSettings;
+                this.businessApps = data.businessApps;
             });
     }
 
-    public deletePhoneNumber(): void {
+    public deletePhoneNumber(): boolean {
         this.spinnerService.show();
 
-        this.authenticationService
-            .deletePhoneNumber()
+        this.phonesService
+            .remove()
             .then(() => {
                 this.userSettings.phoneNumber = '';
                 this.spinnerService.hide();
             })
             .catch((e) => this.handleError(e));
+
+        return false;
     }
 
     private handleError(error: any): void {
@@ -57,11 +70,11 @@ export class DashboardPageComponent implements OnInit {
 
         if (this.userSettings.twoFactor) {
             request =
-                this.authenticationService
+                this.twoFactorService
                     .disableTwoFactor();
         } else {
             request =
-                this.authenticationService
+                this.twoFactorService
                     .enableTwoFactor();
         }
 

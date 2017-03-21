@@ -1,0 +1,19 @@
+.au-business-apps {
+    md-list-item:hover {
+        background-color: gainsboro;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+}
+
+.au-user-account {
+    a {
+        float: right;
+    }
+
+    .au-two-factor-checkbox {
+        span {
+            margin-left: 25px!important;
+        }
+    }
+}
