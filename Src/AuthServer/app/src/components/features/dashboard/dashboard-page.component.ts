@@ -1,12 +1,13 @@
 import {Component, OnInit} from "@angular/core";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {UserSettings} from "../auth/models/user-settings";
-import {AuthenticationService} from "../auth/services/authentication.service";
 import {SpinnerService} from "../../common/spinner/services/spinner.service";
 import {NotificationsService} from "angular2-notifications";
 import {PhonesService} from "../auth/manage-phones/services/phones.service";
 import {TwoFactorService} from "../auth/two-factor/services/two-factor.service";
 import {BusinessApp} from "../business/business-apps/models/business-app";
+import {ConfirmationDialogComponent} from "../../common/pop-ups/confirmation-dialog.component";
+import {MdDialog} from "@angular/material";
 
 
 @Component({
@@ -18,11 +19,10 @@ export class DashboardPageComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private router: Router,
-        private authenticationService: AuthenticationService,
         private notificationsService: NotificationsService,
         private spinnerService: SpinnerService,
         private phonesService: PhonesService,
+        private dialog: MdDialog,
         private twoFactorService: TwoFactorService) {}
 
     public userSettings: UserSettings;
@@ -41,15 +41,20 @@ export class DashboardPageComponent implements OnInit {
     }
 
     public deletePhoneNumber(): boolean {
-        this.spinnerService.show();
+        let dialogRef = this.dialog.open(ConfirmationDialogComponent);
+        dialogRef.afterClosed().subscribe((result: boolean) => {
+            if (result) {
+                this.spinnerService.show();
 
-        this.phonesService
-            .remove()
-            .then(() => {
-                this.userSettings.phoneNumber = '';
-                this.spinnerService.hide();
-            })
-            .catch((e) => this.handleError(e));
+                this.phonesService
+                    .remove()
+                    .then(() => {
+                        this.userSettings.phoneNumber = '';
+                        this.spinnerService.hide();
+                    })
+                    .catch((e) => this.handleError(e));
+            }
+        });
 
         return false;
     }

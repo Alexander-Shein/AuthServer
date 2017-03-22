@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid mt-2">
 
     <div class="row">
         <div class="col-12">
@@ -7,9 +7,10 @@
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-12 col-md-6 col-lg-5 col-xl-4">
-            <form class="sign-up-form row" (ngSubmit)="onSubmit()">
-                <div class="col-12">
+        <form class="col-12 col-md-6 col-lg-5 col-xl-4 sign-up-form" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <md-icon color="primary" class="col-1 mt-3">mail_outline</md-icon>
+                <div class="col-11">
                     <md-input-container class="au-input">
                         <input
                                 mdInput
@@ -23,7 +24,11 @@
                         <md-hint align="end">{{email.value.length}} / 100</md-hint>
                     </md-input-container>
                 </div>
-                <div class="col-12">
+            </div>
+
+            <div class="row">
+                <md-icon color="primary" class="col-1 mt-3">lock_open</md-icon>
+                <div class="col-11">
                     <md-input-container class="au-input">
                         <input
                                 mdInput
@@ -37,7 +42,11 @@
                         <md-hint align="end">{{password.value.length}} / 100</md-hint>
                     </md-input-container>
                 </div>
-                <div class="col-12">
+            </div>
+
+            <div class="row">
+                <md-icon color="primary" class="col-1 mt-3">lock_outline</md-icon>
+                <div class="col-11">
                     <md-input-container class="au-input">
                         <input
                                 mdInput
@@ -51,15 +60,17 @@
                         <md-hint align="end">{{confirmPassword.value.length}} / 100</md-hint>
                     </md-input-container>
                 </div>
+            </div>
 
-                <div class="col-12 au-action-container">
-                    <button md-raised-button color="primary">register</button>
-                </div>
-
+            <div class="row mt-2">
                 <div class="col-12">
-                    <a [routerLink]="['/log-in']" [queryParams]="{redirectUrl: redirectUrl}">Have an account?</a>
+                    <button md-raised-button color="primary" class="float-right">register</button>
                 </div>
-            </form>
-        </div>
+            </div>
+
+            <div class="row mt-2">
+                <a [routerLink]="['/log-in']" [queryParams]="{redirectUrl: redirectUrl}" class="col-12">Have an account?</a>
+            </div>
+        </form>
     </div>
 </div>

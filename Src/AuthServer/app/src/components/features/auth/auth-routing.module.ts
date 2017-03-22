@@ -10,9 +10,9 @@ import {ChangePasswordPageComponent} from "./manage-passwords/change-password-pa
 import {AddPasswordPageComponent} from "./manage-passwords/add-password-page.component";
 import {AddPhonePageComponent} from "./manage-phones/add-phone-page.component";
 import {ManageExternalProvidersPageComponent} from "./external-log-in/manage-external-providers-page.component";
-import {ClientSettingsResolver} from "../business/services/client-settings-resolver.service";
 import {TwoFactorProvidersResolver} from "./two-factor/services/two-factor-providers-resolver.service";
 import {ExternalProvidersSettingsResolver} from "./external-log-in/services/external-providers-settings-resolver.service";
+import {BusinessAppByUrlResolver} from "../business/business-apps/services/business-app-by-url-resolver.service";
 
 
 const appRoutes: Routes = [
@@ -21,7 +21,7 @@ const appRoutes: Routes = [
         component: LogInPageComponent,
         resolve:
         {
-            clientSettings: ClientSettingsResolver
+            clientSettings: BusinessAppByUrlResolver
         }
     },
     {path: 'sign-up', component: SignUpPageComponent},

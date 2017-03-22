@@ -10,8 +10,8 @@ import {ExternalProvider} from "../../auth/external-log-in/models/external-provi
 
 @Component({
     selector: 'au-create-business-app',
-    templateUrl: './create-business-app-page.component.html',
-    styleUrls: ['./create-business-app-page.component.scss']
+    templateUrl: './put-business-app-page.component.html',
+    styleUrls: ['./put-business-app-page.component.scss']
 })
 export class CreateBusinessAppPageComponent extends BaseComponent implements OnInit {
 
@@ -27,6 +27,7 @@ export class CreateBusinessAppPageComponent extends BaseComponent implements OnI
 
     public vm: BusinessApp = new BusinessApp();
     public externalProviders: ExternalProvider[];
+    public title: string = 'Create business app.';
 
     public ngOnInit(): void {
         this.route

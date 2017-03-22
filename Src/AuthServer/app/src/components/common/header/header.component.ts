@@ -12,9 +12,10 @@ import {Consts} from "../../consts";
 export class HeaderComponent implements OnInit {
 
     public menuItems: MenuItem[] = [
-        new MenuItem('home', 'home', 'home'),
-        new MenuItem('support', 'contact_phone', 'support'),
+        new MenuItem('my account', 'verified_user', 'home'),
+        new MenuItem('contact', 'contact_phone', 'contact'),
         new MenuItem('log in', '', 'log-in'),
+        new MenuItem('sign up', '', 'sign-up'),
         new MenuItem('dashboard', '', 'dashboard')
     ];
 

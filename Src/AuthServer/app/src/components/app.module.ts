@@ -8,7 +8,6 @@ import {PageNotFoundComponent} from "./common/not-found.component";
 import {HeaderComponent} from "./common/header/header.component";
 import {HomePageComponent} from "./features/home/home-page.component";
 import {LandingPageComponent} from "./features/landing/landing-page.component";
-import {SupportPageComponent} from "./features/support/support-page.component";
 import {AuthModule} from "./features/auth/auth.module";
 import {SimpleNotificationsModule} from "angular2-notifications";
 import {SpinnerComponent} from "./common/spinner/spinner.component";
@@ -20,8 +19,6 @@ import {AuthenticationService} from "./features/auth/services/authentication.ser
 import {PasswordsService} from "./features/auth/manage-passwords/services/passwords.service";
 import {PhonesService} from "./features/auth/manage-phones/services/phones.service";
 import {TwoFactorService} from "./features/auth/two-factor/services/two-factor.service";
-import {ClientSettingsResolver} from "./features/business/services/client-settings-resolver.service";
-import {ClientsService} from "./features/business/services/clients.service";
 import {TwoFactorProvidersResolver} from "./features/auth/two-factor/services/two-factor-providers-resolver.service";
 import {ExternalProvidersSettingsResolver} from "./features/auth/external-log-in/services/external-providers-settings-resolver.service";
 import {ExternalProvidersService} from "./features/auth/external-log-in/services/external-providers.service";
@@ -32,6 +29,9 @@ import {BusinessModule} from "./features/business/business.module";
 import {BusinessAppResolver} from "./features/business/business-apps/services/business-app-resolver.service";
 import {ConfirmationDialogComponent} from "./common/pop-ups/confirmation-dialog.component";
 import {ExternalProvidersResolver} from "./features/auth/external-log-in/services/external-providers-resolver.service";
+import {BusinessAppByUrlResolver} from "./features/business/business-apps/services/business-app-by-url-resolver.service";
+import {ContactPageComponent} from "./features/contact/contact-page.component";
+import {MessagesService} from "./features/contact/services/messages.service";
 
 
 @NgModule({
@@ -52,7 +52,7 @@ import {ExternalProvidersResolver} from "./features/auth/external-log-in/service
         HeaderComponent,
         HomePageComponent,
         LandingPageComponent,
-        SupportPageComponent,
+        ContactPageComponent,
         SpinnerComponent,
         DashboardPageComponent
     ],
@@ -66,14 +66,14 @@ import {ExternalProvidersResolver} from "./features/auth/external-log-in/service
         BusinessAppsService,
         BusinessAppsResolver,
         BusinessAppResolver,
-        ClientSettingsResolver,
-        ClientsService,
+        BusinessAppByUrlResolver,
         TwoFactorProvidersResolver,
         ExternalProvidersSettingsResolver,
         ExternalProvidersService,
         UsersService,
-        ExternalProvidersResolver
+        ExternalProvidersResolver,
+        MessagesService
     ],
-    bootstrap: [ AppComponent, ConfirmationDialogComponent ]
+    bootstrap: [ AppComponent ]
 })
 export class AppModule { }

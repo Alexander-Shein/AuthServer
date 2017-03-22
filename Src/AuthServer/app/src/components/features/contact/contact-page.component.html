@@ -1,0 +1,104 @@
+<div class="container-fluid mt-2">
+    <div class="row">
+        <h2 class="col-12 text-center">Contact us</h2>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-6 text-center" *ngIf="isMessageSent">
+            Your message is sent successfully. We will answer you soon. Thank you.
+        </div>
+        <form class="col-6" (submit)="send()" *ngIf="!isMessageSent">
+            <div class="row">
+                <md-input-container class="col-6">
+                    <input
+                            mdInput
+                            #firstName
+                            placeholder="First name"
+                            type="text"
+                            name="firstName"
+                            maxlength="50"
+                            required
+                            [(ngModel)]="im.firstName">
+                    <md-hint align="end">{{firstName.value.length}} / 50</md-hint>
+                </md-input-container>
+                <md-input-container class="col-6">
+                    <input
+                            mdInput
+                            #lastName
+                            placeholder="Last name"
+                            type="text"
+                            name="lastName"
+                            maxlength="50"
+                            required
+                            [(ngModel)]="im.lastName">
+                    <md-hint align="end">{{lastName.value.length}} / 50</md-hint>
+                </md-input-container>
+            </div>
+
+            <div class="row">
+                <md-input-container class="col-12">
+                    <input
+                            mdInput
+                            #companyName
+                            placeholder="Company name"
+                            type="text"
+                            name="companyName"
+                            maxlength="100"
+                            required
+                            [(ngModel)]="im.companyName">
+                    <md-hint align="end">{{companyName.value.length}} / 100</md-hint>
+                </md-input-container>
+            </div>
+
+            <div class="row">
+                <md-input-container class="col-12">
+                    <input
+                            mdInput
+                            #email
+                            placeholder="Your email"
+                            type="email"
+                            name="email"
+                            maxlength="100"
+                            required
+                            [(ngModel)]="im.email">
+                    <md-hint align="end">{{email.value.length}} / 100</md-hint>
+                </md-input-container>
+            </div>
+
+            <div class="row">
+                <md-input-container class="col-12">
+                    <input
+                            mdInput
+                            #subject
+                            placeholder="Subject"
+                            type="text"
+                            name="subject"
+                            maxlength="100"
+                            required
+                            [(ngModel)]="im.subject">
+                    <md-hint align="end">{{subject.value.length}} / 100</md-hint>
+                </md-input-container>
+            </div>
+
+            <div class="row">
+                <md-input-container class="col-12">
+                    <textarea
+                            mdInput
+                            #message
+                            placeholder="Message"
+                            name="message"
+                            maxlength="1000"
+                            required
+                            [(ngModel)]="im.message"
+                    ></textarea>
+                    <md-hint align="end">{{message.value.length}} / 1000</md-hint>
+                </md-input-container>
+
+                <div class="col-12 au-actions">
+                    <button md-raised-button color="primary">send</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>

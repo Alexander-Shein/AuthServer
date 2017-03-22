@@ -1,6 +1,7 @@
 import {Injectable} from "@angular/core";
 import {IBusinessAppsService} from "./i-business-apps.service";
 import {BusinessApp} from "../models/business-app";
+import {BusinessAppVm} from "../models/business-app-vm";
 
 
 @Injectable()
@@ -19,7 +20,8 @@ export class BusinessAppsService implements IBusinessAppsService {
                     },
                     externalProviders: [],
                     redirectUrls: ['http://localhost:8000'],
-                    usersCount: 435
+                    usersCount: 435,
+                    allowRememberLogIn: true
                 },
                 {
                     isActive: true,
@@ -31,7 +33,8 @@ export class BusinessAppsService implements IBusinessAppsService {
                     },
                     externalProviders: [],
                     redirectUrls: ['http://localhost:8000'],
-                    usersCount: 4476
+                    usersCount: 4476,
+                    allowRememberLogIn: true
                 },
                 {
                     isActive: true,
@@ -43,8 +46,9 @@ export class BusinessAppsService implements IBusinessAppsService {
                     },
                     externalProviders: [],
                     redirectUrls: ['http://localhost:8000'],
-                    usersCount: 123435
-                }]), 1500)
+                    usersCount: 123435,
+                    allowRememberLogIn: true
+                }]), 500)
         );
     }
 
@@ -69,8 +73,9 @@ export class BusinessAppsService implements IBusinessAppsService {
                     }
                 ],
                 redirectUrls: ['http://localhost:8000'],
-                usersCount: 435
-            }), 1500)
+                usersCount: 435,
+                allowRememberLogIn: true
+            }), 500)
         );
     }
 
@@ -95,15 +100,38 @@ export class BusinessAppsService implements IBusinessAppsService {
                     }
                 ],
                 redirectUrls: ['http://localhost:8000', 'http://localhost:8001'],
-                usersCount: 435
-            }), 1500)
+                usersCount: 435,
+                allowRememberLogIn: true
+            }), 500)
         );
     }
 
     public remove(name: string): Promise<void> {
         return new Promise<void>((resolve) =>
-            setTimeout(() => resolve(), 1500)
+            setTimeout(() => resolve(), 500)
         );
+    }
+
+    public getByUrl(url: string): Promise<BusinessAppVm> {
+        return Promise.resolve(
+            {
+                name: 'my-account',
+                externalProviders: [
+                    {
+                        displayName: 'twitter',
+                        authenticationScheme: 'Twitter'
+                    },
+                    {
+                        displayName: 'facebook',
+                        authenticationScheme: 'Facebook'
+                    },
+                    {
+                        displayName: 'vk',
+                        authenticationScheme: 'Vk'
+                    }],
+                allowRememberLogIn: true,
+                isLocalAccountEnabled: true
+            });
     }
 
 }

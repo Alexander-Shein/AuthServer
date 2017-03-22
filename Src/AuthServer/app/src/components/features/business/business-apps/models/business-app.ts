@@ -1,12 +1,9 @@
 import {AppCredentials} from "./app-credentials";
-import {ExternalProvider} from "../../../auth/external-log-in/models/external-provider";
+import {BusinessAppVm} from "./business-app-vm";
 
 
-export class BusinessApp {
+export class BusinessApp extends BusinessAppVm {
 
-    public name: string;
-    public isLocalAccountEnabled: boolean;
-    public externalProviders: ExternalProvider[] = [];
     public appCredentials: AppCredentials = new AppCredentials();
     public redirectUrls: string[] = [];
     public isActive: boolean;

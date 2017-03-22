@@ -1,15 +1,16 @@
-<div class="container-fluid">
+<div class="container-fluid mt-2">
 
     <div class="row">
         <div class="col-12">
-            <h2 class="text-center">Log in page</h2>
+            <h2 class="text-center">Log in to {{clientSettings.name}}</h2>
         </div>
     </div>
 
-    <div class="row justify-content-center" *ngIf="clientSettings.enableLocalLogIn">
-        <div class="col-12 col-md-6 col-lg-5 col-xl-4">
-            <form class="log-in-form row" (ngSubmit)="onSubmit()">
-                <div class="col-12">
+    <div class="row justify-content-center" *ngIf="clientSettings.isLocalAccountEnabled">
+        <form class="col-12 col-md-6 col-lg-5 col-xl-4 log-in-form" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <md-icon color="primary" class="col-1 mt-3">perm_identity</md-icon>
+                <div class="col-11">
                     <md-input-container class="au-input">
                         <input
                                 mdInput
@@ -23,7 +24,11 @@
                         <md-hint align="end">{{email.value.length}} / 100</md-hint>
                     </md-input-container>
                 </div>
-                <div class="col-12">
+            </div>
+
+            <div class="row">
+                <md-icon color="primary" class="col-1 mt-3">lock_open</md-icon>
+                <div class="col-11">
                     <md-input-container class="au-input">
                         <input
                                 mdInput
@@ -37,37 +42,40 @@
                         <md-hint align="end">{{password.value.length}} / 100</md-hint>
                     </md-input-container>
                 </div>
+            </div>
 
-                <div class="col-12">
-                    <div class="row au-action-container">
-                        <div class="col-8 au-remember-checkbox">
-                            <div *ngIf="clientSettings.allowRememberLogIn">
-                                <md-checkbox
-                                        color="primary"
-                                        name="remember"
-                                        [(ngModel)]="logIn.rememberLogin">remember me</md-checkbox>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <button md-raised-button color="primary">log in</button>
-                        </div>
+            <div class="row mt-2">
+                <div class="col-8 mt-2 pl-3">
+                    <div *ngIf="clientSettings.allowRememberLogIn">
+                        <md-checkbox
+                                color="primary"
+                                name="remember"
+                                [(ngModel)]="logIn.rememberLogin">remember me</md-checkbox>
                     </div>
                 </div>
-
-                <div class="col-12">
-                    <a [routerLink]="['/sign-up']" [queryParams]="{redirectUrl: redirectUrl}">Register as a new user?</a>
+                <div class="col-4">
+                    <button md-raised-button color="primary" class="float-right">log in</button>
                 </div>
+            </div>
 
-                <div class="col-12">
-                    <a [routerLink]="['/forgot-password']" [queryParams]="{redirectUrl: redirectUrl}">Forgot your password?</a>
-                </div>
-            </form>
-        </div>
+            <div class="row mt-2">
+                <a [routerLink]="['/sign-up']" [queryParams]="{redirectUrl: redirectUrl}" class="col-12">Register as a new user?</a>
+            </div>
+
+            <div class="row">
+                <a [routerLink]="['/forgot-password']" [queryParams]="{redirectUrl: redirectUrl}" class="col-12">Forgot your password?</a>
+            </div>
+        </form>
     </div>
 
-    <div class="row justify-content-center mt-3" *ngIf="clientSettings.externalProviders.length">
+    <div class="row justify-content-center" *ngIf="clientSettings.externalProviders.length">
         <div class="col-12 col-md-6 col-lg-5 col-xl-4">
-            <div class="row">
+            <div class="row text-center" *ngIf="clientSettings.isLocalAccountEnabled">
+                <div class="col-12 text-center">
+                    <span>Or</span>
+                </div>
+            </div>
+            <div class="row mt-1">
                 <div class="col-12 au-external-login text-center">
                     <button
                             *ngFor="let sn of clientSettings.externalProviders; let i = index"

@@ -6,8 +6,8 @@ import {LogIn} from "../models/log-in";
 import {LogInResult} from "../models/log-in-result";
 import {NotificationsService} from "angular2-notifications";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
-import {ClientSettings} from "../../business/models/client-settings";
 import {ExternalProvider} from "../external-log-in/models/external-provider";
+import {BusinessAppVm} from "../../business/business-apps/models/business-app-vm";
 
 
 @Component({
@@ -30,14 +30,14 @@ export class LogInPageComponent extends AuthBaseComponent {
     public ngOnInit(): void {
         this.route
             .data
-            .subscribe((data: {clientSettings: ClientSettings}) => {
+            .subscribe((data: {clientSettings: BusinessAppVm}) => {
                 this.clientSettings = data.clientSettings;
             });
 
         super.ngOnInit();
     }
 
-    public clientSettings: ClientSettings;
+    public clientSettings: BusinessAppVm;
     public logIn: LogIn = new LogIn();
 
     public onSubmit(): void {
