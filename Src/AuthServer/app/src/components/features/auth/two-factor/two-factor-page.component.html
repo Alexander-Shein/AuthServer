@@ -2,7 +2,7 @@
 
     <div class="row">
         <div class="col-12">
-            <h2 class="text-center">Two factor page</h2>
+            <h2 class="text-center">Two factor page.</h2>
         </div>
     </div>
 
@@ -19,7 +19,7 @@
                     </md-select>
                 </div>
 
-                <div class="col-6 au-action-container">
+                <div class="col-6 text-right mt-3">
                     <button md-raised-button color="primary">send code</button>
                 </div>
             </form>
@@ -40,15 +40,15 @@
                     </md-input-container>
                 </div>
 
-                <div class="col-12">
+                <div class="col-12 mt-3">
                     <div class="row au-action-container">
-                        <div class="col-8 au-remember-checkbox">
+                        <div class="col-8 mt-2">
                             <md-checkbox
                                     color="primary"
                                     name="remember"
                                     [(ngModel)]="twoFactorVerification.rememberBrowser">remember browser</md-checkbox>
                         </div>
-                        <div class="col-4">
+                        <div class="col-4 text-right">
                             <button md-raised-button color="primary">verify code</button>
                         </div>
                     </div>

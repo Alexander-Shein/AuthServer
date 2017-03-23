@@ -5,6 +5,7 @@ import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {AuthBaseComponent} from "../auth-base.component";
 import {PhonesService} from "./services/phones.service";
 import {NewPhone} from "./models/new-phone";
+import {AuthenticationService} from "../services/authentication.service";
 
 
 @Component({
@@ -18,10 +19,11 @@ export class AddPhonePageComponent extends AuthBaseComponent {
         private phonesService: PhonesService,
         route: ActivatedRoute,
         router: Router,
+        authenticationService: AuthenticationService,
         notificationsService: NotificationsService,
         spinnerService: SpinnerService
     ) {
-        super(route, router, notificationsService, spinnerService);
+        super(route, router, authenticationService, notificationsService, spinnerService);
     }
 
     public im: NewPhone = new NewPhone();

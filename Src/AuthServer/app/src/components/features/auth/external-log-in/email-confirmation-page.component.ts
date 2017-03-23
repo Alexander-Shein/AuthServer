@@ -16,13 +16,13 @@ import {Consts} from "../../../consts";
 export class EmailConfirmationPageComponent extends AuthBaseComponent {
 
     constructor(
-        private authenticationService: AuthenticationService,
         route: ActivatedRoute,
         router: Router,
+        authenticationService: AuthenticationService,
         notificationsService: NotificationsService,
         spinnerService: SpinnerService
     ) {
-        super(route, router, notificationsService, spinnerService);
+        super(route, router, authenticationService, notificationsService, spinnerService);
     }
 
     public loginProvider: string = '';
@@ -40,7 +40,7 @@ export class EmailConfirmationPageComponent extends AuthBaseComponent {
 
     public signUp: SignUp = new SignUp();
 
-    public onSubmit(): void {
+    public confirm(): void {
         this.spinnerService.show();
 
         this.authenticationService

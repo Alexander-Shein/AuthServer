@@ -2,6 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {MenuItem} from "./models/menu-item";
 import {Params, ActivatedRoute} from "@angular/router";
 import {Consts} from "../../consts";
+import {AuthenticationService} from "../../features/auth/services/authentication.service";
 
 
 @Component({
@@ -11,18 +12,26 @@ import {Consts} from "../../consts";
 })
 export class HeaderComponent implements OnInit {
 
-    public menuItems: MenuItem[] = [
-        new MenuItem('my account', 'verified_user', 'home'),
-        new MenuItem('contact', 'contact_phone', 'contact'),
-        new MenuItem('log in', '', 'log-in'),
-        new MenuItem('sign up', '', 'sign-up'),
-        new MenuItem('dashboard', '', 'dashboard')
-    ];
-
-    constructor(private route: ActivatedRoute) {
-    }
+    constructor(
+        private route: ActivatedRoute,
+        private authenticationService: AuthenticationService
+    ) { }
 
     public display: boolean = true;
+    public isLoggedId: boolean;
+
+    public ghostMenuItems: MenuItem[] = [
+        new MenuItem('my account', 'verified_user', 'landing'),
+        new MenuItem('contact', 'contact_phone', 'contact'),
+        new MenuItem('log in', 'lock_outline', 'log-in'),
+        new MenuItem('sign up', 'person_add', 'sign-up')
+    ];
+
+    public loggedInMenuItems: MenuItem[] = [
+        new MenuItem('my account', 'verified_user', 'dashboard'),
+        new MenuItem('contact', 'contact_phone', 'contact'),
+        new MenuItem('log out', 'lock_open', 'log-out')
+    ];
 
     public ngOnInit(): void {
         this.route
@@ -30,5 +39,11 @@ export class HeaderComponent implements OnInit {
             .subscribe((params: Params) => {
                 this.display = !params[Consts.RedirectUrl];
             });
+
+        this.isLoggedId = this.authenticationService.isLoggedIn();
+
+        this.authenticationService
+            .observeIsLoggedIn()
+            .subscribe((value:boolean) => this.isLoggedId = value);
     }
 }

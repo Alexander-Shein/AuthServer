@@ -5,6 +5,7 @@ import {NotificationsService} from "angular2-notifications";
 import {Email} from "./models/email";
 import {AuthBaseComponent} from "../auth-base.component";
 import {PasswordsService} from "./services/passwords.service";
+import {AuthenticationService} from "../services/authentication.service";
 
 
 @Component({
@@ -18,10 +19,11 @@ export class ForgotPasswordPageComponent extends AuthBaseComponent {
         private passwordsService: PasswordsService,
         route: ActivatedRoute,
         router: Router,
+        authenticationService: AuthenticationService,
         notificationsService: NotificationsService,
         spinnerService: SpinnerService
     ) {
-        super(route, router, notificationsService, spinnerService);
+        super(route, router, authenticationService, notificationsService, spinnerService);
     }
 
     private isEmailSent: boolean = false;

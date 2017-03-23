@@ -7,6 +7,7 @@ import {ExternalProvidersService} from "./services/external-providers.service";
 import {UserLogInInfo} from "./models/user-log-in-info";
 import {ExternalProvider} from "./models/external-provider";
 import {ExternalProvidersSettings} from "./models/external-providers-settings";
+import {AuthenticationService} from "../services/authentication.service";
 
 
 @Component({
@@ -17,13 +18,14 @@ import {ExternalProvidersSettings} from "./models/external-providers-settings";
 export class ManageExternalProvidersPageComponent extends AuthBaseComponent {
 
     constructor(
-        private externalProvidersService: ExternalProvidersService,
+        private externalProvidersService : ExternalProvidersService,
         route: ActivatedRoute,
         router: Router,
+        authenticationService: AuthenticationService,
         notificationsService: NotificationsService,
         spinnerService: SpinnerService
     ) {
-        super(route, router, notificationsService, spinnerService);
+        super(route, router, authenticationService, notificationsService, spinnerService);
     }
 
     public externalProvidersSettings: ExternalProvidersSettings;

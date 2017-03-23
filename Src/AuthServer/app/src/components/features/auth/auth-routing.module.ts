@@ -13,6 +13,8 @@ import {ManageExternalProvidersPageComponent} from "./external-log-in/manage-ext
 import {TwoFactorProvidersResolver} from "./two-factor/services/two-factor-providers-resolver.service";
 import {ExternalProvidersSettingsResolver} from "./external-log-in/services/external-providers-settings-resolver.service";
 import {BusinessAppByUrlResolver} from "../business/business-apps/services/business-app-by-url-resolver.service";
+import {LogOutPageComponent} from "./log-out/log-out-page.component";
+import {ExternalLogInCallbackPageComponent} from "./external-log-in/external-log-in-callback-page.component";
 
 
 const appRoutes: Routes = [
@@ -21,10 +23,18 @@ const appRoutes: Routes = [
         component: LogInPageComponent,
         resolve:
         {
-            clientSettings: BusinessAppByUrlResolver
+            app: BusinessAppByUrlResolver
         }
     },
-    {path: 'sign-up', component: SignUpPageComponent},
+    {path: 'log-out', component: LogOutPageComponent},
+    {
+        path: 'sign-up',
+        component: SignUpPageComponent,
+        resolve:
+        {
+            app: BusinessAppByUrlResolver
+        }
+    },
     {path: 'forgot-password', component: ForgotPasswordPageComponent},
     {path: 'reset-password', component: ResetPasswordPageComponent},
     {path: 'change-password', component: ChangePasswordPageComponent},
@@ -46,7 +56,8 @@ const appRoutes: Routes = [
         {
             externalProvidersSettings: ExternalProvidersSettingsResolver
         }
-    }
+    },
+    {path: 'external-log-in-callback', component: ExternalLogInCallbackPageComponent}
 ];
 
 @NgModule({

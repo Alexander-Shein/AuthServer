@@ -2,11 +2,11 @@
 
     <div class="row">
         <div class="col-12">
-            <h2 class="text-center">Log in to {{clientSettings.name}}</h2>
+            <h2 class="text-center">Log in to <strong>{{app.name}}</strong>.</h2>
         </div>
     </div>
 
-    <div class="row justify-content-center" *ngIf="clientSettings.isLocalAccountEnabled">
+    <div class="row justify-content-center" *ngIf="app.isLocalAccountEnabled">
         <form class="col-12 col-md-6 col-lg-5 col-xl-4 log-in-form" (ngSubmit)="onSubmit()">
             <div class="row">
                 <md-icon color="primary" class="col-1 mt-3">perm_identity</md-icon>
@@ -46,7 +46,7 @@
 
             <div class="row mt-2">
                 <div class="col-8 mt-2 pl-3">
-                    <div *ngIf="clientSettings.allowRememberLogIn">
+                    <div *ngIf="app.allowRememberLogIn">
                         <md-checkbox
                                 color="primary"
                                 name="remember"
@@ -68,9 +68,9 @@
         </form>
     </div>
 
-    <div class="row justify-content-center" *ngIf="clientSettings.externalProviders.length">
+    <div class="row justify-content-center" *ngIf="app.externalProviders.length">
         <div class="col-12 col-md-6 col-lg-5 col-xl-4">
-            <div class="row text-center" *ngIf="clientSettings.isLocalAccountEnabled">
+            <div class="row text-center" *ngIf="app.isLocalAccountEnabled">
                 <div class="col-12 text-center">
                     <span>Or</span>
                 </div>
@@ -78,7 +78,7 @@
             <div class="row mt-1">
                 <div class="col-12 au-external-login text-center">
                     <button
-                            *ngFor="let sn of clientSettings.externalProviders; let i = index"
+                            *ngFor="let sn of app.externalProviders; let i = index"
                             md-raised-button
                             color="primary"
                             (click)="externalLogIn(sn)">

@@ -9,34 +9,40 @@
         </div>
         <form class="col-6" (submit)="send()" *ngIf="!isMessageSent">
             <div class="row">
-                <md-input-container class="col-6">
-                    <input
-                            mdInput
-                            #firstName
-                            placeholder="First name"
-                            type="text"
-                            name="firstName"
-                            maxlength="50"
-                            required
-                            [(ngModel)]="im.firstName">
-                    <md-hint align="end">{{firstName.value.length}} / 50</md-hint>
-                </md-input-container>
-                <md-input-container class="col-6">
-                    <input
-                            mdInput
-                            #lastName
-                            placeholder="Last name"
-                            type="text"
-                            name="lastName"
-                            maxlength="50"
-                            required
-                            [(ngModel)]="im.lastName">
-                    <md-hint align="end">{{lastName.value.length}} / 50</md-hint>
-                </md-input-container>
+                <md-icon color="primary" class="col-1 mt-3">perm_identity</md-icon>
+                <div class="col-11">
+                    <div class="row">
+                        <md-input-container class="col-6">
+                            <input
+                                    mdInput
+                                    #firstName
+                                    placeholder="First name"
+                                    type="text"
+                                    name="firstName"
+                                    maxlength="50"
+                                    required
+                                    [(ngModel)]="im.firstName">
+                            <md-hint align="end">{{firstName.value.length}} / 50</md-hint>
+                        </md-input-container>
+                        <md-input-container class="col-6">
+                            <input
+                                    mdInput
+                                    #lastName
+                                    placeholder="Last name"
+                                    type="text"
+                                    name="lastName"
+                                    maxlength="50"
+                                    required
+                                    [(ngModel)]="im.lastName">
+                            <md-hint align="end">{{lastName.value.length}} / 50</md-hint>
+                        </md-input-container>
+                    </div>
+                </div>
             </div>
 
             <div class="row">
-                <md-input-container class="col-12">
+                <md-icon color="primary" class="col-1 mt-3">business</md-icon>
+                <md-input-container class="col-11">
                     <input
                             mdInput
                             #companyName
@@ -51,7 +57,8 @@
             </div>
 
             <div class="row">
-                <md-input-container class="col-12">
+                <md-icon color="primary" class="col-1 mt-3">mail_outline</md-icon>
+                <md-input-container class="col-11">
                     <input
                             mdInput
                             #email
@@ -66,7 +73,8 @@
             </div>
 
             <div class="row">
-                <md-input-container class="col-12">
+                <md-icon color="primary" class="col-1 mt-3">short_text</md-icon>
+                <md-input-container class="col-11">
                     <input
                             mdInput
                             #subject
@@ -81,7 +89,8 @@
             </div>
 
             <div class="row">
-                <md-input-container class="col-12">
+                <md-icon color="primary" class="col-1 mt-3">comment</md-icon>
+                <md-input-container class="col-11">
                     <textarea
                             mdInput
                             #message
@@ -93,8 +102,10 @@
                     ></textarea>
                     <md-hint align="end">{{message.value.length}} / 1000</md-hint>
                 </md-input-container>
+            </div>
 
-                <div class="col-12 au-actions">
+            <div class="row no-gutters">
+                <div class="col-12 mt-2 text-right">
                     <button md-raised-button color="primary">send</button>
                 </div>
             </div>

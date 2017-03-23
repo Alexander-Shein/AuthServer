@@ -13,6 +13,8 @@ import {ChangePasswordPageComponent} from "./manage-passwords/change-password-pa
 import {AddPasswordPageComponent} from "./manage-passwords/add-password-page.component";
 import {AddPhonePageComponent} from "./manage-phones/add-phone-page.component";
 import {ManageExternalProvidersPageComponent} from "./external-log-in/manage-external-providers-page.component";
+import {LogOutPageComponent} from "./log-out/log-out-page.component";
+import {ExternalLogInCallbackPageComponent} from "./external-log-in/external-log-in-callback-page.component";
 
 
 @NgModule({
@@ -24,6 +26,7 @@ import {ManageExternalProvidersPageComponent} from "./external-log-in/manage-ext
     ],
     declarations: [
         LogInPageComponent,
+        LogOutPageComponent,
         SignUpPageComponent,
         ForgotPasswordPageComponent,
         ResetPasswordPageComponent,
@@ -32,7 +35,8 @@ import {ManageExternalProvidersPageComponent} from "./external-log-in/manage-ext
         ChangePasswordPageComponent,
         AddPasswordPageComponent,
         AddPhonePageComponent,
-        ManageExternalProvidersPageComponent
+        ManageExternalProvidersPageComponent,
+        ExternalLogInCallbackPageComponent
     ],
     providers: []
 })

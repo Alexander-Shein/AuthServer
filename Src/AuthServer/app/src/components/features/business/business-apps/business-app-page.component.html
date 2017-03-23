@@ -48,12 +48,10 @@
                 <span class="offset-1 col-11"><strong>{{vm.usersCount | number}}</strong></span>
             </div>
 
-            <div class="col-12 au-actions">
-                <button md-raised-button color="primary" [routerLink]="['edit']">edit</button>
+            <div class="col-12 text-right mt-2">
                 <button md-button color="primary" (click)="removeBusinessApp()">remove</button>
+                <button md-raised-button color="primary" [routerLink]="['edit']">edit</button>
             </div>
-
-            <div class="clearfix"></div>
 
             <div class="col-12">
                 <a [routerLink]="['/dashboard']">Back</a>

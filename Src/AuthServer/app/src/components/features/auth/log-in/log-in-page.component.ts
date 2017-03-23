@@ -18,26 +18,26 @@ import {BusinessAppVm} from "../../business/business-apps/models/business-app-vm
 export class LogInPageComponent extends AuthBaseComponent {
 
     constructor(
-        private authenticationService: AuthenticationService,
         route: ActivatedRoute,
         router: Router,
+        authenticationService: AuthenticationService,
         notificationsService: NotificationsService,
         spinnerService: SpinnerService
     ) {
-        super(route, router, notificationsService, spinnerService);
+        super(route, router, authenticationService, notificationsService, spinnerService);
     }
 
     public ngOnInit(): void {
         this.route
             .data
-            .subscribe((data: {clientSettings: BusinessAppVm}) => {
-                this.clientSettings = data.clientSettings;
+            .subscribe((data: {app: BusinessAppVm}) => {
+                this.app = data.app;
             });
 
         super.ngOnInit();
     }
 
-    public clientSettings: BusinessAppVm;
+    public app: BusinessAppVm;
     public logIn: LogIn = new LogIn();
 
     public onSubmit(): void {

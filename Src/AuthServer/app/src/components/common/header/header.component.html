@@ -1,6 +1,6 @@
 <md-toolbar *ngIf="display">
     <button
-            *ngFor="let menuItem of menuItems; let i = index"
+            *ngFor="let menuItem of (isLoggedId ? loggedInMenuItems : ghostMenuItems)"
             md-button
             [routerLink]="[menuItem.router]"
             [routerLinkActive]="'active'">

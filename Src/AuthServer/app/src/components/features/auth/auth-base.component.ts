@@ -4,6 +4,7 @@ import {Router, ActivatedRoute, Params} from "@angular/router";
 import {OnInit} from "@angular/core";
 import {Consts} from "../../consts";
 import {BaseComponent} from "../../common/base.component";
+import {AuthenticationService} from "./services/authentication.service";
 
 
 export abstract class AuthBaseComponent extends BaseComponent  implements OnInit {
@@ -11,6 +12,7 @@ export abstract class AuthBaseComponent extends BaseComponent  implements OnInit
     constructor(
         protected route: ActivatedRoute,
         protected router: Router,
+        protected authenticationService: AuthenticationService,
         notificationsService: NotificationsService,
         spinnerService: SpinnerService
     ) {
@@ -38,6 +40,13 @@ export abstract class AuthBaseComponent extends BaseComponent  implements OnInit
 
     protected redirectAfterLogin() {
         if (this.redirectUrl) {
+            if (this.redirectUrl.includes('?')) {
+                this.redirectUrl += '$';
+            } else {
+                this.redirectUrl += '?';
+            }
+
+            this.redirectUrl += 'accessToken=' + this.authenticationService.getToken().accessToken;
             window.location.href = this.redirectUrl;
         } else {
             this.router.navigate(['/dashboard']);

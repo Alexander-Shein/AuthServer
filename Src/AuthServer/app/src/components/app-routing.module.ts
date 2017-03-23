@@ -2,7 +2,6 @@ import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {PageNotFoundComponent} from './common/not-found.component';
 import {LandingPageComponent} from './features/landing/landing-page.component';
-import {HomePageComponent} from './features/home/home-page.component';
 import {ErrorPageComponent} from "./common/error-page.component";
 import {DashboardPageComponent} from "./features/dashboard/dashboard-page.component";
 import {UserSettingsResolver} from "./features/auth/services/user-settings-resolver.service";
@@ -11,8 +10,7 @@ import {ContactPageComponent} from "./features/contact/contact-page.component";
 
 
 const appRoutes = [
-    {path: 'home', redirectTo: '', pathMatch: 'full'},
-    {path: '', component: HomePageComponent},
+    {path: '', redirectTo: 'landing', pathMatch: 'full'},
     {path: 'landing', component: LandingPageComponent},
     {path: 'contact', component: ContactPageComponent},
     {

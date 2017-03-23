@@ -4,4 +4,6 @@ export class Consts {
     public static readonly LoginProvider: string = 'loginProvider';
     public static readonly Code: string = 'code';
     public static readonly RememberLogin: string = 'rememberLogin';
+
+    public static readonly AccessToken: string = 'accessToken';
 }

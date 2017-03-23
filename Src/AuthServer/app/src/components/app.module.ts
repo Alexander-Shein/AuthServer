@@ -6,7 +6,6 @@ import {AppComponent} from "./app.component";
 import {AppRoutingModule} from "./app-routing.module";
 import {PageNotFoundComponent} from "./common/not-found.component";
 import {HeaderComponent} from "./common/header/header.component";
-import {HomePageComponent} from "./features/home/home-page.component";
 import {LandingPageComponent} from "./features/landing/landing-page.component";
 import {AuthModule} from "./features/auth/auth.module";
 import {SimpleNotificationsModule} from "angular2-notifications";
@@ -32,6 +31,7 @@ import {ExternalProvidersResolver} from "./features/auth/external-log-in/service
 import {BusinessAppByUrlResolver} from "./features/business/business-apps/services/business-app-by-url-resolver.service";
 import {ContactPageComponent} from "./features/contact/contact-page.component";
 import {MessagesService} from "./features/contact/services/messages.service";
+import {Ng2Webstorage} from "ng2-webstorage";
 
 
 @NgModule({
@@ -42,7 +42,8 @@ import {MessagesService} from "./features/contact/services/messages.service";
         AuthModule,
         BusinessModule,
         AppRoutingModule,
-        SimpleNotificationsModule.forRoot()
+        SimpleNotificationsModule.forRoot(),
+        Ng2Webstorage.forRoot({ prefix: 'au', separator: '-' })
     ],
     declarations: [
         AppComponent,
@@ -50,7 +51,6 @@ import {MessagesService} from "./features/contact/services/messages.service";
         PageNotFoundComponent,
         ErrorPageComponent,
         HeaderComponent,
-        HomePageComponent,
         LandingPageComponent,
         ContactPageComponent,
         SpinnerComponent,
@@ -74,6 +74,6 @@ import {MessagesService} from "./features/contact/services/messages.service";
         ExternalProvidersResolver,
         MessagesService
     ],
-    bootstrap: [ AppComponent ]
+    bootstrap: [ AppComponent, ConfirmationDialogComponent ]
 })
 export class AppModule { }
