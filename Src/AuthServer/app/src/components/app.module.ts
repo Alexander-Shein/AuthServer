@@ -32,6 +32,7 @@ import {BusinessAppByUrlResolver} from "./features/business/business-apps/servic
 import {ContactPageComponent} from "./features/contact/contact-page.component";
 import {MessagesService} from "./features/contact/services/messages.service";
 import {Ng2Webstorage} from "ng2-webstorage";
+import {LoggedInGuard} from "./features/auth/services/logged-in.guard";
 
 
 @NgModule({
@@ -72,7 +73,8 @@ import {Ng2Webstorage} from "ng2-webstorage";
         ExternalProvidersService,
         UsersService,
         ExternalProvidersResolver,
-        MessagesService
+        MessagesService,
+        LoggedInGuard
     ],
     bootstrap: [ AppComponent, ConfirmationDialogComponent ]
 })

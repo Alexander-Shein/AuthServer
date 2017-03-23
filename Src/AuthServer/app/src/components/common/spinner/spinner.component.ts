@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {SpinnerService} from './services/spinner.service';
+import {Component} from "@angular/core";
+import {SpinnerService} from "./services/spinner.service";
 
 
 @Component({

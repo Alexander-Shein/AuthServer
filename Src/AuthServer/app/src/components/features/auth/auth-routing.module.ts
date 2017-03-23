@@ -15,6 +15,7 @@ import {ExternalProvidersSettingsResolver} from "./external-log-in/services/exte
 import {BusinessAppByUrlResolver} from "../business/business-apps/services/business-app-by-url-resolver.service";
 import {LogOutPageComponent} from "./log-out/log-out-page.component";
 import {ExternalLogInCallbackPageComponent} from "./external-log-in/external-log-in-callback-page.component";
+import {LoggedInGuard} from "./services/logged-in.guard";
 
 
 const appRoutes: Routes = [
@@ -37,9 +38,9 @@ const appRoutes: Routes = [
     },
     {path: 'forgot-password', component: ForgotPasswordPageComponent},
     {path: 'reset-password', component: ResetPasswordPageComponent},
-    {path: 'change-password', component: ChangePasswordPageComponent},
-    {path: 'add-password', component: AddPasswordPageComponent},
-    {path: 'add-phone', component: AddPhonePageComponent},
+    {path: 'change-password', component: ChangePasswordPageComponent, canActivate: [LoggedInGuard]},
+    {path: 'add-password', component: AddPasswordPageComponent, canActivate: [LoggedInGuard]},
+    {path: 'add-phone', component: AddPhonePageComponent, canActivate: [LoggedInGuard]},
     {path: 'email-confirmation', component: EmailConfirmationPageComponent},
     {
         path: 'two-factor',
@@ -55,7 +56,8 @@ const appRoutes: Routes = [
         resolve:
         {
             externalProvidersSettings: ExternalProvidersSettingsResolver
-        }
+        },
+        canActivate: [LoggedInGuard]
     },
     {path: 'external-log-in-callback', component: ExternalLogInCallbackPageComponent}
 ];
