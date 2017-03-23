@@ -8,10 +8,11 @@
 
     <div class="row justify-content-center" *ngIf="app.isLocalAccountEnabled">
         <form class="col-12 col-md-6 col-lg-5 col-xl-4 log-in-form" (ngSubmit)="onSubmit()">
+
             <div class="row">
-                <md-icon color="primary" class="col-1 mt-3">perm_identity</md-icon>
-                <div class="col-11">
-                    <md-input-container class="au-input">
+                <md-icon color="primary" class="col-auto mt-3 ml-3">perm_identity</md-icon>
+                <div class="col">
+                    <md-input-container class="w-100">
                         <input
                                 mdInput
                                 #email
@@ -27,9 +28,9 @@
             </div>
 
             <div class="row">
-                <md-icon color="primary" class="col-1 mt-3">lock_open</md-icon>
-                <div class="col-11">
-                    <md-input-container class="au-input">
+                <md-icon color="primary" class="col-auto mt-3 ml-3">lock_open</md-icon>
+                <div class="col">
+                    <md-input-container class="w-100">
                         <input
                                 mdInput
                                 #password
@@ -45,7 +46,7 @@
             </div>
 
             <div class="row mt-2">
-                <div class="col-8 mt-2 pl-3">
+                <div class="col">
                     <div *ngIf="app.allowRememberLogIn">
                         <md-checkbox
                                 color="primary"
@@ -53,8 +54,8 @@
                                 [(ngModel)]="logIn.rememberLogin">remember me</md-checkbox>
                     </div>
                 </div>
-                <div class="col-4">
-                    <button md-raised-button color="primary" class="float-right">log in</button>
+                <div class="col-auto text-right mr-3">
+                    <button md-raised-button color="primary">log in</button>
                 </div>
             </div>
 

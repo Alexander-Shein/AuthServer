@@ -39,12 +39,13 @@ export class EditBusinessAppPageComponent extends BaseComponent implements OnIni
             });
     }
 
-    public addExternalProvider(externalProvider: ExternalProvider): void {
+    public addExternalProvider(externalProvider: ExternalProvider): boolean {
         let array = this.externalProviders,
             index = array.indexOf(externalProvider);
 
         array.splice(index, 1);
         this.vm.externalProviders.push(externalProvider);
+        return false;
     }
 
     public removeExternalProvider(externalProvider: ExternalProvider): void {

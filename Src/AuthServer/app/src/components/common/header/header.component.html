@@ -1,10 +1,30 @@
 <md-toolbar *ngIf="display">
-    <button
-            *ngFor="let menuItem of (isLoggedId ? loggedInMenuItems : ghostMenuItems)"
-            md-button
-            [routerLink]="[menuItem.router]"
-            [routerLinkActive]="'active'">
-        <md-icon *ngIf="menuItem.icon">{{menuItem.icon}}</md-icon>
-        <span>{{menuItem.name}}</span>
-    </button>
+
+    <div class="hidden-xs-down">
+        <button
+                *ngFor="let menuItem of (isLoggedId ? loggedInMenuItems : ghostMenuItems)"
+                md-button
+                [routerLink]="[menuItem.router]"
+                [routerLinkActive]="'active'">
+            <md-icon *ngIf="menuItem.icon">{{menuItem.icon}}</md-icon>
+            <span>{{menuItem.name}}</span>
+        </button>
+    </div>
+
+    <div class="hidden-sm-up">
+        <button md-icon-button [mdMenuTriggerFor]="menu">
+            <md-icon>more_vert</md-icon>
+        </button>
+        <md-menu #menu="mdMenu">
+            <button
+                    *ngFor="let menuItem of (isLoggedId ? loggedInMenuItems : ghostMenuItems)"
+                    md-menu-item
+                    [routerLink]="[menuItem.router]"
+                    [routerLinkActive]="'active'">
+                <md-icon *ngIf="menuItem.icon">{{menuItem.icon}}</md-icon>
+                <span>{{menuItem.name}}</span>
+            </button>
+        </md-menu>
+    </div>
+
 </md-toolbar>

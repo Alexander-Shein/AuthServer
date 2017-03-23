@@ -7,54 +7,75 @@
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-12 col-lg-6 col-xl-5">
+        <div class="col-12 col-md-6 col-lg-5 col-xl-4">
+                <div class="row">
+                    <md-icon color="primary" class="col-auto ml-2">lock</md-icon>
+                    <md-checkbox
+                            class="col"
+                            labelPosition="before"
+                            color="primary"
+                            [disabled]="true"
+                            [checked]="vm.isLocalAccountEnabled">
+                        <span>Is email/password accounts enabled</span>
+                    </md-checkbox>
+                </div>
 
-            <div class="row pt-4">
-                <md-icon color="primary" class="col-1">lock</md-icon>
-                <md-checkbox
-                        class="col-11"
-                        labelPosition="before"
-                        color="primary"
-                        [disabled]="true"
-                        [checked]="vm.isLocalAccountEnabled">
-                    <span>Is local email/password accounts enabled</span>
-                </md-checkbox>
-            </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <strong>Enabled external log ins:</strong>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <md-chip-list class="col-12">
+                                <md-chip *ngFor="let sn of vm.externalProviders" (click)="removeExternalProvider(sn)">{{sn.displayName}}</md-chip>
+                            </md-chip-list>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="row pt-4">
-                <md-icon color="primary" class="col-1">plus_one</md-icon>
-                <span class="col-11">Enabled external log ins:</span>
-                <md-chip-list class="offset-1 col-11">
-                    <md-chip *ngFor="let sn of vm.externalProviders" (click)="removeExternalProvider(sn)">{{sn.displayName}}</md-chip>
-                </md-chip-list>
-            </div>
+                <div class="row pt-3">
+                    <md-icon color="primary" class="col-auto ml-2">link</md-icon>
+                    <div class="col">
+                        <div class="row">
+                            <span class="col">Redirect urls:</span>
+                        </div>
+                        <div class="row">
+                            <span class="col-12" *ngFor="let url of vm.redirectUrls"><small>{{url}}</small></span>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="row pt-4">
-                <md-icon color="primary" class="col-1">link</md-icon>
-                <span class="col-11">Redirect urls:</span>
-                <span class="offset-1 col-11" *ngFor="let url of vm.redirectUrls"><small>{{url}}</small></span>
-            </div>
+                <div class="row">
+                    <div class="col text-center">
+                        <strong>Credentials:</strong>
+                    </div>
+                </div>
 
-            <div class="row pt-4">
-                <md-icon color="primary" class="col-1">security</md-icon>
-                <span class="col-11">Credentials:</span>
-                <span class="offset-1 col-11">Id: <strong>{{vm.appCredentials.id}}</strong></span>
-                <span class="offset-1 col-11">Secret: <strong>{{vm.appCredentials.secret}}</strong></span>
-            </div>
+                <div class="row">
+                    <md-icon color="primary" class="col-auto ml-2">security</md-icon>
+                    <div class="col">
+                        <div class="row">
+                            <span class="col">Id: <strong>{{vm.appCredentials.id}}</strong></span>
+                            <span class="col">Secret: <strong>{{vm.appCredentials.secret}}</strong></span>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="row pt-4">
-                <md-icon color="primary" class="col-1">people</md-icon>
-                <span class="col-11">Users count:</span>
-                <span class="offset-1 col-11"><strong>{{vm.usersCount | number}}</strong></span>
-            </div>
+                <div class="row">
+                    <md-icon color="primary" class="col-auto ml-2">people</md-icon>
+                    <div class="col">
+                        <span>Users count: <strong>{{vm.usersCount | number}}</strong></span>
+                    </div>
+                </div>
 
-            <div class="col-12 text-right mt-2">
-                <button md-button color="primary" (click)="removeBusinessApp()">remove</button>
-                <button md-raised-button color="primary" [routerLink]="['edit']">edit</button>
-            </div>
-
-            <div class="col-12">
-                <a [routerLink]="['/dashboard']">Back</a>
+            <div class="row mt-2">
+                <div class="col-12 text-right mr-3">
+                    <button md-button color="primary" (click)="removeBusinessApp()">remove</button>
+                    <button md-button [routerLink]="['/dashboard']">back</button>
+                    <button md-raised-button color="primary" [routerLink]="['edit']">edit</button>
+                </div>
             </div>
         </div>
 

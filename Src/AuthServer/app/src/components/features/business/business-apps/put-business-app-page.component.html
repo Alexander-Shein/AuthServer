@@ -7,7 +7,7 @@
     </div>
 
     <div class="row justify-content-center">
-        <form class="col-12 col-lg-6 col-xl-5" (submit)="save()">
+        <form class="col-12 col-md-6 col-lg-5 col-xl-4" (submit)="save()">
             <div class="row">
                 <div class="col-12">
                     <md-input-container class="w-100">
@@ -24,53 +24,28 @@
                     </md-input-container>
                 </div>
             </div>
-            <div class="row pt-4">
-                    <md-icon color="primary" class="col-1">lock</md-icon>
-                    <md-checkbox
-                            class="col-11"
-                            labelPosition="before"
-                            color="primary"
-                            name="isLocalAccountEnabled"
-                            [(ngModel)]="vm.isLocalAccountEnabled">
-                        <span>Enable local email/password accounts</span>
-                    </md-checkbox>
-            </div>
-            <div class="row pt-4">
-                <md-icon color="primary" class="col-1">power_settings_new</md-icon>
+            <div class="row">
                 <md-checkbox
-                        class="col-11"
-                        labelPosition="before"
+                        class="col"
+                        color="primary"
+                        name="isLocalAccountEnabled"
+                        [(ngModel)]="vm.isLocalAccountEnabled">
+                    <span>Enable email/password accounts</span>
+                </md-checkbox>
+            </div>
+            <div class="row">
+                <md-checkbox
+                        class="col"
                         color="primary"
                         name="isActive"
                         [(ngModel)]="vm.isActive">
                     <span>Is app active</span>
                 </md-checkbox>
             </div>
-            <div class="row pt-4">
-                <md-icon color="primary" class="col-1">plus_one</md-icon>
-                <md-select
-                        *ngIf="externalProviders.length"
-                        class="col-11"
-                        placeholder="Add external log in"
-                        name="externalLogIns"
-                        (change)="addExternalProvider($event.value)">
-                    <md-option *ngFor="let pr of externalProviders" [value]="pr">
-                        {{pr.displayName}}
-                    </md-option>
-                </md-select>
-                <p class="col-11" *ngIf="!externalProviders.length"><small>All external providers are enabled.</small></p>
-                <md-chip-list class="offset-1 col-11 pt-1">
-                    <md-chip
-                            *ngFor="let sn of vm.externalProviders"
-                            color="primary"
-                            class="au-external-provider-chip"
-                            (click)="removeExternalProvider(sn)"
-                    >{{sn.displayName}} &#10006;</md-chip>
-                </md-chip-list>
-            </div>
-            <div class="row pt-4">
-                <md-icon color="primary" class="col-1">link</md-icon>
-                <div class="col-11">
+
+            <div class="row">
+                <md-icon color="primary" class="col-auto pl-2 mt-3">link</md-icon>
+                <div class="col">
                     <md-input-container class="w-100">
                         <input
                                 mdInput
@@ -84,14 +59,18 @@
                         <md-hint align="end">{{redirectUrl.value.length}} / 100</md-hint>
                     </md-input-container>
                 </div>
-
             </div>
-            <div class="row pt-4">
-                <md-icon color="primary" class="col-1">security</md-icon>
-                <p class="col-11">Credentials:</p>
-                <div class="offset-1 col-11">
+
+            <div class="row">
+                <div class="col-12 text-center">
+                    <strong>Credentials:</strong>
+                </div>
+            </div>
+            <div class="row">
+                <md-icon color="primary" class="col-auto pl-2 mt-3">security</md-icon>
+                <div class="col">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col">
                             <md-input-container class="w-100">
                                 <input
                                         mdInput
@@ -105,7 +84,7 @@
                                 <md-hint align="end">{{id.value.length}} / 100</md-hint>
                             </md-input-container>
                         </div>
-                        <div class="col-6">
+                        <div class="col">
                             <md-input-container class="w-100">
                                 <input
                                         mdInput
@@ -123,15 +102,42 @@
                 </div>
             </div>
 
-            <div class="col-12 text-right mt-2">
-                <button md-raised-button color="primary">save</button>
+            <div class="row pt-4">
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <md-select
+                                    class="w-100"
+                                    *ngIf="externalProviders.length"
+                                    placeholder="Add external log in"
+                                    (change)="addExternalProvider($event.value)">
+                                <md-option *ngFor="let pr of externalProviders" [value]="pr">
+                                    {{pr.displayName}}
+                                </md-option>
+                            </md-select>
+                        </div>
+                    </div>
+                    <div class="row pt-1">
+                        <div class="col-12" *ngIf="!externalProviders.length"><small>All external providers are enabled.</small></div>
+                        <md-chip-list class="col-12">
+                            <md-chip
+                                    *ngFor="let sn of vm.externalProviders"
+                                    color="primary"
+                                    class="au-external-provider-chip"
+                                    (click)="removeExternalProvider(sn)"
+                            >{{sn.displayName}} &#10006;</md-chip>
+                        </md-chip-list>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-12">
-                <a [routerLink]="['/dashboard']">Back</a>
+            <div class="row mt-2">
+                <div class="col-12 text-right mr-3">
+                    <button md-button [routerLink]="['/dashboard']">back</button>
+                    <button md-raised-button color="primary">save</button>
+                </div>
             </div>
         </form>
-
     </div>
 
 </div>
