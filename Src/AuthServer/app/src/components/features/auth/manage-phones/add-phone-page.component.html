@@ -10,7 +10,7 @@
         <div class="col-12 col-md-6 col-lg-5 col-xl-4">
             <form class="send-code-form row" (ngSubmit)="sendCode()" *ngIf="!isCodeSent">
                 <div class="col-12">
-                    <md-input-container class="au-input">
+                    <md-input-container class="w-100">
                         <input
                                 mdInput
                                 #phoneNumber
@@ -35,7 +35,7 @@
 
             <form class="verify-code-form row" (ngSubmit)="verifyCode()" *ngIf="isCodeSent">
                 <div class="col-12">
-                    <md-input-container class="au-input">
+                    <md-input-container class="w-100">
                         <input
                                 mdInput
                                 #code

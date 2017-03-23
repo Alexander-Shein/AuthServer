@@ -73,9 +73,12 @@
             <div class="row mt-2">
                 <div class="col-12 text-right mr-3">
                     <button md-button color="primary" (click)="removeBusinessApp()">remove</button>
-                    <button md-button [routerLink]="['/dashboard']">back</button>
                     <button md-raised-button color="primary" [routerLink]="['edit']">edit</button>
                 </div>
+            </div>
+
+            <div class="row mt-2">
+                <a [routerLink]="['/dashboard']" class="col-12">back</a>
             </div>
         </div>
 
