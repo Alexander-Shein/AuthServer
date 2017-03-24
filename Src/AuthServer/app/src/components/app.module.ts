@@ -1,7 +1,7 @@
 import {NgModule} from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";
 import {FormsModule} from "@angular/forms";
-import {MaterialModule}   from "@angular/material";
+import {MaterialModule, MdDialogModule}   from "@angular/material";
 import {AppComponent} from "./app.component";
 import {AppRoutingModule} from "./app-routing.module";
 import {PageNotFoundComponent} from "./common/not-found.component";
@@ -33,6 +33,7 @@ import {ContactPageComponent} from "./features/contact/contact-page.component";
 import {MessagesService} from "./features/contact/services/messages.service";
 import {Ng2Webstorage} from "ng2-webstorage";
 import {LoggedInGuard} from "./features/auth/services/logged-in.guard";
+import {JwtService} from "./features/auth/services/jwt.service";
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import {LoggedInGuard} from "./features/auth/services/logged-in.guard";
         BrowserModule,
         FormsModule,
         MaterialModule,
+        MdDialogModule,
         AuthModule,
         BusinessModule,
         AppRoutingModule,
@@ -74,8 +76,10 @@ import {LoggedInGuard} from "./features/auth/services/logged-in.guard";
         UsersService,
         ExternalProvidersResolver,
         MessagesService,
-        LoggedInGuard
+        LoggedInGuard,
+        JwtService
     ],
-    bootstrap: [ AppComponent, ConfirmationDialogComponent ]
+    entryComponents: [ ConfirmationDialogComponent ],
+    bootstrap: [ AppComponent ]
 })
 export class AppModule { }

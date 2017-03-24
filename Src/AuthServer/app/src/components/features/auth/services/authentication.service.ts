@@ -46,11 +46,13 @@ export class AuthenticationService implements IAuthenticationService {
     }
 
     public logIn(logIn:LogIn): Promise<LogInResult> {
+        let token = 'eyJhbGciOiJSUzI1NiIsImtpZCI6ImE3YTI4NzJkZDk3ZWNiOTIxNjk0NzdhNWUzMGNmODIzIiwidHlwIjoiSldUIn0.eyJuYmYiOjE0OTAzNjI4NzgsImV4cCI6MTQ5MDM2NjQ3OCwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MDAwIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6NTAwMC9yZXNvdXJjZXMiLCJhcGkxIl0sImNsaWVudF9pZCI6Im12YyIsInN1YiI6Ijg3MDliZWVlLTQxYzEtNDE0Ni1hZTQyLTdiYTQ0Zjc5ODU4ZiIsImF1dGhfdGltZSI6MTQ5MDM2Mjg3NSwiaWRwIjoibG9jYWwiLCJzY29wZSI6WyJvcGVuaWQiLCJwcm9maWxlIiwiYXBpMSIsIm9mZmxpbmVfYWNjZXNzIl0sImFtciI6WyJwd2QiXX0.T4P5Q5duc53U1VXvTCev0aKu-jJy8NWXEkoo35piEWBTtZd98R6DHu0cqJdmpYY5dzt3muT1vYguznUhnoqaaL7D9YFu_pVOgy9dFHItPqJN5jTv44483rE2gNgJzuD4rJPyNM9XDud6G3WhSeV0dNuQmi4-Nt3OvKYJv-FLfKKSIkWWNP8ko81OU5CRED-f2xufO-AT5hcpOyYMfNyiyH21u4DNLDfpN0CRu2mz_DuyjRnuFer-vXVBwXwqLRl9lUYcqo3OYBOo24vLrN3IX97P9yWMPh9YsP1dJnC2327jRAI8PKPtQEiE1qK63ItUcztKRtFybd8axey0aFZF2g';
+
         let result: LogInResult = {
             succeeded: false,
             requiresTwoFactor: true,
             token: {
-                accessToken: '12345'
+                accessToken: token
             }
         };
 
