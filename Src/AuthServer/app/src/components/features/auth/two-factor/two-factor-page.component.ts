@@ -6,7 +6,6 @@ import {Consts} from "../../../consts";
 import {TwoFactorService} from "./services/two-factor.service";
 import {Provider} from "./models/provider";
 import {TwoFactorVerification} from "./models/two-factor-verification";
-import {AuthenticationService} from "../services/authentication.service";
 
 
 @Component({
@@ -20,10 +19,9 @@ export class TwoFactorPageComponent extends AuthBaseComponent {
         private twoFactorService: TwoFactorService,
         route: ActivatedRoute,
         router: Router,
-        authenticationService: AuthenticationService,
         spinnerService: SpinnerService
     ) {
-        super(route, router, authenticationService, spinnerService);
+        super(route, router, spinnerService);
     }
 
     public ngOnInit(): void {

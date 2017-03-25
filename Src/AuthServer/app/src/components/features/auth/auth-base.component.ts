@@ -2,7 +2,6 @@ import {SpinnerService} from "../../common/spinner/services/spinner.service";
 import {Router, ActivatedRoute, Params} from "@angular/router";
 import {OnInit} from "@angular/core";
 import {Consts} from "../../consts";
-import {AuthenticationService} from "./services/authentication.service";
 
 
 export abstract class AuthBaseComponent implements OnInit {
@@ -10,7 +9,6 @@ export abstract class AuthBaseComponent implements OnInit {
     constructor(
         protected route: ActivatedRoute,
         protected router: Router,
-        protected authenticationService: AuthenticationService,
         protected spinnerService: SpinnerService
     ) { }
 
@@ -26,18 +24,13 @@ export abstract class AuthBaseComponent implements OnInit {
 
     protected redirectAfterLogin() {
         if (this.redirectUrl) {
-            if (this.redirectUrl.includes('?')) {
-                this.redirectUrl += '$';
-            } else {
-                this.redirectUrl += '?';
-            }
-
-            this.redirectUrl += 'accessToken=' + this.authenticationService.getToken().accessToken;
             window.location.href = this.redirectUrl;
         } else {
             this.router
                 .navigate(['/dashboard'])
-                .then(() => this.spinnerService.hide());
+                .then(() => {
+                    this.spinnerService.hide()
+                });
         }
     }
 

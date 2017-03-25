@@ -5,7 +5,6 @@ import {ResetPassword} from "./models/reset-password";
 import {AuthBaseComponent} from "../auth-base.component";
 import {Consts} from "../../../consts";
 import {PasswordsService} from "./services/passwords.service";
-import {AuthenticationService} from "../services/authentication.service";
 
 
 @Component({
@@ -19,10 +18,9 @@ export class ResetPasswordPageComponent extends AuthBaseComponent {
         private passwordsService: PasswordsService,
         route: ActivatedRoute,
         router: Router,
-        authenticationService: AuthenticationService,
         spinnerService: SpinnerService
     ) {
-        super(route, router, authenticationService, spinnerService);
+        super(route, router, spinnerService);
     }
 
     public ngOnInit(): void {

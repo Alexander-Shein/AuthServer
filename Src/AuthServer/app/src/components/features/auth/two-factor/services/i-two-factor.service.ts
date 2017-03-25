@@ -1,6 +1,5 @@
 import {Provider} from "../models/provider";
 import {TwoFactorVerification} from "../models/two-factor-verification";
-import {Token} from "../../models/token";
 
 
 export interface ITwoFactorService {

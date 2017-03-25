@@ -17,10 +17,10 @@ export class EmailConfirmationPageComponent extends AuthBaseComponent {
     constructor(
         route: ActivatedRoute,
         router: Router,
-        authenticationService: AuthenticationService,
+        private authenticationService: AuthenticationService,
         spinnerService: SpinnerService
     ) {
-        super(route, router, authenticationService, spinnerService);
+        super(route, router, spinnerService);
     }
 
     public loginProvider: string = '';

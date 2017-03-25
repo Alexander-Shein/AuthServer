@@ -4,7 +4,6 @@ import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {AuthBaseComponent} from "../auth-base.component";
 import {OldNewPassword} from "./models/old-new-password";
 import {PasswordsService} from "./services/passwords.service";
-import {AuthenticationService} from "../services/authentication.service";
 
 
 @Component({
@@ -18,10 +17,9 @@ export class ChangePasswordPageComponent extends AuthBaseComponent {
         private passwordsService: PasswordsService,
         route: ActivatedRoute,
         router: Router,
-        authenticationService: AuthenticationService,
         spinnerService: SpinnerService
     ) {
-        super(route, router, authenticationService, spinnerService);
+        super(route, router, spinnerService);
     }
 
     public im: OldNewPassword = new OldNewPassword();

@@ -21,13 +21,6 @@ export class ExternalLogInCallbackPageComponent implements OnInit {
         this.route
             .queryParams
             .subscribe((params: Params) => {
-                let accessToken: string = params[Consts.AccessToken];
-
-                this.authenticationService
-                    .setToken({
-                        accessToken: accessToken
-                    });
-
                 this.router
                     .navigate(['/dashboard']);
             });

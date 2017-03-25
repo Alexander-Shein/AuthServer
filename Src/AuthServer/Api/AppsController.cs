@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Cors;
 
 namespace AuthServer.Api
 {
+    [EnableCors("default")]
     [Route("api/[controller]")]
     public class AppsController : Controller
     {
@@ -50,18 +51,18 @@ namespace AuthServer.Api
 
         [HttpGet]
         [Route("search")]
-        public async Task<AppVm> Get(string returnUrl)
+        public async Task<IActionResult> Get(string returnUrl)
         {
             var vm = await _account.BuildLoginViewModelAsync(returnUrl);
 
-            return new AppVm
+            return Ok(new AppVm
             {
                 Name = vm.Client?.ClientName ?? "AuthGuardian",
                 Key = vm.Client?.ClientId ?? "AuthGuardian",
                 IsLocalAccountEnabled = vm.EnableLocalLogin,
                 AllowRememberLogIn = vm.AllowRememberLogin,
                 ExternalProviders = vm.ExternalProviders
-            };
+            });
         }
 
         // GET api/values/5

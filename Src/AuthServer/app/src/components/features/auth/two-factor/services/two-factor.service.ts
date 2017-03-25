@@ -2,15 +2,12 @@ import {Injectable} from "@angular/core";
 import {Provider} from "../models/provider";
 import {TwoFactorVerification} from "../models/two-factor-verification";
 import {ITwoFactorService} from "./i-two-factor.service";
-import {Token} from "../../models/token";
-import {AuthenticationService} from "../../services/authentication.service";
 
 
 @Injectable()
 export class TwoFactorService implements ITwoFactorService {
 
     constructor(
-        private authenticationService: AuthenticationService
     ) {}
 
     public getTwoFactorProviders(): Promise<Provider[]> {
@@ -35,11 +32,6 @@ export class TwoFactorService implements ITwoFactorService {
     }
 
     public verifyCode(twoFactorVerification: TwoFactorVerification): Promise<void> {
-        this.authenticationService
-            .setToken({
-                accessToken: '312312'
-            });
-
         return Promise.resolve();
     }
 

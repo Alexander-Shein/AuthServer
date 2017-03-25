@@ -1,13 +1,11 @@
 import {Component} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {NotificationsService} from "angular2-notifications";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {AuthBaseComponent} from "../auth-base.component";
 import {ExternalProvidersService} from "./services/external-providers.service";
 import {UserLogInInfo} from "./models/user-log-in-info";
 import {ExternalProvider} from "./models/external-provider";
 import {ExternalProvidersSettings} from "./models/external-providers-settings";
-import {AuthenticationService} from "../services/authentication.service";
 
 
 @Component({
@@ -21,10 +19,9 @@ export class ManageExternalProvidersPageComponent extends AuthBaseComponent {
         private externalProvidersService : ExternalProvidersService,
         route: ActivatedRoute,
         router: Router,
-        authenticationService: AuthenticationService,
         spinnerService: SpinnerService
     ) {
-        super(route, router, authenticationService, spinnerService);
+        super(route, router, spinnerService);
     }
 
     public externalProvidersSettings: ExternalProvidersSettings;

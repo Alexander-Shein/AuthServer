@@ -15,7 +15,6 @@ export abstract class ServiceBase {
     }
 
     protected handleError(error: Response | any) {
-        debugger;
         let errMsg: string;
         if (error instanceof Response) {
             const body = error.json() || '';

@@ -16,12 +16,12 @@ import {ExternalProvider} from "../external-log-in/models/external-provider";
 export class SignUpPageComponent extends AuthBaseComponent {
 
     constructor(
-        authenticationService: AuthenticationService,
+        private authenticationService: AuthenticationService,
         route: ActivatedRoute,
         router: Router,
         spinnerService: SpinnerService
     ) {
-        super(route, router, authenticationService, spinnerService);
+        super(route, router, spinnerService);
     }
 
     public ngOnInit(): void {

@@ -19,10 +19,10 @@ export class LogInPageComponent extends AuthBaseComponent {
     constructor(
         route: ActivatedRoute,
         router: Router,
-        authenticationService: AuthenticationService,
+        private authenticationService: AuthenticationService,
         spinnerService: SpinnerService
     ) {
-        super(route, router, authenticationService, spinnerService);
+        super(route, router, spinnerService);
     }
 
     public ngOnInit(): void {
@@ -43,8 +43,9 @@ export class LogInPageComponent extends AuthBaseComponent {
 
         this.authenticationService
             .logIn(this.logIn)
-            .then((result: LogInResult) => this.handle(result))
-            .catch(() => this.spinnerService.hide());
+            .subscribe(
+                (result: LogInResult) => this.handle(result),
+                () => this.spinnerService.hide());
     }
 
     public externalLogIn(externalProvider: ExternalProvider): void {
@@ -57,23 +58,20 @@ export class LogInPageComponent extends AuthBaseComponent {
     }
 
     private handle(result: LogInResult): void {
-        if (result.succeeded) {
-            this.redirectAfterLogin();
-        }
-
         if (result.requiresTwoFactor) {
             this.router
                 .navigate(['/two-factor',
-                    {
-                        rememberLogin: this.logIn.rememberLogin
-                    }],
+                        {
+                            rememberLogIn: this.logIn.rememberLogIn
+                        }],
                     {
                         queryParams: {
                             redirectUrl: this.redirectUrl
                         }
-                    });
+                    })
+                .then(() => this.spinnerService.hide());
+        } else {
+            this.redirectAfterLogin();
         }
-
-        this.spinnerService.hide();
     }
 }

@@ -1,29 +1,37 @@
 import {Injectable, EventEmitter} from "@angular/core";
+import {Http} from '@angular/http';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
 import {IAuthenticationService} from "./i-authentication.service";
 import {LogIn} from "../models/log-in";
 import {LogInResult} from "../models/log-in-result";
 import {ExternalLogIn} from "../models/external-log-in";
 import {SignUp} from "../models/sign-up";
-import {Http} from "@angular/http";
 import {LocalStorageService} from "ng2-webstorage";
 import {Consts} from "../../../consts";
-import {Token} from "../models/token";
+import {ServiceBase} from "../../../common/base.service";
+import {NotificationsService} from "angular2-notifications";
 
 
 @Injectable()
-export class AuthenticationService implements IAuthenticationService {
+export class AuthenticationService extends ServiceBase implements IAuthenticationService {
 
     constructor(
         private http: Http,
-        private localStorageService: LocalStorageService)
+        private localStorageService: LocalStorageService,
+        notificationsService: NotificationsService)
     {
-        localStorageService
-            .observe(Consts.AccessToken)
-            .subscribe((value: string) => this.setIsLoggedIn(!!value));
+        super(notificationsService);
 
-        this.loggedIn = !!this.localStorageService.retrieve(Consts.AccessToken);
+        localStorageService
+            .observe(Consts.IsLoggedIn)
+            .subscribe((value: boolean) => this.setIsLoggedIn(value));
+
+        this.loggedIn = this.localStorageService.retrieve(Consts.IsLoggedIn);
     }
 
+    private readonly apiUrl: string = 'http://localhost:5000/api/auth/';
     private loggedIn: boolean;
     private isLoggedInEventEmitter: EventEmitter<boolean> = new EventEmitter();
 
@@ -35,32 +43,20 @@ export class AuthenticationService implements IAuthenticationService {
         return this.isLoggedInEventEmitter;
     }
 
-    public getToken(): Token {
-        return {
-            accessToken: this.localStorageService.retrieve(Consts.AccessToken)
-        };
-    }
+    public logIn(logIn:LogIn): Observable<LogInResult> {
 
-    public setToken(token: Token): void {
-        this.localStorageService.store(Consts.AccessToken, token.accessToken);
-    }
+        let result = this.http
+            .post(this.apiUrl + 'log-in', logIn)
+            .map((res) => this.extractData(res));
 
-    public logIn(logIn:LogIn): Promise<LogInResult> {
-        let token = 'eyJhbGciOiJSUzI1NiIsImtpZCI6ImE3YTI4NzJkZDk3ZWNiOTIxNjk0NzdhNWUzMGNmODIzIiwidHlwIjoiSldUIn0.eyJuYmYiOjE0OTAzNjI4NzgsImV4cCI6MTQ5MDM2NjQ3OCwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MDAwIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6NTAwMC9yZXNvdXJjZXMiLCJhcGkxIl0sImNsaWVudF9pZCI6Im12YyIsInN1YiI6Ijg3MDliZWVlLTQxYzEtNDE0Ni1hZTQyLTdiYTQ0Zjc5ODU4ZiIsImF1dGhfdGltZSI6MTQ5MDM2Mjg3NSwiaWRwIjoibG9jYWwiLCJzY29wZSI6WyJvcGVuaWQiLCJwcm9maWxlIiwiYXBpMSIsIm9mZmxpbmVfYWNjZXNzIl0sImFtciI6WyJwd2QiXX0.T4P5Q5duc53U1VXvTCev0aKu-jJy8NWXEkoo35piEWBTtZd98R6DHu0cqJdmpYY5dzt3muT1vYguznUhnoqaaL7D9YFu_pVOgy9dFHItPqJN5jTv44483rE2gNgJzuD4rJPyNM9XDud6G3WhSeV0dNuQmi4-Nt3OvKYJv-FLfKKSIkWWNP8ko81OU5CRED-f2xufO-AT5hcpOyYMfNyiyH21u4DNLDfpN0CRu2mz_DuyjRnuFer-vXVBwXwqLRl9lUYcqo3OYBOo24vLrN3IX97P9yWMPh9YsP1dJnC2327jRAI8PKPtQEiE1qK63ItUcztKRtFybd8axey0aFZF2g';
-
-        let result: LogInResult = {
-            succeeded: false,
-            requiresTwoFactor: true,
-            token: {
-                accessToken: token
+        result.subscribe((res: LogInResult) => {
+            if (!res.requiresTwoFactor) {
+                this.setIsLoggedIn(true);
+                this.localStorageService.store(Consts.IsLoggedIn, true);
             }
-        };
+        });
 
-        if (result.succeeded) {
-            this.setToken(result.token);
-        }
-
-        return Promise.resolve<LogInResult>(result);
+        return result.catch((error) => this.handleError(error));
     }
 
     public externalLogIn(externalLogIn: ExternalLogIn): void {
@@ -68,23 +64,15 @@ export class AuthenticationService implements IAuthenticationService {
     }
 
     public signUp(signUp: SignUp): Promise<void> {
-        this.setToken({
-            accessToken: '312312'
-        });
-
         return Promise.resolve();
     }
 
     public externalSignUp(signUp: SignUp): Promise<void> {
-        this.setToken({
-                accessToken: '312312'
-            });
-
         return Promise.resolve();
     }
 
     public logOut(): void {
-        this.localStorageService.clear(Consts.AccessToken);
+        this.localStorageService.clear(Consts.IsLoggedIn);
     }
 
     private setIsLoggedIn(value: boolean): void {
