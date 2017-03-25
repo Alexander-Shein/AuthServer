@@ -1,6 +1,5 @@
 import {Component} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {NotificationsService} from "angular2-notifications";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {AuthBaseComponent} from "../auth-base.component";
 import {PhonesService} from "./services/phones.service";
@@ -20,10 +19,9 @@ export class AddPhonePageComponent extends AuthBaseComponent {
         route: ActivatedRoute,
         router: Router,
         authenticationService: AuthenticationService,
-        notificationsService: NotificationsService,
         spinnerService: SpinnerService
     ) {
-        super(route, router, authenticationService, notificationsService, spinnerService);
+        super(route, router, authenticationService, spinnerService);
     }
 
     public im: NewPhone = new NewPhone();
@@ -36,7 +34,7 @@ export class AddPhonePageComponent extends AuthBaseComponent {
                 this.isCodeSent = true;
                 this.spinnerService.hide();
             })
-            .catch((error: any) => this.handleError(error));
+            .catch(() => this.spinnerService.hide());
     }
 
     public verifyCode(): void {
@@ -45,6 +43,6 @@ export class AddPhonePageComponent extends AuthBaseComponent {
         this.phonesService
             .add(this.im)
             .then(() => this.redirectAfterLogin())
-            .catch((error: any) => this.handleError(error));
+            .catch(() => this.spinnerService.hide());
     }
 }

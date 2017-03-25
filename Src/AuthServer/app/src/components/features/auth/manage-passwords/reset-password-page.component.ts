@@ -1,7 +1,6 @@
 import {Component} from "@angular/core";
 import {ActivatedRoute, Router, Params} from "@angular/router";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
-import {NotificationsService} from "angular2-notifications";
 import {ResetPassword} from "./models/reset-password";
 import {AuthBaseComponent} from "../auth-base.component";
 import {Consts} from "../../../consts";
@@ -21,10 +20,9 @@ export class ResetPasswordPageComponent extends AuthBaseComponent {
         route: ActivatedRoute,
         router: Router,
         authenticationService: AuthenticationService,
-        notificationsService: NotificationsService,
         spinnerService: SpinnerService
     ) {
-        super(route, router, authenticationService, notificationsService, spinnerService);
+        super(route, router, authenticationService, spinnerService);
     }
 
     public ngOnInit(): void {
@@ -45,7 +43,7 @@ export class ResetPasswordPageComponent extends AuthBaseComponent {
         this.passwordsService
             .resetPassword(this.im)
             .then(() => this.handle())
-            .catch((error) => this.handleError(error));
+            .catch(() => this.spinnerService.hide());
     }
 
     private handle(): void {

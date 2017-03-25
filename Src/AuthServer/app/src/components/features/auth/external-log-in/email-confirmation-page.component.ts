@@ -2,7 +2,6 @@ import {Component} from "@angular/core";
 import {ActivatedRoute, Router, Params} from "@angular/router";
 import {AuthenticationService} from "../services/authentication.service";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
-import {NotificationsService} from "angular2-notifications";
 import {SignUp} from "../models/sign-up";
 import {AuthBaseComponent} from "../auth-base.component";
 import {Consts} from "../../../consts";
@@ -19,10 +18,9 @@ export class EmailConfirmationPageComponent extends AuthBaseComponent {
         route: ActivatedRoute,
         router: Router,
         authenticationService: AuthenticationService,
-        notificationsService: NotificationsService,
         spinnerService: SpinnerService
     ) {
-        super(route, router, authenticationService, notificationsService, spinnerService);
+        super(route, router, authenticationService, spinnerService);
     }
 
     public loginProvider: string = '';
@@ -46,6 +44,6 @@ export class EmailConfirmationPageComponent extends AuthBaseComponent {
         this.authenticationService
             .externalSignUp(this.signUp)
             .then(() => this.redirectAfterLogin())
-            .catch((error) => this.handleError(error));
+            .catch(() => this.spinnerService.hide());
     }
 }

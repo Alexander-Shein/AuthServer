@@ -9,6 +9,7 @@ using IdentityServer4.Stores;
 using IdentityServer4.Quickstart.UI;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -55,8 +56,8 @@ namespace AuthServer.Api
 
             return new AppVm
             {
-                Name = vm.Client?.ClientName ?? "my account",
-                Key = vm.Client?.ClientId ?? "my-account",
+                Name = vm.Client?.ClientName ?? "AuthGuardian",
+                Key = vm.Client?.ClientId ?? "AuthGuardian",
                 IsLocalAccountEnabled = vm.EnableLocalLogin,
                 AllowRememberLogIn = vm.AllowRememberLogin,
                 ExternalProviders = vm.ExternalProviders

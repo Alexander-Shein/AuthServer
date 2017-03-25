@@ -21,7 +21,7 @@ export class HeaderComponent implements OnInit {
     public isLoggedId: boolean;
 
     public ghostMenuItems: MenuItem[] = [
-        new MenuItem('my account', 'verified_user', 'landing'),
+        new MenuItem('AuthGuardian', 'verified_user', 'landing'),
         new MenuItem('contact', 'contact_phone', 'contact'),
         new MenuItem('log in', 'lock_outline', 'log-in'),
         new MenuItem('sign up', 'person_add', 'sign-up')

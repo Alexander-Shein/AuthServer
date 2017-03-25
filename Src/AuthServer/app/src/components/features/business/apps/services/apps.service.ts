@@ -1,11 +1,27 @@
 import {Injectable} from "@angular/core";
+import {Http, URLSearchParams} from '@angular/http';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
 import {IAppsService} from "./i-apps.service";
 import {App} from "../models/app";
 import {AppVm} from "../models/app-vm";
+import {Consts} from "../../../../consts";
+import {ServiceBase} from "../../../../common/base.service";
+import {NotificationsService} from "angular2-notifications";
 
 
 @Injectable()
-export class AppsService implements IAppsService {
+export class AppsService extends ServiceBase implements IAppsService {
+
+    constructor (
+        private http: Http,
+        notificationsService: NotificationsService
+    ) {
+        super(notificationsService);
+    }
+
+    private readonly apiUrl: string = 'http://localhost:5000/api/apps/';
 
     public getAll(): Promise<App[]> {
         return new Promise<App[]>((resolve) =>
@@ -102,26 +118,14 @@ export class AppsService implements IAppsService {
         );
     }
 
-    public getByUrl(url: string): Promise<AppVm> {
-        return Promise.resolve(
-            {
-                name: 'my-account',
-                externalProviders: [
-                    {
-                        displayName: 'twitter',
-                        authenticationScheme: 'Twitter'
-                    },
-                    {
-                        displayName: 'facebook',
-                        authenticationScheme: 'Facebook'
-                    },
-                    {
-                        displayName: 'vk',
-                        authenticationScheme: 'Vk'
-                    }],
-                allowRememberLogIn: true,
-                isLocalAccountEnabled: true
-            });
+    public getByUrl(redirectUrl: string): Observable<AppVm> {
+        let params = new URLSearchParams();
+        params.set(Consts.RedirectUrl, redirectUrl);
+
+        return this.http
+                    .get(this.apiUrl + 'search', { search: params })
+                    .map((res) => this.extractData(res))
+                    .catch((error) => this.handleError(error));
     }
 
 }

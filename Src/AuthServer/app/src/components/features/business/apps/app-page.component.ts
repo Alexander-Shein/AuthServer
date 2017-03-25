@@ -5,8 +5,6 @@ import {AppsService} from "./services/apps.service";
 import {MdDialog} from "@angular/material";
 import {ConfirmationDialogComponent} from "../../../common/pop-ups/confirmation-dialog.component";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
-import {NotificationsService} from "angular2-notifications";
-import {BaseComponent} from "../../../common/base.component";
 
 
 @Component({
@@ -14,18 +12,15 @@ import {BaseComponent} from "../../../common/base.component";
     templateUrl: './app-page.component.html',
     styleUrls: ['./app-page.component.scss']
 })
-export class AppPageComponent extends BaseComponent implements OnInit {
+export class AppPageComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
         private appsService: AppsService,
         private dialog: MdDialog,
-        notificationsService: NotificationsService,
-        spinnerService: SpinnerService
-    ) {
-        super(notificationsService, spinnerService);
-    }
+        private spinnerService: SpinnerService
+    ) {}
 
     public vm: App;
 
@@ -51,7 +46,7 @@ export class AppPageComponent extends BaseComponent implements OnInit {
                             .navigate(['dashboard'])
                             .then(() => this.spinnerService.hide());
                     })
-                    .catch((e) => this.handleError(e));
+                    .catch(() => this.spinnerService.hide());
             }
         });
     }

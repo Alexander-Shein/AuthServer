@@ -3,6 +3,7 @@ import {Resolve, RouterStateSnapshot, ActivatedRouteSnapshot} from "@angular/rou
 import {AppsService} from "./apps.service";
 import {AppVm} from "../models/app-vm";
 import {Consts} from "../../../../consts";
+import {Observable} from "rxjs";
 
 
 @Injectable()
@@ -12,7 +13,7 @@ export class AppByUrlResolver implements Resolve<AppVm> {
 
     constructor(private appsService: AppsService) {}
 
-    public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<AppVm> {
+    public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<AppVm> {
         let returnUrl = route.params[Consts.RedirectUrl];
 
         return this.appsService.getByUrl(returnUrl);

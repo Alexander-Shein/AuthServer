@@ -1,6 +1,5 @@
 import {Component} from "@angular/core";
 import {ActivatedRoute, Router, Params} from "@angular/router";
-import {NotificationsService} from "angular2-notifications";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {AuthBaseComponent} from "../auth-base.component";
 import {Consts} from "../../../consts";
@@ -22,10 +21,9 @@ export class TwoFactorPageComponent extends AuthBaseComponent {
         route: ActivatedRoute,
         router: Router,
         authenticationService: AuthenticationService,
-        notificationsService: NotificationsService,
         spinnerService: SpinnerService
     ) {
-        super(route, router, authenticationService, notificationsService, spinnerService);
+        super(route, router, authenticationService, spinnerService);
     }
 
     public ngOnInit(): void {
@@ -56,7 +54,7 @@ export class TwoFactorPageComponent extends AuthBaseComponent {
                 this.isCodeSent = true;
                 this.spinnerService.hide();
             })
-            .catch((error: any) => this.handleError(error));
+            .catch(() => this.spinnerService.hide());
     }
 
     public verifyCode(): void {
@@ -65,6 +63,6 @@ export class TwoFactorPageComponent extends AuthBaseComponent {
         this.twoFactorService
             .verifyCode(this.twoFactorVerification)
             .then(() => this.redirectAfterLogin())
-            .catch((error: any) => this.handleError(error));
+            .catch(() => this.spinnerService.hide());
     }
 }

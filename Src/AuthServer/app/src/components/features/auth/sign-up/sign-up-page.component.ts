@@ -3,7 +3,6 @@ import {SignUp} from "../models/sign-up";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AuthenticationService} from "../services/authentication.service";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
-import {NotificationsService} from "angular2-notifications";
 import {AuthBaseComponent} from "../auth-base.component";
 import {AppVm} from "../../business/apps/models/app-vm";
 import {ExternalProvider} from "../external-log-in/models/external-provider";
@@ -20,10 +19,9 @@ export class SignUpPageComponent extends AuthBaseComponent {
         authenticationService: AuthenticationService,
         route: ActivatedRoute,
         router: Router,
-        notificationsService: NotificationsService,
         spinnerService: SpinnerService
     ) {
-        super(route, router, authenticationService, notificationsService, spinnerService);
+        super(route, router, authenticationService, spinnerService);
     }
 
     public ngOnInit(): void {
@@ -45,7 +43,7 @@ export class SignUpPageComponent extends AuthBaseComponent {
         this.authenticationService
             .signUp(this.signUp)
             .then(() => this.redirectAfterLogin())
-            .catch((error: any) => this.handleError(error));
+            .catch(() => this.spinnerService.hide());
     }
 
     public externalLogIn(externalProvider: ExternalProvider): void {

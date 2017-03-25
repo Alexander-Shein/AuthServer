@@ -4,7 +4,6 @@ import {AuthBaseComponent} from '../auth-base.component';
 import {AuthenticationService} from "../services/authentication.service";
 import {LogIn} from "../models/log-in";
 import {LogInResult} from "../models/log-in-result";
-import {NotificationsService} from "angular2-notifications";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {ExternalProvider} from "../external-log-in/models/external-provider";
 import {AppVm} from "../../business/apps/models/app-vm";
@@ -21,10 +20,9 @@ export class LogInPageComponent extends AuthBaseComponent {
         route: ActivatedRoute,
         router: Router,
         authenticationService: AuthenticationService,
-        notificationsService: NotificationsService,
         spinnerService: SpinnerService
     ) {
-        super(route, router, authenticationService, notificationsService, spinnerService);
+        super(route, router, authenticationService, spinnerService);
     }
 
     public ngOnInit(): void {
@@ -46,7 +44,7 @@ export class LogInPageComponent extends AuthBaseComponent {
         this.authenticationService
             .logIn(this.logIn)
             .then((result: LogInResult) => this.handle(result))
-            .catch((error: any) => this.handleError(error));
+            .catch(() => this.spinnerService.hide());
     }
 
     public externalLogIn(externalProvider: ExternalProvider): void {

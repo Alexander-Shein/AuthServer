@@ -3,8 +3,6 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {App} from "./models/app";
 import {AppsService} from "./services/apps.service";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
-import {NotificationsService} from "angular2-notifications";
-import {BaseComponent} from "../../../common/base.component";
 import {ExternalProvider} from "../../auth/external-log-in/models/external-provider";
 
 
@@ -13,17 +11,14 @@ import {ExternalProvider} from "../../auth/external-log-in/models/external-provi
     templateUrl: './put-app-page.component.html',
     styleUrls: ['./put-app-page.component.scss']
 })
-export class EditAppPageComponent extends BaseComponent implements OnInit {
+export class EditAppPageComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
         private appsService: AppsService,
-        notificationsService: NotificationsService,
-        spinnerService: SpinnerService
-    ) {
-        super(notificationsService, spinnerService);
-    }
+        private spinnerService: SpinnerService
+    ) { }
 
     public vm: App;
     public externalProviders: ExternalProvider[];
@@ -67,7 +62,7 @@ export class EditAppPageComponent extends BaseComponent implements OnInit {
                     .navigate(['/business-apps/' + this.vm.name])
                     .then(() => this.spinnerService.hide());
             })
-            .catch((e) => this.handleError(e));
+            .catch(() => this.spinnerService.hide());
     }
 
     private removeSelectedExternalProviders() {

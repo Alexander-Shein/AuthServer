@@ -1,8 +1,6 @@
 import {Component} from "@angular/core";
 import {Message} from "./models/message";
 import {MessagesService} from "./services/messages.service";
-import {BaseComponent} from "../../common/base.component";
-import {NotificationsService} from "angular2-notifications";
 import {SpinnerService} from "../../common/spinner/services/spinner.service";
 
 
@@ -11,15 +9,12 @@ import {SpinnerService} from "../../common/spinner/services/spinner.service";
     templateUrl: './contact-page.component.html',
     styleUrls: ['./contact-page.component.scss']
 })
-export class ContactPageComponent extends BaseComponent {
+export class ContactPageComponent {
 
     constructor(
         private messagesService: MessagesService,
-        notificationsService: NotificationsService,
-        spinnerService: SpinnerService
-    ) {
-        super(notificationsService, spinnerService);
-    }
+        private spinnerService: SpinnerService
+    ) { }
 
     public im: Message = new Message();
     public isMessageSent: boolean = false;
@@ -36,7 +31,7 @@ export class ContactPageComponent extends BaseComponent {
 
                 this.isMessageSent = true;
             })
-            .catch((e) => this.handleError(e));
+            .catch(() => this.spinnerService.hide());
     }
 
 }

@@ -22,10 +22,9 @@ export class ManageExternalProvidersPageComponent extends AuthBaseComponent {
         route: ActivatedRoute,
         router: Router,
         authenticationService: AuthenticationService,
-        notificationsService: NotificationsService,
         spinnerService: SpinnerService
     ) {
-        super(route, router, authenticationService, notificationsService, spinnerService);
+        super(route, router, authenticationService, spinnerService);
     }
 
     public externalProvidersSettings: ExternalProvidersSettings;
@@ -53,7 +52,7 @@ export class ManageExternalProvidersPageComponent extends AuthBaseComponent {
 
                 this.spinnerService.hide();
             })
-            .catch((e) => this.handleError(e));
+            .catch(() => this.spinnerService.hide());
     }
 
     public linkExternalLogIn(externalProvider: ExternalProvider): void {

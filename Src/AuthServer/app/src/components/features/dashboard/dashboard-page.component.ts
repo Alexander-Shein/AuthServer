@@ -2,7 +2,6 @@ import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
 import {UserSettings} from "../auth/models/user-settings";
 import {SpinnerService} from "../../common/spinner/services/spinner.service";
-import {NotificationsService} from "angular2-notifications";
 import {PhonesService} from "../auth/manage-phones/services/phones.service";
 import {TwoFactorService} from "../auth/two-factor/services/two-factor.service";
 import {App} from "../business/apps/models/app";
@@ -19,7 +18,6 @@ export class DashboardPageComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private notificationsService: NotificationsService,
         private spinnerService: SpinnerService,
         private phonesService: PhonesService,
         private dialog: MdDialog,
@@ -52,20 +50,11 @@ export class DashboardPageComponent implements OnInit {
                         this.userSettings.phoneNumber = '';
                         this.spinnerService.hide();
                     })
-                    .catch((e) => this.handleError(e));
+                    .catch(() => this.spinnerService.hide());
             }
         });
 
         return false;
-    }
-
-    private handleError(error: any): void {
-        let message = error || error.message || '';
-
-        this.notificationsService
-            .error('Failed.', message);
-
-        this.spinnerService.hide();
     }
 
     public toggleTwoFactor(): void {
@@ -87,7 +76,7 @@ export class DashboardPageComponent implements OnInit {
             .then(() => {
                 this.spinnerService.hide();
             })
-            .catch((e) => this.handleError(e));
+            .catch(() => this.spinnerService.hide());
     }
 
 }

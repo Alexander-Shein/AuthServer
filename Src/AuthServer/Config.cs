@@ -96,7 +96,7 @@ namespace IdentityServerWithAspNetIdentity
 
                     RedirectUris = { "http://localhost:7017/callback.html" },
                     PostLogoutRedirectUris = { "http://localhost:7017/index.html" },
-                    AllowedCorsOrigins = { "http://localhost:7017" },
+                    AllowedCorsOrigins = { "http://localhost:7017", "http://localhost:8080" },
 
                     AllowedScopes =
                     {

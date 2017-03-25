@@ -1,7 +1,6 @@
 import {Component} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
-import {NotificationsService} from "angular2-notifications";
 import {AuthBaseComponent} from "../auth-base.component";
 import {OldNewPassword} from "./models/old-new-password";
 import {PasswordsService} from "./services/passwords.service";
@@ -20,10 +19,9 @@ export class ChangePasswordPageComponent extends AuthBaseComponent {
         route: ActivatedRoute,
         router: Router,
         authenticationService: AuthenticationService,
-        notificationsService: NotificationsService,
         spinnerService: SpinnerService
     ) {
-        super(route, router, authenticationService, notificationsService, spinnerService);
+        super(route, router, authenticationService, spinnerService);
     }
 
     public im: OldNewPassword = new OldNewPassword();
@@ -34,7 +32,7 @@ export class ChangePasswordPageComponent extends AuthBaseComponent {
         this.passwordsService
             .changePassword(this.im)
             .then(() => this.redirectAfterLogin())
-            .catch((error: any) => this.handleError(error));
+            .catch(() => this.spinnerService.hide());
     }
 
 }
