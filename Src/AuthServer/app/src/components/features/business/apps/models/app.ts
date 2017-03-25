@@ -1,8 +1,8 @@
 import {AppCredentials} from "./app-credentials";
-import {BusinessAppVm} from "./business-app-vm";
+import {AppVm} from "./app-vm";
 
 
-export class BusinessApp extends BusinessAppVm {
+export class App extends AppVm {
 
     public appCredentials: AppCredentials = new AppCredentials();
     public redirectUrls: string[] = [];

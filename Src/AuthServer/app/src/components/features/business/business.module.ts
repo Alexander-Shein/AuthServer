@@ -3,9 +3,9 @@ import {BrowserModule} from "@angular/platform-browser";
 import {FormsModule} from "@angular/forms";
 import {MaterialModule}   from "@angular/material";
 import {BusinessRoutingModule} from "./business-routing.module";
-import {BusinessAppPageComponent} from "./business-apps/business-app-page.component";
-import {EditBusinessAppPageComponent} from "./business-apps/edit-business-app-page.component";
-import {CreateBusinessAppPageComponent} from "./business-apps/create-business-app-page.component";
+import {AppPageComponent} from "./apps/app-page.component";
+import {EditAppPageComponent} from "./apps/edit-app-page.component";
+import {CreateAppPageComponent} from "./apps/create-app-page.component";
 
 
 @NgModule({
@@ -16,9 +16,9 @@ import {CreateBusinessAppPageComponent} from "./business-apps/create-business-ap
         BusinessRoutingModule
     ],
     declarations: [
-        BusinessAppPageComponent,
-        CreateBusinessAppPageComponent,
-        EditBusinessAppPageComponent
+        AppPageComponent,
+        CreateAppPageComponent,
+        EditAppPageComponent
     ],
     providers: [
     ]

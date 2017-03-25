@@ -21,14 +21,14 @@ import {TwoFactorService} from "./features/auth/two-factor/services/two-factor.s
 import {TwoFactorProvidersResolver} from "./features/auth/two-factor/services/two-factor-providers-resolver.service";
 import {ExternalProvidersSettingsResolver} from "./features/auth/external-log-in/services/external-providers-settings-resolver.service";
 import {ExternalProvidersService} from "./features/auth/external-log-in/services/external-providers.service";
-import {BusinessAppsService} from "./features/business/business-apps/services/business-apps.service";
-import {BusinessAppsResolver} from "./features/business/business-apps/services/business-apps-resolver.service";
+import {AppsService} from "./features/business/apps/services/apps.service";
+import {AppsResolver} from "./features/business/apps/services/apps-resolver.service";
 import {UsersService} from "./features/auth/services/users.service";
 import {BusinessModule} from "./features/business/business.module";
-import {BusinessAppResolver} from "./features/business/business-apps/services/business-app-resolver.service";
+import {AppResolver} from "./features/business/apps/services/app-resolver.service";
 import {ConfirmationDialogComponent} from "./common/pop-ups/confirmation-dialog.component";
 import {ExternalProvidersResolver} from "./features/auth/external-log-in/services/external-providers-resolver.service";
-import {BusinessAppByUrlResolver} from "./features/business/business-apps/services/business-app-by-url-resolver.service";
+import {AppByUrlResolver} from "./features/business/apps/services/app-by-url-resolver.service";
 import {ContactPageComponent} from "./features/contact/contact-page.component";
 import {MessagesService} from "./features/contact/services/messages.service";
 import {Ng2Webstorage} from "ng2-webstorage";
@@ -66,10 +66,10 @@ import {JwtService} from "./features/auth/services/jwt.service";
         UserSettingsResolver,
         PhonesService,
         TwoFactorService,
-        BusinessAppsService,
-        BusinessAppsResolver,
-        BusinessAppResolver,
-        BusinessAppByUrlResolver,
+        AppsService,
+        AppsResolver,
+        AppResolver,
+        AppByUrlResolver,
         TwoFactorProvidersResolver,
         ExternalProvidersSettingsResolver,
         ExternalProvidersService,

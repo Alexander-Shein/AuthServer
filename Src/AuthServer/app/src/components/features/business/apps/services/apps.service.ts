@@ -1,14 +1,14 @@
 import {Injectable} from "@angular/core";
-import {IBusinessAppsService} from "./i-business-apps.service";
-import {BusinessApp} from "../models/business-app";
-import {BusinessAppVm} from "../models/business-app-vm";
+import {IAppsService} from "./i-apps.service";
+import {App} from "../models/app";
+import {AppVm} from "../models/app-vm";
 
 
 @Injectable()
-export class BusinessAppsService implements IBusinessAppsService {
+export class AppsService implements IAppsService {
 
-    public getAll(): Promise<BusinessApp[]> {
-        return new Promise<BusinessApp[]>((resolve) =>
+    public getAll(): Promise<App[]> {
+        return new Promise<App[]>((resolve) =>
             setTimeout(() => resolve([
                 {
                     isActive: true,
@@ -52,8 +52,8 @@ export class BusinessAppsService implements IBusinessAppsService {
         );
     }
 
-    public put(businessApp: BusinessApp): Promise<BusinessApp> {
-        return new Promise<BusinessApp>((resolve) =>
+    public put(app: App): Promise<App> {
+        return new Promise<App>((resolve) =>
             setTimeout(() => resolve({
                 isActive: true,
                 name: name,
@@ -79,8 +79,8 @@ export class BusinessAppsService implements IBusinessAppsService {
         );
     }
 
-    public get(name: string): Promise<BusinessApp> {
-        return new Promise<BusinessApp>((resolve) =>
+    public get(name: string): Promise<App> {
+        return new Promise<App>((resolve) =>
             setTimeout(() => resolve({
                 isActive: true,
                 name: name,
@@ -112,7 +112,7 @@ export class BusinessAppsService implements IBusinessAppsService {
         );
     }
 
-    public getByUrl(url: string): Promise<BusinessAppVm> {
+    public getByUrl(url: string): Promise<AppVm> {
         return Promise.resolve(
             {
                 name: 'my-account',

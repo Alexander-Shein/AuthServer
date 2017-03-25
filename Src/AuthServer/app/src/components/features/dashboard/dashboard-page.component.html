@@ -72,13 +72,13 @@
                 </div>
             </div>
 
-            <div class="row" *ngIf="!businessApps.length">
+            <div class="row" *ngIf="!apps.length">
                 <div class="col-12 text-center">
                     You have no apps yet. Click 'create' button.
                 </div>
             </div>
 
-            <div class="row pt-2 pb-2 au-app-link" *ngFor="let app of businessApps" [routerLink]="['/business-apps/' + app.name]">
+            <div class="row pt-2 pb-2 au-app-link" *ngFor="let app of apps" [routerLink]="['/business-apps/' + app.name]">
                 <md-icon color="primary" class="col-auto ml-2">settings_applications</md-icon>
                 <div class="col">
                     <div class="row">

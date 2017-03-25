@@ -5,7 +5,7 @@ import {AuthenticationService} from "../services/authentication.service";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {NotificationsService} from "angular2-notifications";
 import {AuthBaseComponent} from "../auth-base.component";
-import {BusinessAppVm} from "../../business/business-apps/models/business-app-vm";
+import {AppVm} from "../../business/apps/models/app-vm";
 import {ExternalProvider} from "../external-log-in/models/external-provider";
 
 
@@ -29,14 +29,14 @@ export class SignUpPageComponent extends AuthBaseComponent {
     public ngOnInit(): void {
         this.route
             .data
-            .subscribe((data: {app: BusinessAppVm}) => {
+            .subscribe((data: {app: AppVm}) => {
                 this.app = data.app;
             });
 
         super.ngOnInit();
     }
 
-    public app: BusinessAppVm;
+    public app: AppVm;
     public signUp: SignUp = new SignUp();
 
     public onSubmit(): void {

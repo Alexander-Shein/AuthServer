@@ -84,7 +84,6 @@ namespace IdentityServerWithAspNetIdentity.Controllers
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginInputModel model)
         {
             if (ModelState.IsValid)

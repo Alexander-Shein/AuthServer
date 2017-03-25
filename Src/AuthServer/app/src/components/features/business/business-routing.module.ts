@@ -1,17 +1,17 @@
 import {NgModule} from "@angular/core";
 import {RouterModule, Routes} from "@angular/router";
-import {BusinessAppResolver} from "./business-apps/services/business-app-resolver.service";
-import {EditBusinessAppPageComponent} from "./business-apps/edit-business-app-page.component";
+import {AppResolver} from "./apps/services/app-resolver.service";
+import {EditAppPageComponent} from "./apps/edit-app-page.component";
 import {ExternalProvidersResolver} from "../auth/external-log-in/services/external-providers-resolver.service";
-import {CreateBusinessAppPageComponent} from "./business-apps/create-business-app-page.component";
-import {BusinessAppPageComponent} from "./business-apps/business-app-page.component";
+import {CreateAppPageComponent} from "./apps/create-app-page.component";
+import {AppPageComponent} from "./apps/app-page.component";
 
 
 const appRoutes: Routes = [
 
     {
         path: 'business-apps/create',
-        component: CreateBusinessAppPageComponent,
+        component: CreateAppPageComponent,
         resolve:
             {
                 externalProviders: ExternalProvidersResolver
@@ -19,18 +19,18 @@ const appRoutes: Routes = [
     },
     {
         path: 'business-apps/:name',
-        component: BusinessAppPageComponent,
+        component: AppPageComponent,
         resolve:
             {
-                businessApp: BusinessAppResolver
+                app: AppResolver
             }
     },
     {
         path: 'business-apps/:name/edit',
-        component: EditBusinessAppPageComponent,
+        component: EditAppPageComponent,
         resolve:
             {
-                businessApp: BusinessAppResolver,
+                app: AppResolver,
                 externalProviders: ExternalProvidersResolver
             }
     }

@@ -5,7 +5,7 @@ import {SpinnerService} from "../../common/spinner/services/spinner.service";
 import {NotificationsService} from "angular2-notifications";
 import {PhonesService} from "../auth/manage-phones/services/phones.service";
 import {TwoFactorService} from "../auth/two-factor/services/two-factor.service";
-import {BusinessApp} from "../business/business-apps/models/business-app";
+import {App} from "../business/apps/models/app";
 import {ConfirmationDialogComponent} from "../../common/pop-ups/confirmation-dialog.component";
 import {MdDialog} from "@angular/material";
 
@@ -26,17 +26,17 @@ export class DashboardPageComponent implements OnInit {
         private twoFactorService: TwoFactorService) {}
 
     public userSettings: UserSettings;
-    public businessApps: BusinessApp[];
+    public apps: App[];
 
     public ngOnInit(): void {
         this.route.data
             .subscribe((data:
                             {
                                 userSettings: UserSettings,
-                                businessApps: BusinessApp[]
+                                apps: App[]
                             }) => {
                 this.userSettings = data.userSettings;
-                this.businessApps = data.businessApps;
+                this.apps = data.apps;
             });
     }
 

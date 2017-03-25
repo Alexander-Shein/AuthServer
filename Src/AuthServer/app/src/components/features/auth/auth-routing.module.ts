@@ -12,7 +12,7 @@ import {AddPhonePageComponent} from "./manage-phones/add-phone-page.component";
 import {ManageExternalProvidersPageComponent} from "./external-log-in/manage-external-providers-page.component";
 import {TwoFactorProvidersResolver} from "./two-factor/services/two-factor-providers-resolver.service";
 import {ExternalProvidersSettingsResolver} from "./external-log-in/services/external-providers-settings-resolver.service";
-import {BusinessAppByUrlResolver} from "../business/business-apps/services/business-app-by-url-resolver.service";
+import {AppByUrlResolver} from "../business/apps/services/app-by-url-resolver.service";
 import {LogOutPageComponent} from "./log-out/log-out-page.component";
 import {ExternalLogInCallbackPageComponent} from "./external-log-in/external-log-in-callback-page.component";
 import {LoggedInGuard} from "./services/logged-in.guard";
@@ -24,7 +24,7 @@ const appRoutes: Routes = [
         component: LogInPageComponent,
         resolve:
         {
-            app: BusinessAppByUrlResolver
+            app: AppByUrlResolver
         }
     },
     {path: 'log-out', component: LogOutPageComponent},
@@ -33,7 +33,7 @@ const appRoutes: Routes = [
         component: SignUpPageComponent,
         resolve:
         {
-            app: BusinessAppByUrlResolver
+            app: AppByUrlResolver
         }
     },
     {path: 'forgot-password', component: ForgotPasswordPageComponent},

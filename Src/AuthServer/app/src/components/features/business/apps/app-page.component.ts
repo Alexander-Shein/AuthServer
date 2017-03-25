@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {BusinessApp} from "./models/business-app";
-import {BusinessAppsService} from "./services/business-apps.service";
+import {App} from "./models/app";
+import {AppsService} from "./services/apps.service";
 import {MdDialog} from "@angular/material";
 import {ConfirmationDialogComponent} from "../../../common/pop-ups/confirmation-dialog.component";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
@@ -10,16 +10,16 @@ import {BaseComponent} from "../../../common/base.component";
 
 
 @Component({
-    selector: 'au-business-app',
-    templateUrl: './business-app-page.component.html',
-    styleUrls: ['./business-app-page.component.scss']
+    selector: 'au-app',
+    templateUrl: './app-page.component.html',
+    styleUrls: ['./app-page.component.scss']
 })
-export class BusinessAppPageComponent extends BaseComponent implements OnInit {
+export class AppPageComponent extends BaseComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private businessAppsService: BusinessAppsService,
+        private appsService: AppsService,
         private dialog: MdDialog,
         notificationsService: NotificationsService,
         spinnerService: SpinnerService
@@ -27,13 +27,13 @@ export class BusinessAppPageComponent extends BaseComponent implements OnInit {
         super(notificationsService, spinnerService);
     }
 
-    public vm: BusinessApp;
+    public vm: App;
 
     public ngOnInit(): void {
         this.route
             .data
-            .subscribe((data: { businessApp: BusinessApp }) => {
-                this.vm = data.businessApp;
+            .subscribe((data: { app: App }) => {
+                this.vm = data.app;
             });
     }
 
@@ -44,14 +44,12 @@ export class BusinessAppPageComponent extends BaseComponent implements OnInit {
                 this.spinnerService
                     .show();
 
-                this.businessAppsService
+                this.appsService
                     .remove(this.vm.name)
                     .then(() => {
                         this.router
-                            .navigate(['dashboard']);
-
-                        this.spinnerService
-                            .hide();
+                            .navigate(['dashboard'])
+                            .then(() => this.spinnerService.hide());
                     })
                     .catch((e) => this.handleError(e));
             }
