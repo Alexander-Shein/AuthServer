@@ -14,10 +14,8 @@ export class AppsService implements IAppsService {
                     isActive: true,
                     name: 'test-app',
                     isLocalAccountEnabled: true,
-                    appCredentials: {
-                        secret: 'secret',
-                        id: 'client-id'
-                    },
+                    secret: 'secret',
+                    key: 'client-id',
                     externalProviders: [],
                     redirectUrls: ['http://localhost:8000'],
                     usersCount: 435,
@@ -27,10 +25,8 @@ export class AppsService implements IAppsService {
                     isActive: true,
                     name: 'staging-app',
                     isLocalAccountEnabled: true,
-                    appCredentials: {
-                        secret: 'secret',
-                        id: 'client-id'
-                    },
+                    secret: 'secret',
+                    key: 'client-id',
                     externalProviders: [],
                     redirectUrls: ['http://localhost:8000'],
                     usersCount: 4476,
@@ -40,10 +36,8 @@ export class AppsService implements IAppsService {
                     isActive: true,
                     name: 'production-app',
                     isLocalAccountEnabled: true,
-                    appCredentials: {
-                        secret: 'secret',
-                        id: 'client-id'
-                    },
+                    secret: 'secret',
+                    key: 'client-id',
                     externalProviders: [],
                     redirectUrls: ['http://localhost:8000'],
                     usersCount: 123435,
@@ -58,10 +52,8 @@ export class AppsService implements IAppsService {
                 isActive: true,
                 name: name,
                 isLocalAccountEnabled: true,
-                appCredentials: {
-                    secret: 'secret',
-                    id: 'client-id'
-                },
+                secret: 'secret',
+                key: 'client-id',
                 externalProviders: [
                     {
                         displayName: 'twitter',
@@ -85,10 +77,8 @@ export class AppsService implements IAppsService {
                 isActive: true,
                 name: name,
                 isLocalAccountEnabled: true,
-                appCredentials: {
-                    secret: 'secret',
-                    id: 'client-id'
-                },
+                secret: 'secret',
+                key: 'client-id',
                 externalProviders: [
                     {
                         displayName: 'twitter',

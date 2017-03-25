@@ -20,7 +20,8 @@ namespace IdentityServerWithAspNetIdentity
         {
             return new List<ApiResource>
             {
-                new ApiResource("api1", "My API")
+                new ApiResource("api1", "My API"),
+                new ApiResource("api2.read_only", "My API 2")
             };
         }
 
@@ -84,6 +85,27 @@ namespace IdentityServerWithAspNetIdentity
                     //UpdateAccessTokenClaimsOnRefresh = true,
                     //AllowAccessTokensViaBrowser = true,
                     //RefreshTokenUsage = TokenUsage.ReUse
+                },
+
+                new Client
+                {
+                    ClientId = "js_oidc",
+                    ClientName = "JavaScript Client",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AllowAccessTokensViaBrowser = true,
+
+                    RedirectUris = { "http://localhost:7017/callback.html" },
+                    PostLogoutRedirectUris = { "http://localhost:7017/index.html" },
+                    AllowedCorsOrigins = { "http://localhost:7017" },
+
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "api1",
+                        "api2.read_only",
+                        IdentityServerConstants.StandardScopes.Email
+                    },
                 }
             };
         }

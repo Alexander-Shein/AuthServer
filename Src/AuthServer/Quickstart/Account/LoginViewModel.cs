@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using IdentityServer4.Models;
 
 namespace IdentityServer4.Quickstart.UI
 {
@@ -14,5 +15,7 @@ namespace IdentityServer4.Quickstart.UI
         public IEnumerable<ExternalProvider> ExternalProviders { get; set; }
 
         public bool IsExternalLoginOnly => EnableLocalLogin == false && ExternalProviders?.Count() == 1;
+
+        public Client Client { get; internal set; }
     }
 }

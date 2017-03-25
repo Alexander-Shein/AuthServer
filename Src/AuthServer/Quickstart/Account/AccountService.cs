@@ -4,6 +4,7 @@
 
 using IdentityModel;
 using IdentityServer4.Extensions;
+using IdentityServer4.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Http;
@@ -68,9 +69,10 @@ namespace IdentityServer4.Quickstart.UI
             }
 
             var allowLocal = true;
+            Client client = null;
             if (context?.ClientId != null)
             {
-                var client = await _clientStore.FindEnabledClientByIdAsync(context.ClientId);
+                client = await _clientStore.FindEnabledClientByIdAsync(context.ClientId);
                 if (client != null)
                 {
                     allowLocal = client.EnableLocalLogin;
@@ -84,6 +86,7 @@ namespace IdentityServer4.Quickstart.UI
 
             return new LoginViewModel
             {
+                Client = client,
                 AllowRememberLogin = AccountOptions.AllowRememberLogin,
                 EnableLocalLogin = allowLocal && AccountOptions.AllowLocalLogin,
                 ReturnUrl = returnUrl,

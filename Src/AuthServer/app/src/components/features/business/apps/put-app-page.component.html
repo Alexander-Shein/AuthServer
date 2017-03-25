@@ -74,14 +74,14 @@
                             <md-input-container class="w-100">
                                 <input
                                         mdInput
-                                        #id
-                                        placeholder="Id"
+                                        #key
+                                        placeholder="Key"
                                         type="text"
-                                        name="id"
+                                        name="key"
                                         maxlength="100"
                                         required
-                                        [(ngModel)]="vm.appCredentials.id">
-                                <md-hint align="end">{{id.value.length}} / 100</md-hint>
+                                        [(ngModel)]="vm.key">
+                                <md-hint align="end">{{keys.value.length}} / 100</md-hint>
                             </md-input-container>
                         </div>
                         <div class="col">
@@ -94,7 +94,7 @@
                                         name="secret"
                                         maxlength="100"
                                         required
-                                        [(ngModel)]="vm.appCredentials.secret">
+                                        [(ngModel)]="vm.secret">
                                 <md-hint align="end">{{secret.value.length}} / 100</md-hint>
                             </md-input-container>
                         </div>
