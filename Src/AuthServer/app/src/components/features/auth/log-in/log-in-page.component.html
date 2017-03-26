@@ -47,11 +47,16 @@
 
             <div class="row mt-2">
                 <div class="col">
-                    <div *ngIf="app.allowRememberLogIn">
+                    <div *ngIf="app.localAccountSettings.isRememberLogInEnabled">
                         <md-checkbox
                                 color="primary"
                                 name="remember"
-                                [(ngModel)]="logIn.rememberLogIn">remember me</md-checkbox>
+                                [(ngModel)]="logIn.rememberLogIn">
+                            <span>remember me </span>
+                        </md-checkbox>
+                        <md-icon style="position: absolute; margin-left: 3px;"
+                                 mdTooltip="Protect your account. Uncheck if using public/shared device."
+                                 [mdTooltipPosition]="'above'">info_outline</md-icon>
                     </div>
                 </div>
                 <div class="col-auto text-right mr-3">
@@ -79,7 +84,7 @@
             <div class="row mt-1">
                 <div class="col-12 au-external-login text-center">
                     <button
-                            *ngFor="let sn of app.externalProviders; let i = index"
+                            *ngFor="let sn of app.externalProviders"
                             md-raised-button
                             color="primary"
                             (click)="externalLogIn(sn)">

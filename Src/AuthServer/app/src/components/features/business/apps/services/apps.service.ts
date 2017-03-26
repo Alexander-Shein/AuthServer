@@ -30,34 +30,46 @@ export class AppsService extends ServiceBase implements IAppsService {
                     isActive: true,
                     name: 'test-app',
                     isLocalAccountEnabled: true,
-                    secret: 'secret',
                     key: 'client-id',
                     externalProviders: [],
                     redirectUrls: ['http://localhost:8000'],
                     usersCount: 435,
-                    allowRememberLogIn: true
+                    localAccountSettings: {
+                        isConfirmationEnabled: true,
+                        isPasswordlessEnabled: true,
+                        isPhoneEnabled: true,
+                        isRememberLogInEnabled: false
+                    }
                 },
                 {
                     isActive: true,
                     name: 'staging-app',
                     isLocalAccountEnabled: true,
-                    secret: 'secret',
                     key: 'client-id',
                     externalProviders: [],
                     redirectUrls: ['http://localhost:8000'],
                     usersCount: 4476,
-                    allowRememberLogIn: true
+                    localAccountSettings: {
+                        isConfirmationEnabled: true,
+                        isPasswordlessEnabled: true,
+                        isPhoneEnabled: true,
+                        isRememberLogInEnabled: false
+                    }
                 },
                 {
                     isActive: true,
                     name: 'production-app',
                     isLocalAccountEnabled: true,
-                    secret: 'secret',
                     key: 'client-id',
                     externalProviders: [],
                     redirectUrls: ['http://localhost:8000'],
                     usersCount: 123435,
-                    allowRememberLogIn: true
+                    localAccountSettings: {
+                        isConfirmationEnabled: true,
+                        isPasswordlessEnabled: true,
+                        isPhoneEnabled: true,
+                        isRememberLogInEnabled: false
+                    }
                 }]), 500)
         );
     }
@@ -68,7 +80,6 @@ export class AppsService extends ServiceBase implements IAppsService {
                 isActive: true,
                 name: name,
                 isLocalAccountEnabled: true,
-                secret: 'secret',
                 key: 'client-id',
                 externalProviders: [
                     {
@@ -82,7 +93,12 @@ export class AppsService extends ServiceBase implements IAppsService {
                 ],
                 redirectUrls: ['http://localhost:8000'],
                 usersCount: 435,
-                allowRememberLogIn: true
+                localAccountSettings: {
+                    isConfirmationEnabled: true,
+                    isPasswordlessEnabled: true,
+                    isPhoneEnabled: true,
+                    isRememberLogInEnabled: false
+                }
             }), 500)
         );
     }
@@ -93,7 +109,6 @@ export class AppsService extends ServiceBase implements IAppsService {
                 isActive: true,
                 name: name,
                 isLocalAccountEnabled: true,
-                secret: 'secret',
                 key: 'client-id',
                 externalProviders: [
                     {
@@ -107,7 +122,12 @@ export class AppsService extends ServiceBase implements IAppsService {
                 ],
                 redirectUrls: ['http://localhost:8000', 'http://localhost:8001'],
                 usersCount: 435,
-                allowRememberLogIn: true
+                localAccountSettings: {
+                    isConfirmationEnabled: true,
+                    isPasswordlessEnabled: true,
+                    isPhoneEnabled: true,
+                    isRememberLogInEnabled: false
+                }
             }), 500)
         );
     }

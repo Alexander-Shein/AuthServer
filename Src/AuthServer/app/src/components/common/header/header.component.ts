@@ -28,7 +28,7 @@ export class HeaderComponent implements OnInit {
     ];
 
     public loggedInMenuItems: MenuItem[] = [
-        new MenuItem('my account', 'verified_user', 'dashboard'),
+        new MenuItem('AuthGuardian', 'verified_user', 'dashboard'),
         new MenuItem('contact', 'contact_phone', 'contact'),
         new MenuItem('log out', 'lock_open', 'log-out')
     ];

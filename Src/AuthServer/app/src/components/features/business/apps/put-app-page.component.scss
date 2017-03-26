@@ -1,3 +1,15 @@
 .au-external-provider-chip {
     cursor: pointer;
 }
+
+.mat-checkbox-disabled {
+    color: rgba(0,0,0,0.3);
+}
+
+.mat-checkbox {
+    .mat-icon {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+}

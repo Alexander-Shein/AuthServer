@@ -6,6 +6,5 @@ export class App extends AppVm {
     public redirectUrls: string[] = [];
     public isActive: boolean;
     public usersCount: number;
-    public secret: string;
 
 }

@@ -22,7 +22,7 @@ export class EditAppPageComponent implements OnInit {
 
     public vm: App;
     public externalProviders: ExternalProvider[];
-    public title: string = 'Edit business app.';
+    public title: string = 'Edit your app.';
 
     public ngOnInit(): void {
         this.route

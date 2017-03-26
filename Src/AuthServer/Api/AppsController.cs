@@ -60,8 +60,14 @@ namespace AuthServer.Api
                 Name = vm.Client?.ClientName ?? "AuthGuardian",
                 Key = vm.Client?.ClientId ?? "AuthGuardian",
                 IsLocalAccountEnabled = vm.EnableLocalLogin,
-                AllowRememberLogIn = vm.AllowRememberLogin,
-                ExternalProviders = vm.ExternalProviders
+                ExternalProviders = vm.ExternalProviders,
+                LocalAccountSettings = new LocalAccountSettings
+                {
+                    isConfirmationEnabled = true,
+                    isPasswordlessEnabled = true,
+                    isPhoneEnabled = true,
+                    isRememberLogInEnabled  =true
+                }
             });
         }
 
@@ -96,7 +102,15 @@ namespace AuthServer.Api
         public string Name { get; set; }
         public string Key { get; set; }
         public bool IsLocalAccountEnabled { get; set; }
-        public bool AllowRememberLogIn { get; set; }
+        public LocalAccountSettings LocalAccountSettings { get; set; }
         public IEnumerable<ExternalProvider> ExternalProviders { get; set; }
+    }
+
+    public class LocalAccountSettings
+    {
+        public bool isConfirmationEnabled { get; set; }
+        public bool isPasswordlessEnabled { get; set; }
+        public bool isPhoneEnabled { get; set; }
+        public bool isRememberLogInEnabled { get; set; }
     }
 }

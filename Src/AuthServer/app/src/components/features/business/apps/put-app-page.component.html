@@ -2,12 +2,13 @@
 
     <div class="row">
         <div class="col-12">
-            <h2 class="text-center">{{title}}</h2>
+            <h3 class="text-center">{{title}}</h3>
         </div>
     </div>
 
     <div class="row justify-content-center">
         <form class="col-12 col-md-6 col-lg-5 col-xl-4" (submit)="save()">
+
             <div class="row">
                 <div class="col-12">
                     <md-input-container class="w-100">
@@ -24,23 +25,22 @@
                     </md-input-container>
                 </div>
             </div>
+
             <div class="row">
-                <md-checkbox
-                        class="col"
-                        color="primary"
-                        name="isLocalAccountEnabled"
-                        [(ngModel)]="vm.isLocalAccountEnabled">
-                    <span>Enable email/password accounts</span>
-                </md-checkbox>
-            </div>
-            <div class="row">
-                <md-checkbox
-                        class="col"
-                        color="primary"
-                        name="isActive"
-                        [(ngModel)]="vm.isActive">
-                    <span>Is app active</span>
-                </md-checkbox>
+                <div class="col-12">
+                    <md-input-container class="w-100">
+                        <input
+                                mdInput
+                                #key
+                                placeholder="Unique key"
+                                type="text"
+                                name="key"
+                                maxlength="100"
+                                required
+                                [(ngModel)]="vm.key">
+                        <md-hint align="end">{{key.value.length}} / 100</md-hint>
+                    </md-input-container>
+                </div>
             </div>
 
             <div class="row">
@@ -62,47 +62,77 @@
             </div>
 
             <div class="row">
-                <div class="col-12 text-center">
-                    <strong>Credentials:</strong>
-                </div>
+                <md-checkbox
+                        class="col"
+                        color="primary"
+                        name="isActive"
+                        [(ngModel)]="vm.isActive">
+                    <span>Is app active</span>
+                </md-checkbox>
             </div>
+
             <div class="row">
-                <md-icon color="primary" class="col-auto pl-2 mt-3">security</md-icon>
-                <div class="col">
-                    <div class="row">
-                        <div class="col">
-                            <md-input-container class="w-100">
-                                <input
-                                        mdInput
-                                        #key
-                                        placeholder="Key"
-                                        type="text"
-                                        name="key"
-                                        maxlength="100"
-                                        required
-                                        [(ngModel)]="vm.key">
-                                <md-hint align="end">{{keys.value.length}} / 100</md-hint>
-                            </md-input-container>
-                        </div>
-                        <div class="col">
-                            <md-input-container class="w-100">
-                                <input
-                                        mdInput
-                                        #secret
-                                        placeholder="Secret"
-                                        type="text"
-                                        name="secret"
-                                        maxlength="100"
-                                        required
-                                        [(ngModel)]="vm.secret">
-                                <md-hint align="end">{{secret.value.length}} / 100</md-hint>
-                            </md-input-container>
-                        </div>
-                    </div>
+                <div class="col-12">
+                    <strong>Local accounts settings:</strong>
                 </div>
             </div>
 
-            <div class="row pt-4">
+            <div class="row">
+                <md-checkbox
+                        class="col"
+                        color="primary"
+                        name="isLocalAccountEnabled"
+                        [(ngModel)]="vm.isLocalAccountEnabled">
+                    <span>Enable username/password accounts</span>
+                </md-checkbox>
+            </div>
+
+            <div class="row">
+                <md-checkbox
+                        [disabled]="!vm.isLocalAccountEnabled"
+                        class="offset-1 col-10"
+                        color="primary"
+                        name="isConfirmationEnabled"
+                        [(ngModel)]="vm.localAccountSettings.isConfirmationEnabled">
+                    <span>Enable mandatory account confirmation</span>
+                    <md-icon
+                            mdTooltip="After sign up a confirmation email will be send to entered user's email in order to validate email address."
+                            [mdTooltipPosition]="'above'">info_outline</md-icon>
+                </md-checkbox>
+            </div>
+
+            <div class="row">
+                <md-checkbox
+                        [disabled]="!vm.isLocalAccountEnabled"
+                        class="offset-1 col-10"
+                        color="primary"
+                        name="isPasswordlessEnabled"
+                        [(ngModel)]="vm.localAccountSettings.isPasswordlessEnabled">
+                    <span>Enable passwordless log in</span>
+                    <md-icon
+                            mdTooltip="An email with magic link will be send to email in order to sign in/up. No password is required."
+                            [mdTooltipPosition]="'above'">info_outline</md-icon>
+                </md-checkbox>
+            </div>
+
+            <div class="row">
+                <md-checkbox
+                        [disabled]="!vm.isLocalAccountEnabled"
+                        class="offset-1 col-10"
+                        color="primary"
+                        name="isPhoneEnabled"
+                        [(ngModel)]="vm.localAccountSettings.isPhoneEnabled">
+                    <span>Allow phone number as username</span>
+                </md-checkbox>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <strong>External log in providers:</strong>
+                </div>
+            </div>
+
+            <div class="row pt-3">
                 <div class="col">
                     <div class="row">
                         <div class="col">
