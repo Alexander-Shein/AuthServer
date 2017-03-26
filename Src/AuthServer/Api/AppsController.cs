@@ -63,10 +63,10 @@ namespace AuthServer.Api
                 ExternalProviders = vm.ExternalProviders,
                 LocalAccountSettings = new LocalAccountSettings
                 {
-                    isConfirmationEnabled = true,
-                    isPasswordlessEnabled = true,
-                    isPhoneEnabled = true,
-                    isRememberLogInEnabled  =true
+                    IsConfirmationEnabled = true,
+                    IsPasswordlessEnabled = true,
+                    IsPhoneEnabled = true,
+                    IsRememberLogInEnabled = true
                 }
             });
         }
@@ -108,9 +108,9 @@ namespace AuthServer.Api
 
     public class LocalAccountSettings
     {
-        public bool isConfirmationEnabled { get; set; }
-        public bool isPasswordlessEnabled { get; set; }
-        public bool isPhoneEnabled { get; set; }
-        public bool isRememberLogInEnabled { get; set; }
+        public bool IsConfirmationEnabled { get; set; }
+        public bool IsPasswordlessEnabled { get; set; }
+        public bool IsPhoneEnabled { get; set; }
+        public bool IsRememberLogInEnabled { get; set; }
     }
 }

@@ -34,11 +34,18 @@ export class AppsService extends ServiceBase implements IAppsService {
                     externalProviders: [],
                     redirectUrls: ['http://localhost:8000'],
                     usersCount: 435,
-                    localAccountSettings: {
-                        isConfirmationEnabled: true,
+                    isRememberLogInEnabled: false,
+                    emailSettings: {
+                        isEnabled : true,
+                        isConfirmationRequired: true,
                         isPasswordlessEnabled: true,
-                        isPhoneEnabled: true,
-                        isRememberLogInEnabled: false
+                        isPasswordEnabled: true
+                    },
+                    phoneSettings: {
+                        isEnabled : true,
+                        isConfirmationRequired: true,
+                        isPasswordlessEnabled: true,
+                        isPasswordEnabled: true
                     }
                 },
                 {
@@ -49,11 +56,18 @@ export class AppsService extends ServiceBase implements IAppsService {
                     externalProviders: [],
                     redirectUrls: ['http://localhost:8000'],
                     usersCount: 4476,
-                    localAccountSettings: {
-                        isConfirmationEnabled: true,
+                    isRememberLogInEnabled: false,
+                    emailSettings: {
+                        isEnabled : true,
+                        isConfirmationRequired: true,
                         isPasswordlessEnabled: true,
-                        isPhoneEnabled: true,
-                        isRememberLogInEnabled: false
+                        isPasswordEnabled: true
+                    },
+                    phoneSettings: {
+                        isEnabled : true,
+                        isConfirmationRequired: true,
+                        isPasswordlessEnabled: true,
+                        isPasswordEnabled: true
                     }
                 },
                 {
@@ -64,11 +78,18 @@ export class AppsService extends ServiceBase implements IAppsService {
                     externalProviders: [],
                     redirectUrls: ['http://localhost:8000'],
                     usersCount: 123435,
-                    localAccountSettings: {
-                        isConfirmationEnabled: true,
+                    isRememberLogInEnabled: false,
+                    emailSettings: {
+                        isEnabled : true,
+                        isConfirmationRequired: true,
                         isPasswordlessEnabled: true,
-                        isPhoneEnabled: true,
-                        isRememberLogInEnabled: false
+                        isPasswordEnabled: true
+                    },
+                    phoneSettings: {
+                        isEnabled : true,
+                        isConfirmationRequired: true,
+                        isPasswordlessEnabled: true,
+                        isPasswordEnabled: true
                     }
                 }]), 500)
         );
@@ -93,11 +114,18 @@ export class AppsService extends ServiceBase implements IAppsService {
                 ],
                 redirectUrls: ['http://localhost:8000'],
                 usersCount: 435,
-                localAccountSettings: {
-                    isConfirmationEnabled: true,
+                isRememberLogInEnabled: false,
+                emailSettings: {
+                    isEnabled : true,
+                    isConfirmationRequired: true,
                     isPasswordlessEnabled: true,
-                    isPhoneEnabled: true,
-                    isRememberLogInEnabled: false
+                    isPasswordEnabled: true
+                },
+                phoneSettings: {
+                    isEnabled : true,
+                    isConfirmationRequired: true,
+                    isPasswordlessEnabled: true,
+                    isPasswordEnabled: true
                 }
             }), 500)
         );
@@ -108,7 +136,6 @@ export class AppsService extends ServiceBase implements IAppsService {
             setTimeout(() => resolve({
                 isActive: true,
                 name: name,
-                isLocalAccountEnabled: true,
                 key: 'client-id',
                 externalProviders: [
                     {
@@ -122,11 +149,19 @@ export class AppsService extends ServiceBase implements IAppsService {
                 ],
                 redirectUrls: ['http://localhost:8000', 'http://localhost:8001'],
                 usersCount: 435,
-                localAccountSettings: {
-                    isConfirmationEnabled: true,
+                isLocalAccountEnabled: true,
+                isRememberLogInEnabled: false,
+                emailSettings: {
+                    isEnabled : true,
+                    isConfirmationRequired: true,
                     isPasswordlessEnabled: true,
-                    isPhoneEnabled: true,
-                    isRememberLogInEnabled: false
+                    isPasswordEnabled: true
+                },
+                phoneSettings: {
+                    isEnabled : true,
+                    isConfirmationRequired: true,
+                    isPasswordlessEnabled: true,
+                    isPasswordEnabled: true
                 }
             }), 500)
         );

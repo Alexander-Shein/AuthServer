@@ -1,10 +1,7 @@
 export class LocalAccountSettings {
 
-    public isConfirmationEnabled: boolean;
-    public isRememberLogInEnabled: boolean;
-
+    public isEnabled: boolean;
     public isPasswordlessEnabled: boolean;
-    public isPhoneEnabled: boolean;
-
-
+    public isPasswordEnabled: boolean;
+    public isConfirmationRequired: boolean;
 }
