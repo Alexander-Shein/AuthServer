@@ -32,7 +32,7 @@ export class AppsService extends ServiceBase implements IAppsService {
                     isLocalAccountEnabled: true,
                     key: 'client-id',
                     externalProviders: [],
-                    redirectUrls: ['http://localhost:8000'],
+                    websiteUrl: 'http://localhost:8000',
                     usersCount: 435,
                     isRememberLogInEnabled: false,
                     emailSettings: {
@@ -54,7 +54,7 @@ export class AppsService extends ServiceBase implements IAppsService {
                     isLocalAccountEnabled: true,
                     key: 'client-id',
                     externalProviders: [],
-                    redirectUrls: ['http://localhost:8000'],
+                    websiteUrl: 'http://localhost:8000',
                     usersCount: 4476,
                     isRememberLogInEnabled: false,
                     emailSettings: {
@@ -76,7 +76,7 @@ export class AppsService extends ServiceBase implements IAppsService {
                     isLocalAccountEnabled: true,
                     key: 'client-id',
                     externalProviders: [],
-                    redirectUrls: ['http://localhost:8000'],
+                    websiteUrl: 'http://localhost:8000',
                     usersCount: 123435,
                     isRememberLogInEnabled: false,
                     emailSettings: {
@@ -112,7 +112,7 @@ export class AppsService extends ServiceBase implements IAppsService {
                         authenticationScheme: 'Facebook'
                     }
                 ],
-                redirectUrls: ['http://localhost:8000'],
+                websiteUrl: 'http://localhost:8000',
                 usersCount: 435,
                 isRememberLogInEnabled: false,
                 emailSettings: {
@@ -147,7 +147,7 @@ export class AppsService extends ServiceBase implements IAppsService {
                         authenticationScheme: 'Facebook'
                     }
                 ],
-                redirectUrls: ['http://localhost:8000', 'http://localhost:8001'],
+                websiteUrl: 'http://localhost:8000',
                 usersCount: 435,
                 isLocalAccountEnabled: true,
                 isRememberLogInEnabled: false,
