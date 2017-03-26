@@ -72,7 +72,7 @@
 
             <div class="row">
                 <div class="col-12">
-                    <strong>Local accounts settings:</strong>
+                    <span><strong>Local accounts settings:</strong></span>
                 </div>
             </div>
 
@@ -108,6 +108,20 @@
                         name="isConfirmationEnabled"
                         [(ngModel)]="vm.emailSettings.isEnabled">
                     <span>Allow email as username</span>
+                </md-checkbox>
+            </div>
+
+            <div class="row">
+                <md-checkbox
+                        [disabled]="!(vm.isLocalAccountEnabled && vm.emailSettings.isEnabled)"
+                        class="offset-2 col-9"
+                        color="primary"
+                        name="isEmailSearchRelatedProviderEnabled"
+                        [(ngModel)]="vm.emailSettings.isSearchRelatedProviderEnabled">
+                    <span>Enable search related external provider</span>
+                    <md-icon
+                            mdTooltip="When related external provider exists for entered email the system proposes to use it."
+                            [mdTooltipPosition]="'above'">info_outline</md-icon>
                 </md-checkbox>
             </div>
 
@@ -206,12 +220,12 @@
                 </div>
             </div>
 
-            <div class="row pt-3">
+            <div class="row">
                 <div class="col">
                     <div class="row">
                         <div class="col">
                             <md-select
-                                    class="w-100"
+                                    class="w-100 pt-3"
                                     *ngIf="externalProviders.length"
                                     placeholder="Add external log in"
                                     (change)="addExternalProvider($event.value)">
@@ -221,9 +235,9 @@
                             </md-select>
                         </div>
                     </div>
-                    <div class="row pt-1">
+                    <div class="row">
                         <div class="col-12" *ngIf="!externalProviders.length"><small>All external providers are enabled.</small></div>
-                        <md-chip-list class="col-12">
+                        <md-chip-list class="col-12 pt-1">
                             <md-chip
                                     *ngFor="let sn of vm.externalProviders"
                                     color="primary"

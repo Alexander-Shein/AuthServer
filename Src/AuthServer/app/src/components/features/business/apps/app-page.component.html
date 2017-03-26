@@ -8,57 +8,174 @@
 
     <div class="row justify-content-center">
         <div class="col-12 col-md-6 col-lg-5 col-xl-4">
-                <div class="row">
-                    <md-icon color="primary" class="col-auto ml-2">lock</md-icon>
-                    <md-checkbox
-                            class="col"
-                            labelPosition="before"
-                            color="primary"
-                            [disabled]="true"
-                            [checked]="vm.isLocalAccountEnabled">
-                        <span>Is email/password accounts enabled</span>
-                    </md-checkbox>
-                </div>
 
-                <div class="row">
-                    <div class="col">
-                        <div class="row">
-                            <div class="col-12 text-center">
-                                <strong>Enabled external log ins:</strong>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <md-chip-list class="col-12">
-                                <md-chip *ngFor="let sn of vm.externalProviders" (click)="removeExternalProvider(sn)">{{sn.displayName}}</md-chip>
-                            </md-chip-list>
+            <div class="row">
+                <div class="col-12">
+                    <span><strong>App key: </strong>{{vm.key}}</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <span><strong>Website url: </strong>{{vm.websiteUrl}}</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <span><strong>Users count: </strong>{{vm.usersCount | number}} </span>
+                    <md-icon style="position: absolute;" color="primary" class="">people</md-icon>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-12">
+                    <span><strong>Local accounts settings:</strong></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <md-checkbox
+                        class="col"
+                        color="primary"
+                        [disabled]="true"
+                        [checked]="vm.isLocalAccountEnabled">
+                    <span>Enable local accounts</span>
+                </md-checkbox>
+            </div>
+
+            <div class="row">
+                <md-checkbox
+                        class="offset-1 col-10"
+                        color="primary"
+                        [disabled]="true"
+                        [checked]="vm.isRememberLogInEnabled">
+                    <span>Enable remember log in</span>
+                    <md-icon
+                            mdTooltip="Protection against log in on public\shared devives."
+                            [mdTooltipPosition]="'above'">info_outline</md-icon>
+                </md-checkbox>
+            </div>
+
+            <div class="row">
+                <md-checkbox
+                        class="offset-1 col-10"
+                        color="primary"
+                        [disabled]="true"
+                        [checked]="vm.emailSettings.isEnabled">
+                    <span>Allow email as username</span>
+                </md-checkbox>
+            </div>
+
+            <div class="row">
+                <md-checkbox
+                        class="offset-2 col-9"
+                        color="primary"
+                        [disabled]="true"
+                        [checked]="vm.emailSettings.isSearchRelatedProviderEnabled">
+                    <span>Enable search related external provider</span>
+                    <md-icon
+                            mdTooltip="When related external provider exists for entered email the system proposes to use it."
+                            [mdTooltipPosition]="'above'">info_outline</md-icon>
+                </md-checkbox>
+            </div>
+
+            <div class="row">
+                <md-checkbox
+                        class="offset-2 col-9"
+                        color="primary"
+                        [disabled]="true"
+                        [checked]="vm.emailSettings.isPasswordEnabled">
+                    <span>Enable password</span>
+                </md-checkbox>
+            </div>
+
+            <div class="row">
+                <md-checkbox
+                        class="offset-3 col-8"
+                        color="primary"
+                        [disabled]="true"
+                        [checked]="vm.emailSettings.isConfirmationRequired">
+                    <span>Required email confirmation</span>
+                    <md-icon
+                            mdTooltip="On sign up a confirmation email will be send to user's email in order to validate email address."
+                            [mdTooltipPosition]="'above'">info_outline</md-icon>
+                </md-checkbox>
+            </div>
+
+            <div class="row">
+                <md-checkbox
+                        class="offset-2 col-9"
+                        color="primary"
+                        [disabled]="true"
+                        [checked]="vm.emailSettings.isPasswordlessEnabled">
+                    <span>Enable passwordless feature</span>
+                    <md-icon
+                            mdTooltip="An email with link will be send to email in order to sign in/up. No password is required."
+                            [mdTooltipPosition]="'above'">info_outline</md-icon>
+                </md-checkbox>
+            </div>
+
+            <div class="row">
+                <md-checkbox
+                        class="offset-1 col-10"
+                        color="primary"
+                        [disabled]="true"
+                        [checked]="vm.phoneSettings.isEnabled">
+                    <span>Allow phone as username</span>
+                </md-checkbox>
+            </div>
+
+            <div class="row">
+                <md-checkbox
+                        class="offset-2 col-9"
+                        color="primary"
+                        [disabled]="true"
+                        [checked]="vm.phoneSettings.isPasswordEnabled">
+                    <span>Enable password</span>
+                </md-checkbox>
+            </div>
+
+            <div class="row">
+                <md-checkbox
+                        class="offset-3 col-8"
+                        color="primary"
+                        [disabled]="true"
+                        [checked]="vm.phoneSettings.isConfirmationRequired">
+                    <span>Required phone confirmation</span>
+                    <md-icon
+                            mdTooltip="On sign up a confirmation code will be send to user's phone to validate it."
+                            [mdTooltipPosition]="'above'">info_outline</md-icon>
+                </md-checkbox>
+            </div>
+
+            <div class="row">
+                <md-checkbox
+                        class="offset-2 col-9"
+                        color="primary"
+                        [disabled]="true"
+                        [checked]="vm.phoneSettings.isPasswordlessEnabled">
+                    <span>Enable passwordless feature</span>
+                    <md-icon
+                            mdTooltip="Code will be send to phone number in order to sign in/up. No password is required."
+                            [mdTooltipPosition]="'above'">info_outline</md-icon>
+                </md-checkbox>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        <div class="col-12">
+                            <span><strong>Enabled external log ins:</strong></span>
                         </div>
                     </div>
-                </div>
-
-                <div class="row pt-3">
-                    <md-icon color="primary" class="col-auto ml-2">link</md-icon>
-                    <div class="col">
-                        <div class="row">
-                            <span class="col">Website url:</span>
-                        </div>
-                        <div class="row">
-                            <span class="col-12"><small>{{vm.websiteUrl}}</small></span>
-                        </div>
+                    <div class="row">
+                        <md-chip-list class="col-12">
+                            <md-chip *ngFor="let sn of vm.externalProviders">{{sn.displayName}}</md-chip>
+                        </md-chip-list>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col text-center">
-                        <strong>Credentials:</strong>
-                    </div>
-                </div>
-
-                <div class="row pt-3">
-                    <md-icon color="primary" class="col-auto ml-2">people</md-icon>
-                    <div class="col">
-                        <span>Users count: <strong>{{vm.usersCount | number}}</strong></span>
-                    </div>
-                </div>
+            </div>
 
             <div class="row mt-2">
                 <div class="col-12 text-right mr-3">

@@ -39,13 +39,15 @@ export class AppsService extends ServiceBase implements IAppsService {
                         isEnabled : true,
                         isConfirmationRequired: true,
                         isPasswordlessEnabled: true,
-                        isPasswordEnabled: true
+                        isPasswordEnabled: true,
+                        isSearchRelatedProviderEnabled: true
                     },
                     phoneSettings: {
                         isEnabled : true,
                         isConfirmationRequired: true,
                         isPasswordlessEnabled: true,
-                        isPasswordEnabled: true
+                        isPasswordEnabled: true,
+                        isSearchRelatedProviderEnabled: true
                     }
                 },
                 {
@@ -61,13 +63,15 @@ export class AppsService extends ServiceBase implements IAppsService {
                         isEnabled : true,
                         isConfirmationRequired: true,
                         isPasswordlessEnabled: true,
-                        isPasswordEnabled: true
+                        isPasswordEnabled: true,
+                        isSearchRelatedProviderEnabled: true
                     },
                     phoneSettings: {
                         isEnabled : true,
                         isConfirmationRequired: true,
                         isPasswordlessEnabled: true,
-                        isPasswordEnabled: true
+                        isPasswordEnabled: true,
+                        isSearchRelatedProviderEnabled: true
                     }
                 },
                 {
@@ -83,13 +87,15 @@ export class AppsService extends ServiceBase implements IAppsService {
                         isEnabled : true,
                         isConfirmationRequired: true,
                         isPasswordlessEnabled: true,
-                        isPasswordEnabled: true
+                        isPasswordEnabled: true,
+                        isSearchRelatedProviderEnabled: true
                     },
                     phoneSettings: {
                         isEnabled : true,
                         isConfirmationRequired: true,
                         isPasswordlessEnabled: true,
-                        isPasswordEnabled: true
+                        isPasswordEnabled: true,
+                        isSearchRelatedProviderEnabled: true
                     }
                 }]), 500)
         );
@@ -119,13 +125,15 @@ export class AppsService extends ServiceBase implements IAppsService {
                     isEnabled : true,
                     isConfirmationRequired: true,
                     isPasswordlessEnabled: true,
-                    isPasswordEnabled: true
+                    isPasswordEnabled: true,
+                    isSearchRelatedProviderEnabled: true
                 },
                 phoneSettings: {
                     isEnabled : true,
                     isConfirmationRequired: true,
                     isPasswordlessEnabled: true,
-                    isPasswordEnabled: true
+                    isPasswordEnabled: true,
+                    isSearchRelatedProviderEnabled: true
                 }
             }), 500)
         );
@@ -155,13 +163,15 @@ export class AppsService extends ServiceBase implements IAppsService {
                     isEnabled : true,
                     isConfirmationRequired: true,
                     isPasswordlessEnabled: true,
-                    isPasswordEnabled: true
+                    isPasswordEnabled: true,
+                    isSearchRelatedProviderEnabled: true
                 },
                 phoneSettings: {
                     isEnabled : true,
                     isConfirmationRequired: true,
                     isPasswordlessEnabled: true,
-                    isPasswordEnabled: true
+                    isPasswordEnabled: true,
+                    isSearchRelatedProviderEnabled: true
                 }
             }), 500)
         );

@@ -4,4 +4,5 @@ export class LocalAccountSettings {
     public isPasswordlessEnabled: boolean;
     public isPasswordEnabled: boolean;
     public isConfirmationRequired: boolean;
+    public isSearchRelatedProviderEnabled: boolean;
 }

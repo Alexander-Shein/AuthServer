@@ -21,19 +21,41 @@ export class CreateAppPageComponent implements OnInit {
         private spinnerService: SpinnerService
     ) {}
 
-    public vm: App = new App();
-    public externalProviders: ExternalProvider[];
+    public vm: App;
+    public externalProviders: ExternalProvider[] = [];
     public title: string = 'Create business app.';
 
     public ngOnInit(): void {
+        this.vm = {
+            isActive: true,
+            name: '',
+            key: '',
+            externalProviders: [],
+            websiteUrl: '',
+            usersCount: 0,
+            isLocalAccountEnabled: true,
+            isRememberLogInEnabled: true,
+            emailSettings: {
+                isEnabled : true,
+                isConfirmationRequired: true,
+                isPasswordlessEnabled: true,
+                isPasswordEnabled: true,
+                isSearchRelatedProviderEnabled: true
+            },
+            phoneSettings: {
+                isEnabled : true,
+                isConfirmationRequired: true,
+                isPasswordlessEnabled: true,
+                isPasswordEnabled: true,
+                isSearchRelatedProviderEnabled: true
+            }
+        };
+
         this.route
             .data
             .subscribe((data: { externalProviders: ExternalProvider[] }) => {
-                this.externalProviders = data.externalProviders;
+                this.vm.externalProviders = data.externalProviders;
             });
-
-        this.vm.emailSettings = new LocalAccountSettings();
-        this.vm.phoneSettings = new LocalAccountSettings();
     }
 
     public addExternalProvider(externalProvider: ExternalProvider): void {
