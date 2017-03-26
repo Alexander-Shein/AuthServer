@@ -4,6 +4,7 @@ import {App} from "./models/app";
 import {AppsService} from "./services/apps.service";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {ExternalProvider} from "../../auth/external-log-in/models/external-provider";
+import {LocalAccountSettings} from "./models/local-account-settings";
 
 
 @Component({
@@ -30,6 +31,9 @@ export class CreateAppPageComponent implements OnInit {
             .subscribe((data: { externalProviders: ExternalProvider[] }) => {
                 this.externalProviders = data.externalProviders;
             });
+
+        this.vm.emailSettings = new LocalAccountSettings();
+        this.vm.phoneSettings = new LocalAccountSettings();
     }
 
     public addExternalProvider(externalProvider: ExternalProvider): void {
