@@ -11,7 +11,7 @@
         <div class="col-12 col-md-6 col-lg-5 col-xl-4">
 
             <div class="row">
-                <div class="col text-center">
+                <div class="col">
                     <strong>My user account settings</strong>
                 </div>
             </div>
@@ -33,7 +33,7 @@
                 <md-icon color="primary" class="col-auto ml-2">plus_one</md-icon>
                 <div class="col">
                     <div class="row">
-                        <div class="col">External log ins:</div>
+                        <div class="col">Linked external log ins:</div>
                         <div class="col text-right">
                             <a routerLink="/external-providers">manage</a>
                         </div>
@@ -67,8 +67,8 @@
             </div>
 
             <div class="row mt-4">
-                <div class="col text-center">
-                    <strong>My business apps</strong>
+                <div class="col">
+                    <strong>My apps</strong>
                 </div>
             </div>
 
@@ -83,6 +83,7 @@
                 <div class="col">
                     <div class="row">
                         <div class="col">Name: <strong>{{app.name}}</strong></div>
+                        <div class="col">Key: <strong>{{app.key}}</strong></div>
                         <div class="col">
                             Users count: <strong>{{app.usersCount | number}}</strong>
                         </div>
