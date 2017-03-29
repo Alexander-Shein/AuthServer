@@ -15,6 +15,8 @@ import {AddPhonePageComponent} from "./manage-phones/add-phone-page.component";
 import {ManageExternalProvidersPageComponent} from "./external-log-in/manage-external-providers-page.component";
 import {LogOutPageComponent} from "./log-out/log-out-page.component";
 import {ExternalLogInCallbackPageComponent} from "./external-log-in/external-log-in-callback-page.component";
+import {EmailLogInComponent} from "./log-in/email-log-in.component";
+import {PhoneLogInComponent} from "./log-in/phone-log-in.component";
 
 
 @NgModule({
@@ -26,6 +28,8 @@ import {ExternalLogInCallbackPageComponent} from "./external-log-in/external-log
     ],
     declarations: [
         LogInPageComponent,
+        EmailLogInComponent,
+        PhoneLogInComponent,
         LogOutPageComponent,
         SignUpPageComponent,
         ForgotPasswordPageComponent,

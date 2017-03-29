@@ -30,6 +30,7 @@ export class LogInPageComponent extends AuthBaseComponent {
             .data
             .subscribe((data: {app: AppVm}) => {
                 this.app = data.app;
+                this.setupUserNameLabel();
             });
 
         super.ngOnInit();
@@ -37,6 +38,9 @@ export class LogInPageComponent extends AuthBaseComponent {
 
     public app: AppVm;
     public logIn: LogIn = new LogIn();
+    public searchResult: ExternalProvider;
+
+    public userNameLabel: string;
 
     public onSubmit(): void {
         this.spinnerService.show();
@@ -55,6 +59,36 @@ export class LogInPageComponent extends AuthBaseComponent {
                     redirectUrl: this.redirectUrl,
                     authenticationScheme: externalProvider.authenticationScheme
                 });
+    }
+
+    public searchExternalLogIn(): void
+    {
+        this.searchResult = null;
+
+        if (this.logIn.userName.endsWith('@gmail.com')) {
+            this.searchResult  = {
+                displayName: 'GMail',
+                authenticationScheme: 'GMail'
+            };
+        }
+
+        if (this.logIn.userName.endsWith('@live.com')) {
+            this.searchResult  = {
+                displayName: 'Outlook',
+                authenticationScheme: 'Outlook'
+            };
+        }
+    }
+
+    private setupUserNameLabel(): void {
+        if (!this.app.isLocalAccountEnabled) return;
+
+        if (this.app.emailSettings.isEnabled && this.app.phoneSettings.isEnabled) {
+            this.userNameLabel = 'Email or Phone';
+            return;
+        }
+
+        this.userNameLabel = this.app.emailSettings.isEnabled ? 'Email' : 'Phone';
     }
 
     private handle(result: LogInResult): void {

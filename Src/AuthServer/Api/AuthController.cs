@@ -58,7 +58,7 @@ namespace AuthServer.Api
                 return BadRequest(new ErrorResult("Invalid login attempt."));
             }
 
-            var result = await _signInManager.PasswordSignInAsync(im.Email, im.Password, im.RememberLogIn, lockoutOnFailure: true);
+            var result = await _signInManager.PasswordSignInAsync(im.Email ?? im.Phone, im.Password, im.RememberLogIn, lockoutOnFailure: true);
 
             if (result.IsLockedOut)
             {
@@ -82,6 +82,7 @@ namespace AuthServer.Api
     public class LogInDetails
     {
         public string Email { get; set; }
+        public string Phone { get; set; }
         public string Password { get; set; }
         public bool RememberLogIn { get; set; }
     }

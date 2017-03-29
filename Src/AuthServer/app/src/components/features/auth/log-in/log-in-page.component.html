@@ -7,47 +7,118 @@
     </div>
 
     <div class="row justify-content-center" *ngIf="app.isLocalAccountEnabled">
-        <form class="col-12 col-md-6 col-lg-5 col-xl-4 log-in-form" (ngSubmit)="onSubmit()">
+        <div class="col-12 col-md-6 col-lg-5 col-xl-4" style="max-width: 320px;">
 
-            <div class="row">
-                <md-icon color="primary" class="col-auto mt-3 ml-3">perm_identity</md-icon>
+            <form class="row" #logInForm="ngForm" *ngIf="step === 1">
                 <div class="col">
-                    <md-input-container class="w-100">
-                        <input
-                                mdInput
-                                #email
-                                placeholder="Email"
-                                type="email"
-                                name="email"
-                                maxlength="100"
-                                required
-                                [(ngModel)]="logIn.email">
-                        <md-hint align="end">{{email.value.length}} / 100</md-hint>
-                    </md-input-container>
+
+                    <div class="row">
+                        <div class="col">
+                            <md-input-container class="w-100">
+                                <input
+                                        mdInput
+                                        placeholder="{{userNameLabel}}"
+                                        type="text"
+                                        name="userName"
+                                        maxlength="254"
+                                        required
+                                        [(ngModel)]="logIn.userName"
+                                        (input)="searchExternalLogIn()"
+                                        #userName="ngModel">
+                                <md-hint align="end">{{userName.value?.length || 0}} / 254</md-hint>
+                            </md-input-container>
+                        </div>
+                    </div>
+
+                    <div class="row mt-1">
+                        <div class="col">
+                            <button
+                                    class="w-100"
+                                    [disabled]="!logInForm.form.valid"
+                                    (click)="step = 2"
+                                    md-raised-button color="primary">next</button>
+                        </div>
+                    </div>
+
+                    <div class="row mt-1" *ngIf="searchResult">
+                        <div class="col">
+                            <button
+                                    class="w-100"
+                                    md-raised-button
+                                    (click)="externalLogIn(searchResult)">
+                                <md-icon>lock_open</md-icon>
+                                <span>log in with {{searchResult.displayName}}?</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="row text-center" *ngIf="step === 2">
+                <div class="col-12">
+                    <button
+                            class="w-100"
+                            (click)="step = 2"
+                            md-raised-button color="primary">send link to email</button>
                 </div>
             </div>
 
-            <div class="row">
-                <md-icon color="primary" class="col-auto mt-3 ml-3">lock_open</md-icon>
-                <div class="col">
-                    <md-input-container class="w-100">
-                        <input
-                                mdInput
-                                #password
-                                name="password"
-                                placeholder="Password"
-                                type="password"
-                                maxlength="100"
-                                required
-                                [(ngModel)]="logIn.password">
-                        <md-hint align="end">{{password.value.length}} / 100</md-hint>
-                    </md-input-container>
+            <form class="row" #logInForm="ngForm" *ngIf="step === 2">
+                <div class="col-12 mt-3 mb-3" *ngIf="app.emailSettings.isPasswordEnabled">
+                    <span>Or use password</span>
                 </div>
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col">
+                            <md-input-container class="w-100">
+                                <input
+                                        mdInput
+                                        placeholder="Password"
+                                        type="password"
+                                        name="password"
+                                        maxlength="100"
+                                        minlength="6"
+                                        required
+                                        [(ngModel)]="logIn.password"
+                                        #password="ngModel">
+                                <md-hint align="end">{{password.value?.length || 0}} / 100</md-hint>
+                            </md-input-container>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col">
+                            <button
+                                    class="w-100"
+                                    [disabled]="!logInForm.form.valid"
+                                    (click)="step = 2"
+                                    md-raised-button color="primary">log in</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+
+
+
+<!--
+            <au-email-log-in [logIn]="logIn" [app]="app" *ngIf="app.emailSettings.isEnabled && !app.phoneSettings.isEnabled"></au-email-log-in>
+            <au-phone-log-in [logIn]="logIn" *ngIf="!app.emailSettings.isEnabled && app.phoneSettings.isEnabled"></au-phone-log-in>
+
+            <div class="row" *ngIf="app.emailSettings.isEnabled && app.phoneSettings.isEnabled">
+                <md-tab-group class="col">
+                    <md-tab label="Using email">
+                        <au-email-log-in [logIn]="logIn" [app]="app"></au-email-log-in>
+                    </md-tab>
+                    <md-tab label="Using phone">
+                        <au-phone-log-in [logIn]="logIn"></au-phone-log-in>
+                    </md-tab>
+                </md-tab-group>
             </div>
 
-            <div class="row mt-2">
+            <div class="row" *ngIf="app.isRememberLogInEnabled">
                 <div class="col">
-                    <div *ngIf="app.localAccountSettings.isRememberLogInEnabled">
+                    <div>
                         <md-checkbox
                                 color="primary"
                                 name="remember"
@@ -59,9 +130,6 @@
                                  [mdTooltipPosition]="'above'">info_outline</md-icon>
                     </div>
                 </div>
-                <div class="col-auto text-right mr-3">
-                    <button md-raised-button color="primary">log in</button>
-                </div>
             </div>
 
             <div class="row mt-2">
@@ -70,26 +138,32 @@
 
             <div class="row">
                 <a [routerLink]="['/forgot-password']" [queryParams]="{redirectUrl: redirectUrl}" class="col-12">Forgot your password?</a>
-            </div>
-        </form>
+            </div>-->
+        </div>
     </div>
 
-    <div class="row justify-content-center" *ngIf="app.externalProviders?.length">
-        <div class="col-12 col-md-6 col-lg-5 col-xl-4">
-            <div class="row text-center" *ngIf="app.isLocalAccountEnabled">
-                <div class="col-12 text-center">
-                    <span>Or</span>
+    <div class="row justify-content-center" *ngIf="step === 1 && app.externalProviders?.length">
+        <div class="col-12 col-md-6 col-lg-5 col-xl-4" style="max-width: 320px;">
+            <div class="row" *ngIf="app.isLocalAccountEnabled">
+                <div class="col-12 text-center mt-3 mb-3">
+                    <span>Or using external provider</span>
                 </div>
             </div>
             <div class="row mt-1">
-                <div class="col-12 au-external-login text-center">
+                <div class="col-12">
                     <button
+                            class="w-100 mb-1"
                             *ngFor="let sn of app.externalProviders"
                             md-raised-button
                             color="primary"
                             (click)="externalLogIn(sn)">
-                        <span>{{sn.displayName}}</span>
+                        <span>log in with {{sn.displayName}}</span>
                     </button>
+                </div>
+            </div>
+            <div class="row text-right">
+                <div class="col">
+                    <span style="font-size: 10px;">Powered by <strong>AuthGuardian</strong></span>
                 </div>
             </div>
         </div>
