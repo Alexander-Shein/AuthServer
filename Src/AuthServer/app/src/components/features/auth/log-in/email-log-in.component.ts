@@ -6,47 +6,46 @@ import {AppVm} from "../../business/apps/models/app-vm";
 @Component({
     selector: 'au-email-log-in',
     template: `
-    <div class="row mt-1">
-        <md-icon color="primary" class="col-auto mt-3 ml-3">perm_identity</md-icon>
-        <div class="col">
-            <md-input-container class="w-100">
-                <input
-                        mdInput
-                        #email
-                        placeholder="Email"
-                        type="email"
-                        name="email"
-                        maxlength="100"
-                        required
-                        [(ngModel)]="logIn.email">
-                <md-hint align="end">{{email.value.length}} / 100</md-hint>
-            </md-input-container>
+        <div class="row">
+            <div class="col-12">
+                <button
+                        class="w-100"
+                        md-raised-button color="primary">send link to email</button>
+            </div>
         </div>
-    </div>
-    
-    <div class="row" *ngIf="app.emailSettings.isPasswordEnabled">
-        <md-icon color="primary" class="col-auto mt-3 ml-3">lock_open</md-icon>
-        <div class="col">
-            <md-input-container class="w-100">
-                <input
-                        mdInput
-                        #password
-                        name="password"
-                        placeholder="Password"
-                        type="password"
-                        maxlength="100"
-                        required
-                        [(ngModel)]="logIn.password">
-                <md-hint align="end">{{password.value.length}} / 100</md-hint>
-            </md-input-container>
-        </div>
-    </div>
-    
-    <div class="row mt-1">
-        <div class="col text-right">
-            <button [disabled]="!logIn.email" md-raised-button color="primary">log in</button>
-        </div>
-    </div>
+
+        <form class="row" #logInForm="ngForm">
+            <div class="col-12 mt-3 mb-3" *ngIf="app.emailSettings.isPasswordEnabled">
+                <span>Or use password</span>
+            </div>
+            <div class="col-12">
+                <div class="row">
+                    <div class="col">
+                        <md-input-container class="w-100">
+                            <input
+                                    mdInput
+                                    placeholder="Password"
+                                    type="password"
+                                    name="password"
+                                    maxlength="100"
+                                    minlength="6"
+                                    required
+                                    [(ngModel)]="logIn.password"
+                                    #password="ngModel">
+                            <md-hint align="end">{{password.value?.length || 0}} / 100</md-hint>
+                        </md-input-container>
+                    </div>
+                </div>
+                <div class="row mt-1">
+                    <div class="col">
+                        <button
+                                class="w-100"
+                                [disabled]="!logInForm.form.valid"
+                                md-raised-button color="primary">log in</button>
+                    </div>
+                </div>
+            </div>
+        </form>
 `
 })
 export class EmailLogInComponent {

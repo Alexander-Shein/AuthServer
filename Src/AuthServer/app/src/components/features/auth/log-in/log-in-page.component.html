@@ -9,7 +9,7 @@
     <div class="row justify-content-center" *ngIf="app.isLocalAccountEnabled">
         <div class="col-12 col-md-6 col-lg-5 col-xl-4" style="max-width: 320px;">
 
-            <form class="row" #logInForm="ngForm" *ngIf="step === 1">
+            <form class="row" #logInForm="ngForm">
                 <div class="col">
 
                     <div class="row">
@@ -35,7 +35,6 @@
                             <button
                                     class="w-100"
                                     [disabled]="!logInForm.form.valid"
-                                    (click)="step = 2"
                                     md-raised-button color="primary">next</button>
                         </div>
                     </div>
@@ -53,54 +52,6 @@
                     </div>
                 </div>
             </form>
-
-            <div class="row text-center" *ngIf="step === 2">
-                <div class="col-12">
-                    <button
-                            class="w-100"
-                            (click)="step = 2"
-                            md-raised-button color="primary">send link to email</button>
-                </div>
-            </div>
-
-            <form class="row" #logInForm="ngForm" *ngIf="step === 2">
-                <div class="col-12 mt-3 mb-3" *ngIf="app.emailSettings.isPasswordEnabled">
-                    <span>Or use password</span>
-                </div>
-                <div class="col-12">
-                    <div class="row">
-                        <div class="col">
-                            <md-input-container class="w-100">
-                                <input
-                                        mdInput
-                                        placeholder="Password"
-                                        type="password"
-                                        name="password"
-                                        maxlength="100"
-                                        minlength="6"
-                                        required
-                                        [(ngModel)]="logIn.password"
-                                        #password="ngModel">
-                                <md-hint align="end">{{password.value?.length || 0}} / 100</md-hint>
-                            </md-input-container>
-                        </div>
-                    </div>
-                    <div class="row mt-1">
-                        <div class="col">
-                            <button
-                                    class="w-100"
-                                    [disabled]="!logInForm.form.valid"
-                                    (click)="step = 2"
-                                    md-raised-button color="primary">log in</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-
-
-
-
-
 <!--
             <au-email-log-in [logIn]="logIn" [app]="app" *ngIf="app.emailSettings.isEnabled && !app.phoneSettings.isEnabled"></au-email-log-in>
             <au-phone-log-in [logIn]="logIn" *ngIf="!app.emailSettings.isEnabled && app.phoneSettings.isEnabled"></au-phone-log-in>
@@ -142,7 +93,7 @@
         </div>
     </div>
 
-    <div class="row justify-content-center" *ngIf="step === 1 && app.externalProviders?.length">
+    <div class="row justify-content-center" *ngIf="app.externalProviders?.length">
         <div class="col-12 col-md-6 col-lg-5 col-xl-4" style="max-width: 320px;">
             <div class="row" *ngIf="app.isLocalAccountEnabled">
                 <div class="col-12 text-center mt-3 mb-3">
