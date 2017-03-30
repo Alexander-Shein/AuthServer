@@ -68,7 +68,7 @@ namespace AuthServer.Api
                 },
                 PhoneSettings = new LocalAccountSettings
                 {
-                    IsEnabled = false
+                    IsEnabled = true
                 }
             });
         }

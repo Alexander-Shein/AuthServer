@@ -30,7 +30,7 @@ module.exports = {
                     {
                         loader: 'url-loader',
                         query: {
-                            name: 'assets/[name].[hash].[ext]',
+                            name: 'assets/[name].[ext]',
                             limit: '10000'
                         }
                     },
@@ -46,6 +46,10 @@ module.exports = {
                         }
                     }]
             },
+            { test: /.*\.(svg)$/i, loader: 'file-loader',
+                query: {
+                    name: 'assets/[name].[ext]'
+                }},
             {
                 test: /\.(woff|woff2|ttf|eot|ico)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
                 use: [{

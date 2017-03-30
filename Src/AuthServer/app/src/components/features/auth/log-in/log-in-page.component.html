@@ -156,14 +156,11 @@
             </div>
             <div class="row mt-1">
                 <div class="col-12">
-                    <button
-                            class="w-100 mb-1"
+                    <au-social-network-button
                             *ngFor="let sn of app.externalProviders"
-                            md-raised-button
-                            color="primary"
-                            (click)="externalLogIn(sn)">
-                        <span>log in with {{sn.displayName}}</span>
-                    </button>
+                            (click)="externalLogIn(sn)"
+                            [provider]="sn"
+                    ></au-social-network-button>
                 </div>
             </div>
             <div class="row text-right">

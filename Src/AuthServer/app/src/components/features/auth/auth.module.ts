@@ -19,6 +19,7 @@ import {EmailLogInComponent} from "./log-in/email-log-in.component";
 import {PhoneLogInComponent} from "./log-in/phone-log-in.component";
 import {EmailOrPhoneValidatorDirective} from "./log-in/email-or-phone-validator.directive";
 import {PhoneValidatorDirective} from "./log-in/phone-validator.directive";
+import {SocialNetworkButtonComponent} from "./external-log-in/social-network-button.component";
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import {PhoneValidatorDirective} from "./log-in/phone-validator.directive";
         ManageExternalProvidersPageComponent,
         ExternalLogInCallbackPageComponent,
         EmailOrPhoneValidatorDirective,
-        PhoneValidatorDirective
+        PhoneValidatorDirective,
+        SocialNetworkButtonComponent
     ],
     providers: []
 })
