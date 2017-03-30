@@ -35,6 +35,7 @@ import {MessagesService} from "./features/contact/services/messages.service";
 import {Ng2Webstorage} from "ng2-webstorage";
 import {LoggedInGuard} from "./features/auth/services/logged-in.guard";
 import {JwtService} from "./features/auth/services/jwt.service";
+import {SearchableProvidersResolver} from "./features/auth/external-log-in/services/searchable-providers-resolver";
 
 
 @NgModule({
@@ -77,6 +78,7 @@ import {JwtService} from "./features/auth/services/jwt.service";
         ExternalProvidersService,
         UsersService,
         ExternalProvidersResolver,
+        SearchableProvidersResolver,
         MessagesService,
         LoggedInGuard,
         JwtService

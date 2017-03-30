@@ -3,10 +3,10 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {AuthBaseComponent} from '../auth-base.component';
 import {AuthenticationService} from "../services/authentication.service";
 import {LogIn} from "../models/log-in";
-import {LogInResult} from "../models/log-in-result";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {ExternalProvider} from "../external-log-in/models/external-provider";
 import {AppVm} from "../../business/apps/models/app-vm";
+import {SearchableExternalProvider} from "../external-log-in/models/searchable-external-provider";
 
 
 @Component({
@@ -28,9 +28,9 @@ export class LogInPageComponent extends AuthBaseComponent {
     public ngOnInit(): void {
         this.route
             .data
-            .subscribe((data: {app: AppVm}) => {
+            .subscribe((data: {app: AppVm, searchableProviders: SearchableExternalProvider[]}) => {
                 this.app = data.app;
-                this.setupUserNameLabel();
+                this.searchableProviders = data.searchableProviders;
             });
 
         super.ngOnInit();
@@ -38,17 +38,17 @@ export class LogInPageComponent extends AuthBaseComponent {
 
     public app: AppVm;
     public logIn: LogIn = new LogIn();
-    public searchResult: ExternalProvider;
 
-    public userNameLabel: string;
+    public searchableProviders: SearchableExternalProvider[];
+    public searchResult: ExternalProvider;
 
     public onSubmit(): void {
         this.spinnerService.show();
 
         this.authenticationService
-            .logIn(this.logIn)
+            .isUserNameExists(this.logIn.userName)
             .subscribe(
-                (result: LogInResult) => this.handle(result),
+                () => this.handle(),
                 () => this.spinnerService.hide());
     }
 
@@ -61,51 +61,27 @@ export class LogInPageComponent extends AuthBaseComponent {
                 });
     }
 
-    public searchExternalLogIn(): void
-    {
+    public searchProvider(): void {
         this.searchResult = null;
 
-        if (this.logIn.userName.endsWith('@gmail.com')) {
-            this.searchResult  = {
-                displayName: 'GMail',
-                authenticationScheme: 'GMail'
-            };
-        }
-
-        if (this.logIn.userName.endsWith('@live.com')) {
-            this.searchResult  = {
-                displayName: 'Outlook',
-                authenticationScheme: 'Outlook'
-            };
+        for(let item of this.searchableProviders) {
+            for(let match of item.matches) {
+                if(this.logIn.userName.toLowerCase().indexOf(match) != -1) {
+                    this.searchResult = item;
+                    return;
+                }
+            }
         }
     }
 
-    private setupUserNameLabel(): void {
-        if (!this.app.isLocalAccountEnabled) return;
-
-        if (this.app.emailSettings.isEnabled && this.app.phoneSettings.isEnabled) {
-            this.userNameLabel = 'Email or Phone';
-            return;
-        }
-
-        this.userNameLabel = this.app.emailSettings.isEnabled ? 'Email' : 'Phone';
-    }
-
-    private handle(result: LogInResult): void {
-        if (result.requiresTwoFactor) {
-            this.router
-                .navigate(['/two-factor',
-                        {
-                            rememberLogIn: this.logIn.rememberLogIn
-                        }],
-                    {
-                        queryParams: {
-                            redirectUrl: this.redirectUrl
-                        }
-                    })
-                .then(() => this.spinnerService.hide());
-        } else {
-            this.redirectAfterLogin();
-        }
+    private handle(): void {
+        this.router
+            .navigate(['/'],
+                {
+                    queryParams: {
+                        redirectUrl: this.redirectUrl
+                    }
+                })
+            .then(() => this.spinnerService.hide());
     }
 }

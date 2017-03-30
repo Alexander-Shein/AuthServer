@@ -16,6 +16,7 @@ import {AppByUrlResolver} from "../business/apps/services/app-by-url-resolver.se
 import {LogOutPageComponent} from "./log-out/log-out-page.component";
 import {ExternalLogInCallbackPageComponent} from "./external-log-in/external-log-in-callback-page.component";
 import {LoggedInGuard} from "./services/logged-in.guard";
+import {SearchableProvidersResolver} from "./external-log-in/services/searchable-providers-resolver";
 
 
 const appRoutes: Routes = [
@@ -24,7 +25,8 @@ const appRoutes: Routes = [
         component: LogInPageComponent,
         resolve:
         {
-            app: AppByUrlResolver
+            app: AppByUrlResolver,
+            searchableProviders: SearchableProvidersResolver
         }
     },
     {path: 'log-out', component: LogOutPageComponent},

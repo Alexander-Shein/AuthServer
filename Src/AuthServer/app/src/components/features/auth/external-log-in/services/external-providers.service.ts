@@ -3,10 +3,26 @@ import {ExternalProvidersSettings} from "../models/external-providers-settings";
 import {UserLogInInfo} from "../models/user-log-in-info";
 import {IExternalProvidersService} from "./i-external-providers.service";
 import {ExternalProvider} from "../models/external-provider";
+import {SearchableExternalProvider} from "../models/searchable-external-provider";
 
 
 @Injectable()
 export class ExternalProvidersService implements IExternalProvidersService {
+
+    public getSearchableProviders(): Promise<SearchableExternalProvider[]> {
+        return Promise.resolve([
+                {
+                    matches: ['@live', '@outlook'],
+                    displayName: 'Microsoft',
+                    authenticationScheme: 'Microsoft'
+                },
+                {
+                    matches: ['@gmail', '@outlook'],
+                    displayName: 'Google',
+                    authenticationScheme: 'Google'
+                }
+            ]);
+    }
 
     public getExternalProvidersSettings(): Promise<ExternalProvidersSettings> {
         return Promise.resolve({

@@ -82,4 +82,8 @@ export class AuthenticationService extends ServiceBase implements IAuthenticatio
         this.isLoggedInEventEmitter.emit(this.loggedIn);
     }
 
+    public isUserNameExists(userName: string): Observable<void> {
+        return Observable.of<void>();
+    }
+
 }

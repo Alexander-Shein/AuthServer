@@ -9,23 +9,77 @@
     <div class="row justify-content-center" *ngIf="app.isLocalAccountEnabled">
         <div class="col-12 col-md-6 col-lg-5 col-xl-4" style="max-width: 320px;">
 
-            <form class="row" #logInForm="ngForm">
+            <form class="row" #logInForm="ngForm" (submit)="onSubmit()">
                 <div class="col">
 
                     <div class="row">
                         <div class="col">
-                            <md-input-container class="w-100">
+                            <md-input-container class="w-100" *ngIf="app.emailSettings.isEnabled && app.phoneSettings.isEnabled">
                                 <input
                                         mdInput
-                                        placeholder="{{userNameLabel}}"
+                                        placeholder="Email or Phone"
                                         type="text"
                                         name="userName"
                                         maxlength="254"
                                         required
+                                        emailOrPhone
                                         [(ngModel)]="logIn.userName"
-                                        (input)="searchExternalLogIn()"
+                                        (input)="searchProvider()"
                                         #userName="ngModel">
                                 <md-hint align="end">{{userName.value?.length || 0}} / 254</md-hint>
+                                <md-hint *ngIf="userName.errors && (userName.dirty || userName.touched)" style="color: red;">
+                                    <span [hidden]="!userName.errors.required" >
+                                        Email or Phone is required.
+                                    </span>
+                                    <span [hidden]="!userName.errors.emailOrPhone || userName.errors.required">
+                                        Email or Phone is not valid.
+                                    </span>
+                                </md-hint>
+                            </md-input-container>
+
+                            <md-input-container class="w-100" *ngIf="app.emailSettings.isEnabled && !app.phoneSettings.isEnabled">
+                                <input
+                                        mdInput
+                                        placeholder="Email"
+                                        type="text"
+                                        name="userName"
+                                        maxlength="254"
+                                        required
+                                        email
+                                        [(ngModel)]="logIn.userName"
+                                        (input)="searchProvider()"
+                                        #userName="ngModel">
+                                <md-hint align="end">{{userName.value?.length || 0}} / 254</md-hint>
+                                <md-hint *ngIf="userName.errors && (userName.dirty || userName.touched)" style="color: red;">
+                                    <span [hidden]="!userName.errors.required" >
+                                        Email is required.
+                                    </span>
+                                    <span [hidden]="!userName.errors.email || userName.errors.required">
+                                        Email is not valid.
+                                    </span>
+                                </md-hint>
+                            </md-input-container>
+
+                            <md-input-container class="w-100" *ngIf="!app.emailSettings.isEnabled && app.phoneSettings.isEnabled">
+                                <input
+                                        mdInput
+                                        placeholder="Phone"
+                                        type="text"
+                                        name="userName"
+                                        maxlength="50"
+                                        required
+                                        phone
+                                        [(ngModel)]="logIn.userName"
+                                        #userName="ngModel">
+                                <md-hint align="end">{{userName.value?.length || 0}} / 254</md-hint>
+                                <md-hint *ngIf="userName.errors && (userName.dirty || userName.touched)" style="color: red;">
+                                    <span [hidden]="!userName.errors.required" >
+                                        Phone is required.
+                                    </span>
+                                    <span [hidden]="!userName.errors.phone || userName.errors.required">
+                                        Phone is not valid.
+                                    </span>
+                                </md-hint>
                             </md-input-container>
                         </div>
                     </div>
