@@ -75,6 +75,9 @@ export class LogInPageComponent extends AuthBaseComponent {
     }
 
     private handle(): void {
+
+        let isEmail = this.logIn.userName.indexOf('@') != -1;
+
         this.router
             .navigate(['/'],
                 {

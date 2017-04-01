@@ -93,15 +93,24 @@
                         </div>
                     </div>
 
+                    <!--<div class="row">
+                        <div class="col-12">
+                            <button
+                                    class="g-recaptcha"
+                                    data-sitekey="6LfwFxsUAAAAABnL6zYOgcoOOn-WMQ3i5dbsnE4c"
+                                    data-callback="YourOnSubmitFn">
+                                Submit
+                            </button>
+                            <div class="g-recaptcha" data-sitekey="6LevEhsUAAAAAHiBe_2GZMkgCos78lNYAiL6HdZL"></div>
+                        </div>
+                    </div>-->
+
                     <div class="row mt-1" *ngIf="searchResult">
                         <div class="col">
-                            <button
-                                    class="w-100"
-                                    md-raised-button
-                                    (click)="externalLogIn(searchResult)">
-                                <md-icon>lock_open</md-icon>
-                                <span>log in with {{searchResult.displayName}}?</span>
-                            </button>
+                            <au-social-network-button
+                                    (click)="externalLogIn(searchResult)"
+                                    [provider]="searchResult"
+                            ></au-social-network-button>
                         </div>
                     </div>
                 </div>
@@ -147,6 +156,12 @@
         </div>
     </div>
 
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-5 col-xl-4 text-right" style="max-width: 320px;">
+            <au-email-log-in [app]="app" [logIn]="logIn"></au-email-log-in>
+        </div>
+    </div>
+
     <div class="row justify-content-center" *ngIf="app.externalProviders?.length">
         <div class="col-12 col-md-6 col-lg-5 col-xl-4" style="max-width: 320px;">
             <div class="row" *ngIf="app.isLocalAccountEnabled">
@@ -163,11 +178,12 @@
                     ></au-social-network-button>
                 </div>
             </div>
-            <div class="row text-right">
-                <div class="col">
-                    <span style="font-size: 10px;">Powered by <strong>AuthGuardian</strong></span>
-                </div>
-            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-5 col-xl-4 text-right" style="max-width: 320px;">
+            <span style="font-size: 10px;">Powered by <strong>AuthGuardian</strong></span>
         </div>
     </div>
 

@@ -11,6 +11,7 @@ import {ExternalProvider} from "./models/external-provider";
     selector: 'au-social-network-button',
     template: `
         <button
+                [ngClass]="getIconName()"
                 class="w-100 mb-1 text-left"
                 md-raised-button
                 color="primary">

@@ -6,18 +6,8 @@ import {AppVm} from "../../business/apps/models/app-vm";
 @Component({
     selector: 'au-email-log-in',
     template: `
-        <div class="row">
-            <div class="col-12">
-                <button
-                        class="w-100"
-                        md-raised-button color="primary">send link to email</button>
-            </div>
-        </div>
 
-        <form class="row" #logInForm="ngForm">
-            <div class="col-12 mt-3 mb-3" *ngIf="app.emailSettings.isPasswordEnabled">
-                <span>Or use password</span>
-            </div>
+        <form class="row" #logInForm="ngForm" *ngIf="!isLinkSent">
             <div class="col-12">
                 <div class="row">
                     <div class="col">
@@ -33,6 +23,14 @@ import {AppVm} from "../../business/apps/models/app-vm";
                                     [(ngModel)]="logIn.password"
                                     #password="ngModel">
                             <md-hint align="end">{{password.value?.length || 0}} / 100</md-hint>
+                            <md-hint *ngIf="password.errors && (password.dirty || password.touched)" style="color: red;">
+                                    <span [hidden]="!password.errors.required" >
+                                        Password is required.
+                                    </span>
+                                <span [hidden]="!password.errors.minlength || password.errors.required">
+                                        Min length is 6 characters for password.
+                                    </span>
+                            </md-hint>
                         </md-input-container>
                     </div>
                 </div>
@@ -46,6 +44,29 @@ import {AppVm} from "../../business/apps/models/app-vm";
                 </div>
             </div>
         </form>
+
+        <div class="row" *ngIf="app.emailSettings.isPasswordlessEnabled && !isLinkSent">
+            <div class="col-12 mt-3 mb-3 text-center">
+                <span>Or log in without password</span>
+            </div>
+            <div class="col-12">
+                <button
+                        class="w-100"
+                        md-raised-button color="primary" (click)="isLinkSent = true">send link to email</button>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="isLinkSent">
+            <div class="col-12 mb-3 text-center">
+                <md-icon color="primary">done</md-icon>
+                <div><span>Please check your email. We've sent you a log in link.</span></div>
+            </div>
+            <div class="col-12">
+                <button
+                        class="w-100"
+                        md-raised-button color="primary">resend</button>
+            </div>
+        </div>
 `
 })
 export class EmailLogInComponent {
@@ -54,4 +75,7 @@ export class EmailLogInComponent {
 
     @Input()
     public app: AppVm;
+
+    @Input()
+    public isLinkSent: boolean = false;
 }

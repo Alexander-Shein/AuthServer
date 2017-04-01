@@ -36,6 +36,7 @@ import {Ng2Webstorage} from "ng2-webstorage";
 import {LoggedInGuard} from "./features/auth/services/logged-in.guard";
 import {JwtService} from "./features/auth/services/jwt.service";
 import {SearchableProvidersResolver} from "./features/auth/external-log-in/services/searchable-providers-resolver";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 
 @NgModule({
@@ -49,7 +50,8 @@ import {SearchableProvidersResolver} from "./features/auth/external-log-in/servi
         BusinessModule,
         AppRoutingModule,
         SimpleNotificationsModule.forRoot(),
-        Ng2Webstorage.forRoot({ prefix: 'au', separator: '-' })
+        Ng2Webstorage.forRoot({ prefix: 'au', separator: '-' }),
+        BrowserAnimationsModule
     ],
     declarations: [
         AppComponent,

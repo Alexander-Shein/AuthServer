@@ -64,7 +64,8 @@ namespace AuthServer.Api
                 ExternalProviders = vm.ExternalProviders,
                 EmailSettings = new LocalAccountSettings
                 {
-                    IsEnabled = true
+                    IsEnabled = true,
+                    IsPasswordlessEnabled = true
                 },
                 PhoneSettings = new LocalAccountSettings
                 {
