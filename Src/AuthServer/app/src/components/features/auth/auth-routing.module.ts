@@ -17,9 +17,16 @@ import {LogOutPageComponent} from "./log-out/log-out-page.component";
 import {ExternalLogInCallbackPageComponent} from "./external-log-in/external-log-in-callback-page.component";
 import {LoggedInGuard} from "./services/logged-in.guard";
 import {SearchableProvidersResolver} from "./external-log-in/services/searchable-providers-resolver";
+import {SignInUpPageComponent} from "./sign-in-up/sign-in-up-page.component";
 
 
 const appRoutes: Routes = [
+    {path: 'log-in2', component: SignInUpPageComponent,
+        resolve:
+            {
+                app: AppByUrlResolver,
+                searchableProviders: SearchableProvidersResolver
+            }},
     {
         path: 'log-in',
         component: LogInPageComponent,

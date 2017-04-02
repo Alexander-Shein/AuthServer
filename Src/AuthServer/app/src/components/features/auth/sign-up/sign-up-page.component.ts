@@ -40,7 +40,6 @@ export class SignUpPageComponent extends AuthBaseComponent {
     public signUp: SignUp = new SignUp();
 
     public searchableProviders: SearchableExternalProvider[];
-    public searchResult: ExternalProvider;
     public isValidUserName: boolean = false;
     public isEmail: boolean = false;
 
@@ -67,18 +66,5 @@ export class SignUpPageComponent extends AuthBaseComponent {
                     redirectUrl: this.redirectUrl,
                     authenticationScheme: externalProvider.authenticationScheme
                 });
-    }
-
-    public searchProvider(): void {
-        this.searchResult = null;
-
-        for(let item of this.searchableProviders) {
-            for(let match of item.matches) {
-                if(this.signUp.userName.toLowerCase().indexOf(match) != -1) {
-                    this.searchResult = item;
-                    return;
-                }
-            }
-        }
     }
 }

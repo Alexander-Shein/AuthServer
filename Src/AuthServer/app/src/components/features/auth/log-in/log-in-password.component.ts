@@ -24,12 +24,12 @@ import {AppVm} from "../../business/apps/models/app-vm";
                                     #password="ngModel">
                             <md-hint align="end">{{password.value?.length || 0}} / 100</md-hint>
                             <md-hint *ngIf="password.errors && (password.dirty || password.touched)" style="color: red;">
-                                    <span [hidden]="!password.errors.required" >
-                                        Password is required.
-                                    </span>
+                                <span [hidden]="!password.errors.required" >
+                                    Password is required.
+                                </span>
                                 <span [hidden]="!password.errors.minlength || password.errors.required">
-                                        Min length is 6 characters for password.
-                                    </span>
+                                    Min length is 6 characters for password.
+                                </span>
                             </md-hint>
                         </md-input-container>
                     </div>

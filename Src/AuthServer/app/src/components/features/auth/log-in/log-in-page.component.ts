@@ -40,7 +40,6 @@ export class LogInPageComponent extends AuthBaseComponent {
     public logIn: LogIn = new LogIn();
 
     public searchableProviders: SearchableExternalProvider[];
-    public searchResult: ExternalProvider;
     public isValidUserName: boolean = false;
     public isEmail: boolean = false;
 
@@ -65,18 +64,5 @@ export class LogInPageComponent extends AuthBaseComponent {
                     redirectUrl: this.redirectUrl,
                     authenticationScheme: externalProvider.authenticationScheme
                 });
-    }
-
-    public searchProvider(): void {
-        this.searchResult = null;
-
-        for(let item of this.searchableProviders) {
-            for(let match of item.matches) {
-                if(this.logIn.userName.toLowerCase().indexOf(match) != -1) {
-                    this.searchResult = item;
-                    return;
-                }
-            }
-        }
     }
 }
