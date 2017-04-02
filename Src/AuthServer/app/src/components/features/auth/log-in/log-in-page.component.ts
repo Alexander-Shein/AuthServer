@@ -41,14 +41,20 @@ export class LogInPageComponent extends AuthBaseComponent {
 
     public searchableProviders: SearchableExternalProvider[];
     public searchResult: ExternalProvider;
+    public isValidUserName: boolean = false;
+    public isEmail: boolean = false;
 
-    public onSubmit(): void {
+    public validateUserName(): void {
         this.spinnerService.show();
 
         this.authenticationService
             .isUserNameExists(this.logIn.userName)
             .subscribe(
-                () => this.handle(),
+                () => {
+                    this.isValidUserName = true;
+                    this.isEmail = this.logIn.userName.indexOf('@') != -1;
+                    this.spinnerService.hide();
+                },
                 () => this.spinnerService.hide());
     }
 
@@ -72,19 +78,5 @@ export class LogInPageComponent extends AuthBaseComponent {
                 }
             }
         }
-    }
-
-    private handle(): void {
-
-        let isEmail = this.logIn.userName.indexOf('@') != -1;
-
-        this.router
-            .navigate(['/'],
-                {
-                    queryParams: {
-                        redirectUrl: this.redirectUrl
-                    }
-                })
-            .then(() => this.spinnerService.hide());
     }
 }

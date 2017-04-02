@@ -2,10 +2,134 @@
 
     <div class="row">
         <div class="col-12">
-            <h2 class="text-center">Sign up to <strong>{{app.name}}</strong>.</h2>
+            <h3 class="text-center">Sign up to <strong>{{app.name}}</strong>.</h3>
         </div>
     </div>
 
+    <div class="row justify-content-center" *ngIf="!isValidUserName">
+        <div class="col-12 col-md-6 col-lg-5 col-xl-4" style="max-width: 320px;">
+
+            <form class="row" #signUpForm="ngForm" (submit)="validateUserName()"  *ngIf="app.isLocalAccountEnabled">
+                <div class="col">
+
+                    <div class="row">
+                        <div class="col">
+                            <md-input-container class="w-100" *ngIf="app.emailSettings.isEnabled && app.phoneSettings.isEnabled">
+                                <input
+                                        mdInput
+                                        placeholder="Email or Phone"
+                                        type="text"
+                                        name="userName"
+                                        maxlength="254"
+                                        required
+                                        emailOrPhone
+                                        [(ngModel)]="signUp.userName"
+                                        (input)="searchProvider()"
+                                        #userName="ngModel">
+                                <md-hint align="end">{{userName.value?.length || 0}} / 254</md-hint>
+                                <md-hint *ngIf="userName.errors && (userName.dirty || userName.touched)" style="color: red;">
+                                    <span [hidden]="!userName.errors.required">
+                                        Email or Phone is required.
+                                    </span>
+                                    <span [hidden]="!userName.errors.emailOrPhone || userName.errors.required">
+                                        Email or Phone is not valid.
+                                    </span>
+                                </md-hint>
+                            </md-input-container>
+
+                            <md-input-container class="w-100" *ngIf="app.emailSettings.isEnabled && !app.phoneSettings.isEnabled">
+                                <input
+                                        mdInput
+                                        placeholder="Email"
+                                        type="text"
+                                        name="userName"
+                                        maxlength="254"
+                                        required
+                                        email
+                                        [(ngModel)]="signUp.userName"
+                                        (input)="searchProvider()"
+                                        #userName="ngModel">
+                                <md-hint align="end">{{userName.value?.length || 0}} / 254</md-hint>
+                                <md-hint *ngIf="userName.errors && (userName.dirty || userName.touched)" style="color: red;">
+                                    <span [hidden]="!userName.errors.required">
+                                        Email is required.
+                                    </span>
+                                    <span [hidden]="!userName.errors.email || userName.errors.required">
+                                        Email is not valid.
+                                    </span>
+                                </md-hint>
+                            </md-input-container>
+
+                            <md-input-container class="w-100" *ngIf="!app.emailSettings.isEnabled && app.phoneSettings.isEnabled">
+                                <input
+                                        mdInput
+                                        placeholder="Phone"
+                                        type="text"
+                                        name="userName"
+                                        maxlength="50"
+                                        required
+                                        phone
+                                        [(ngModel)]="signUp.userName"
+                                        #userName="ngModel">
+                                <md-hint align="end">{{userName.value?.length || 0}} / 254</md-hint>
+                                <md-hint *ngIf="userName.errors && (userName.dirty || userName.touched)" style="color: red;">
+                                    <span [hidden]="!userName.errors.required">
+                                        Phone is required.
+                                    </span>
+                                    <span [hidden]="!userName.errors.phone || userName.errors.required">
+                                        Phone is not valid.
+                                    </span>
+                                </md-hint>
+                            </md-input-container>
+                        </div>
+                    </div>
+
+                    <div class="row mt-1">
+                        <div class="col">
+                            <button
+                                    class="w-100"
+                                    [disabled]="!signUpForm.form.valid"
+                                    md-raised-button color="primary">next</button>
+                        </div>
+                    </div>
+
+                    <div class="row mt-1" *ngIf="searchResult">
+                        <div class="col">
+                            <au-social-network-button
+                                    [namePrefix]="'sign up with'"
+                                    [namePostfix]="'?'"
+                                    (click)="externalLogIn(searchResult)"
+                                    [provider]="searchResult"
+                            ></au-social-network-button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="row" *ngIf="app.externalProviders?.length">
+                <div class="col">
+                    <div class="row" *ngIf="app.isLocalAccountEnabled">
+                        <div class="col-12 text-center mt-3 mb-3">
+                            <span>Or using external provider</span>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-12">
+                            <au-social-network-button
+                                    [namePrefix]="'sign up with'"
+                                    *ngFor="let sn of app.externalProviders"
+                                    (click)="externalLogIn(sn)"
+                                    [provider]="sn"
+                            ></au-social-network-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--
     <div class="row justify-content-center">
         <form class="col-12 col-md-6 col-lg-5 col-xl-4 sign-up-form" (ngSubmit)="onSubmit()">
 
@@ -93,6 +217,12 @@
                     </button>
                 </div>
             </div>
+        </div>
+    </div>-->
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-5 col-xl-4 text-right" style="max-width: 320px;">
+            <span style="font-size: 10px;">Protected by <strong>AuthGuardian</strong></span>
         </div>
     </div>
 

@@ -1,6 +1,8 @@
-export class LogIn {
+import {UserName} from "./user-name";
 
-    public userName: string;
+
+export class LogIn extends UserName {
+
     public password: string;
     public rememberLogIn: boolean = true;
 

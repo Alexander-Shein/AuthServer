@@ -16,7 +16,7 @@ import {ExternalProvider} from "./models/external-provider";
                 md-raised-button
                 color="primary">
             <md-icon svgIcon="{{getIconName()}}"></md-icon>
-            <span class="ml-2">log in with {{provider.displayName}}</span>
+            <span class="ml-2">{{namePrefix}} {{provider.displayName}} {{namePostfix}}</span>
         </button>
     `,
     styleUrls: ['./social-network-button.component.scss']
@@ -25,6 +25,12 @@ export class SocialNetworkButtonComponent {
 
     @Input()
     public provider: ExternalProvider;
+
+    @Input()
+    public namePrefix: string = '';
+
+    @Input()
+    public namePostfix: string = '';
 
     constructor(
         iconRegistry: MdIconRegistry, sanitizer: DomSanitizer

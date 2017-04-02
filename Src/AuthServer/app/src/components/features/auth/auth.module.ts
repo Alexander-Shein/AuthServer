@@ -20,6 +20,8 @@ import {PhoneLogInComponent} from "./log-in/phone-log-in.component";
 import {EmailOrPhoneValidatorDirective} from "./log-in/email-or-phone-validator.directive";
 import {PhoneValidatorDirective} from "./log-in/phone-validator.directive";
 import {SocialNetworkButtonComponent} from "./external-log-in/social-network-button.component";
+import {LogInPasswordComponent} from "./log-in/log-in-password.component";
+import {UserNameComponent} from "./shared/user-name.component";
 
 
 @NgModule({
@@ -46,7 +48,9 @@ import {SocialNetworkButtonComponent} from "./external-log-in/social-network-but
         ExternalLogInCallbackPageComponent,
         EmailOrPhoneValidatorDirective,
         PhoneValidatorDirective,
-        SocialNetworkButtonComponent
+        SocialNetworkButtonComponent,
+        LogInPasswordComponent,
+        UserNameComponent
     ],
     providers: []
 })

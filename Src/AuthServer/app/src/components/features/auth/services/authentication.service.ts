@@ -83,7 +83,11 @@ export class AuthenticationService extends ServiceBase implements IAuthenticatio
     }
 
     public isUserNameExists(userName: string): Observable<void> {
-        return Observable.of<void>();
+        return new Observable<void>(observer => {
+            setTimeout(() => {
+                observer.next();
+            }, 1000);
+        });
     }
 
 }

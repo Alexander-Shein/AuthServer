@@ -29,7 +29,7 @@ export class EmailConfirmationPageComponent extends AuthBaseComponent {
         this.route
             .params
             .subscribe((params: Params) => {
-                this.signUp.email = params[Consts.Email] || '';
+                this.signUp.userName = params[Consts.Email] || '';
                 this.loginProvider = params[Consts.LoginProvider];
             });
 

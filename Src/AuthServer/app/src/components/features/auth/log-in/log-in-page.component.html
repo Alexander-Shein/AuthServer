@@ -6,10 +6,19 @@
         </div>
     </div>
 
-    <div class="row justify-content-center" *ngIf="app.isLocalAccountEnabled">
+    <div class="row justify-content-center" *ngIf="!isValidUserName">
         <div class="col-12 col-md-6 col-lg-5 col-xl-4" style="max-width: 320px;">
 
-            <form class="row" #logInForm="ngForm" (submit)="onSubmit()">
+            <au-user-name
+                    [app]="app"
+                    [im]="logIn"
+                    [searchableProviders]="searchableProviders"
+                    (next)="validateUserName()"
+            ></au-user-name>
+
+            <!--
+
+            <form class="row" #logInForm="ngForm" (submit)="validateUserName()"  *ngIf="app.isLocalAccountEnabled">
                 <div class="col">
 
                     <div class="row">
@@ -28,7 +37,7 @@
                                         #userName="ngModel">
                                 <md-hint align="end">{{userName.value?.length || 0}} / 254</md-hint>
                                 <md-hint *ngIf="userName.errors && (userName.dirty || userName.touched)" style="color: red;">
-                                    <span [hidden]="!userName.errors.required" >
+                                    <span [hidden]="!userName.errors.required">
                                         Email or Phone is required.
                                     </span>
                                     <span [hidden]="!userName.errors.emailOrPhone || userName.errors.required">
@@ -51,7 +60,7 @@
                                         #userName="ngModel">
                                 <md-hint align="end">{{userName.value?.length || 0}} / 254</md-hint>
                                 <md-hint *ngIf="userName.errors && (userName.dirty || userName.touched)" style="color: red;">
-                                    <span [hidden]="!userName.errors.required" >
+                                    <span [hidden]="!userName.errors.required">
                                         Email is required.
                                     </span>
                                     <span [hidden]="!userName.errors.email || userName.errors.required">
@@ -73,7 +82,7 @@
                                         #userName="ngModel">
                                 <md-hint align="end">{{userName.value?.length || 0}} / 254</md-hint>
                                 <md-hint *ngIf="userName.errors && (userName.dirty || userName.touched)" style="color: red;">
-                                    <span [hidden]="!userName.errors.required" >
+                                    <span [hidden]="!userName.errors.required">
                                         Phone is required.
                                     </span>
                                     <span [hidden]="!userName.errors.phone || userName.errors.required">
@@ -93,21 +102,11 @@
                         </div>
                     </div>
 
-                    <!--<div class="row">
-                        <div class="col-12">
-                            <button
-                                    class="g-recaptcha"
-                                    data-sitekey="6LfwFxsUAAAAABnL6zYOgcoOOn-WMQ3i5dbsnE4c"
-                                    data-callback="YourOnSubmitFn">
-                                Submit
-                            </button>
-                            <div class="g-recaptcha" data-sitekey="6LevEhsUAAAAAHiBe_2GZMkgCos78lNYAiL6HdZL"></div>
-                        </div>
-                    </div>-->
-
                     <div class="row mt-1" *ngIf="searchResult">
                         <div class="col">
                             <au-social-network-button
+                                    [namePrefix]="'log in with'"
+                                    [namePostfix]="'?'"
                                     (click)="externalLogIn(searchResult)"
                                     [provider]="searchResult"
                             ></au-social-network-button>
@@ -115,75 +114,44 @@
                     </div>
                 </div>
             </form>
-<!--
-            <au-email-log-in [logIn]="logIn" [app]="app" *ngIf="app.emailSettings.isEnabled && !app.phoneSettings.isEnabled"></au-email-log-in>
-            <au-phone-log-in [logIn]="logIn" *ngIf="!app.emailSettings.isEnabled && app.phoneSettings.isEnabled"></au-phone-log-in>
-
-            <div class="row" *ngIf="app.emailSettings.isEnabled && app.phoneSettings.isEnabled">
-                <md-tab-group class="col">
-                    <md-tab label="Using email">
-                        <au-email-log-in [logIn]="logIn" [app]="app"></au-email-log-in>
-                    </md-tab>
-                    <md-tab label="Using phone">
-                        <au-phone-log-in [logIn]="logIn"></au-phone-log-in>
-                    </md-tab>
-                </md-tab-group>
-            </div>
-
-            <div class="row" *ngIf="app.isRememberLogInEnabled">
+-->
+            <div class="row" *ngIf="app.externalProviders?.length">
                 <div class="col">
-                    <div>
-                        <md-checkbox
-                                color="primary"
-                                name="remember"
-                                [(ngModel)]="logIn.rememberLogIn">
-                            <span>remember me </span>
-                        </md-checkbox>
-                        <md-icon style="position: absolute; margin-left: 3px;"
-                                 mdTooltip="Protect your account. Uncheck if using public/shared device."
-                                 [mdTooltipPosition]="'above'">info_outline</md-icon>
+                    <div class="row" *ngIf="app.isLocalAccountEnabled">
+                        <div class="col-12 text-center mt-3 mb-3">
+                            <span>Or using external provider</span>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-12">
+                            <au-social-network-button
+                                    [namePrefix]="'log in with'"
+                                    *ngFor="let sn of app.externalProviders"
+                                    (click)="externalLogIn(sn)"
+                                    [provider]="sn"
+                            ></au-social-network-button>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div class="row mt-2">
-                <a [routerLink]="['/sign-up']" [queryParams]="{redirectUrl: redirectUrl}" class="col-12">Register as a new user?</a>
-            </div>
-
-            <div class="row">
-                <a [routerLink]="['/forgot-password']" [queryParams]="{redirectUrl: redirectUrl}" class="col-12">Forgot your password?</a>
-            </div>-->
         </div>
     </div>
 
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" *ngIf="isValidUserName && isEmail">
         <div class="col-12 col-md-6 col-lg-5 col-xl-4 text-right" style="max-width: 320px;">
             <au-email-log-in [app]="app" [logIn]="logIn"></au-email-log-in>
         </div>
     </div>
 
-    <div class="row justify-content-center" *ngIf="app.externalProviders?.length">
-        <div class="col-12 col-md-6 col-lg-5 col-xl-4" style="max-width: 320px;">
-            <div class="row" *ngIf="app.isLocalAccountEnabled">
-                <div class="col-12 text-center mt-3 mb-3">
-                    <span>Or using external provider</span>
-                </div>
-            </div>
-            <div class="row mt-1">
-                <div class="col-12">
-                    <au-social-network-button
-                            *ngFor="let sn of app.externalProviders"
-                            (click)="externalLogIn(sn)"
-                            [provider]="sn"
-                    ></au-social-network-button>
-                </div>
-            </div>
+    <div class="row justify-content-center" *ngIf="isValidUserName && !isEmail">
+        <div class="col-12 col-md-6 col-lg-5 col-xl-4 text-right" style="max-width: 320px;">
+            <au-phone-log-in [app]="app" [logIn]="logIn"></au-phone-log-in>
         </div>
     </div>
 
     <div class="row justify-content-center">
         <div class="col-12 col-md-6 col-lg-5 col-xl-4 text-right" style="max-width: 320px;">
-            <span style="font-size: 10px;">Powered by <strong>AuthGuardian</strong></span>
+            <span style="font-size: 10px;">Protected by <strong>AuthGuardian</strong></span>
         </div>
     </div>
 

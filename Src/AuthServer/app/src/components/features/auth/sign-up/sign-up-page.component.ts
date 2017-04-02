@@ -6,6 +6,7 @@ import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {AuthBaseComponent} from "../auth-base.component";
 import {AppVm} from "../../business/apps/models/app-vm";
 import {ExternalProvider} from "../external-log-in/models/external-provider";
+import {SearchableExternalProvider} from "../external-log-in/models/searchable-external-provider";
 
 
 @Component({
@@ -27,8 +28,9 @@ export class SignUpPageComponent extends AuthBaseComponent {
     public ngOnInit(): void {
         this.route
             .data
-            .subscribe((data: {app: AppVm}) => {
+            .subscribe((data: {app: AppVm, searchableProviders: SearchableExternalProvider[]}) => {
                 this.app = data.app;
+                this.searchableProviders = data.searchableProviders;
             });
 
         super.ngOnInit();
@@ -37,13 +39,25 @@ export class SignUpPageComponent extends AuthBaseComponent {
     public app: AppVm;
     public signUp: SignUp = new SignUp();
 
-    public onSubmit(): void {
+    public searchableProviders: SearchableExternalProvider[];
+    public searchResult: ExternalProvider;
+    public isValidUserName: boolean = false;
+    public isEmail: boolean = false;
+
+    public validateUserName(): void {
         this.spinnerService.show();
 
         this.authenticationService
-            .signUp(this.signUp)
-            .then(() => this.redirectAfterLogin())
-            .catch(() => this.spinnerService.hide());
+            .isUserNameExists(this.signUp.userName)
+            .subscribe(
+                () => {
+                    this.isValidUserName = true;
+                    this.isEmail = this.signUp.userName.indexOf('@') != -1;
+                    this.spinnerService.hide();
+                },
+                () => {
+                    this.spinnerService.hide()
+                });
     }
 
     public externalLogIn(externalProvider: ExternalProvider): void {
@@ -55,4 +69,16 @@ export class SignUpPageComponent extends AuthBaseComponent {
                 });
     }
 
+    public searchProvider(): void {
+        this.searchResult = null;
+
+        for(let item of this.searchableProviders) {
+            for(let match of item.matches) {
+                if(this.signUp.userName.toLowerCase().indexOf(match) != -1) {
+                    this.searchResult = item;
+                    return;
+                }
+            }
+        }
+    }
 }

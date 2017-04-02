@@ -35,7 +35,8 @@ const appRoutes: Routes = [
         component: SignUpPageComponent,
         resolve:
         {
-            app: AppByUrlResolver
+            app: AppByUrlResolver,
+            searchableProviders: SearchableProvidersResolver
         }
     },
     {path: 'forgot-password', component: ForgotPasswordPageComponent},

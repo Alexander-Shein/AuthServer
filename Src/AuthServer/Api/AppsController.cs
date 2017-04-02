@@ -65,11 +65,14 @@ namespace AuthServer.Api
                 EmailSettings = new LocalAccountSettings
                 {
                     IsEnabled = true,
-                    IsPasswordlessEnabled = true
+                    IsPasswordlessEnabled = true,
+                    IsPasswordEnabled = false
                 },
                 PhoneSettings = new LocalAccountSettings
                 {
-                    IsEnabled = true
+                    IsEnabled = true,
+                    IsPasswordlessEnabled = true,
+                    IsPasswordEnabled = true
                 }
             });
         }
