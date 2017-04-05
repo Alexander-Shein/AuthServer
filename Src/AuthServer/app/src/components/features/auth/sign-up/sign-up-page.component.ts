@@ -65,7 +65,7 @@ export class SignUpPageComponent extends AuthBaseComponent {
         this.authenticationService
             .externalLogIn(
                 {
-                    redirectUrl: this.redirectUrl,
+                    returnUrl: this.redirectUrl,
                     authenticationScheme: externalProvider.authenticationScheme
                 });
     }

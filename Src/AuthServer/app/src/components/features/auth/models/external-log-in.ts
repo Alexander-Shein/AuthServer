@@ -1,6 +1,6 @@
 export class ExternalLogIn {
 
-    public redirectUrl: string;
+    public returnUrl: string;
     public authenticationScheme: string;
 
 }

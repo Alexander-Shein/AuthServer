@@ -1,9 +1,14 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Params} from "@angular/router";
+import {Consts} from "../consts";
 
 
 @Component({
-    template: '<div class="text-center"><h1>An error has occurred.</h1><h2>{{message}}</h2></div>'
+    template: `
+        <div class="text-center">
+            <h3>An error has occurred.</h3>
+            <p *ngIf="errorMessage">Error message: <span style="color: red;">{{errorMessage}}</span></p>
+        </div>`
 })
 export class ErrorPageComponent implements OnInit {
 
@@ -12,10 +17,12 @@ export class ErrorPageComponent implements OnInit {
     ) {}
 
     public ngOnInit(): void {
-        this.route.params.subscribe((params: Params) => {
-            this.message = params['message'] || '';
-        });
+        this.route
+            .params
+            .subscribe((params: Params) => {
+                this.errorMessage = params[Consts.ErrorMessage] || '';
+            });
     }
 
-    public message: string;
+    public errorMessage: string;
 }

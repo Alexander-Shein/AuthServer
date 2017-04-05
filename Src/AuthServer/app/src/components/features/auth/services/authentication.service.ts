@@ -60,7 +60,17 @@ export class AuthenticationService extends ServiceBase implements IAuthenticatio
     }
 
     public externalLogIn(externalLogIn: ExternalLogIn): void {
-        window.location.href = 'http://localhost:8080/external-log-in-callback?accessToken=54321';
+        let form = document.createElement('form');
+        form.setAttribute('method', 'post');
+        form.setAttribute('action', this.apiUrl + 'external-log-in');
+
+        let returnUrl = 'http://localhost:8080/external-log-in-callback?redirectUrl=' + encodeURIComponent(externalLogIn.returnUrl);
+
+        this.addParameterToForm(form, 'authenticationScheme', externalLogIn.authenticationScheme);
+        this.addParameterToForm(form, 'returnUrl', returnUrl);
+
+        document.body.appendChild(form);
+        form.submit();
     }
 
     public signUp(signUp: SignUp): Promise<void> {
@@ -80,6 +90,15 @@ export class AuthenticationService extends ServiceBase implements IAuthenticatio
 
         this.loggedIn = !this.loggedIn;
         this.isLoggedInEventEmitter.emit(this.loggedIn);
+    }
+
+    private addParameterToForm(form: any, key: string, value: string) {
+        let hiddenField = document.createElement('input');
+        hiddenField.setAttribute('type', 'hidden');
+        hiddenField.setAttribute('name', key);
+        hiddenField.setAttribute('value', value);
+
+        form.appendChild(hiddenField);
     }
 
 }

@@ -140,7 +140,7 @@ export class UserNameComponent extends AuthBaseComponent {
         this.authenticationService
             .externalLogIn(
                 {
-                    redirectUrl: this.redirectUrl,
+                    returnUrl: this.redirectUrl,
                     authenticationScheme: externalProvider.authenticationScheme
                 });
     }

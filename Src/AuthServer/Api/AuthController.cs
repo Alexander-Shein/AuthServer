@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using System;
+using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -51,52 +52,130 @@ namespace AuthServer.Api
 
         [HttpPost]
         [Route("log-in")]
-        public async Task<IActionResult> LogIn([FromBody] LogInDetails im)
+        public async Task<IActionResult> LogIn([FromBody] LogInIm im)
         {
-            if (String.IsNullOrWhiteSpace(im?.Email) || String.IsNullOrWhiteSpace(im?.Password))
+            if (String.IsNullOrWhiteSpace(im?.UserName) || String.IsNullOrWhiteSpace(im?.Password))
             {
-                return BadRequest(new ErrorResult("Invalid login attempt."));
+                return BadRequest(new BadRequestResult("Invalid login attempt."));
             }
 
-            var result = await _signInManager.PasswordSignInAsync(im.Email ?? im.Phone, im.Password, im.RememberLogIn, lockoutOnFailure: true);
+            var result = await _signInManager.PasswordSignInAsync(im.UserName, im.Password, im.RememberLogIn, lockoutOnFailure: true);
 
             if (result.IsLockedOut)
             {
-                return BadRequest(new ErrorResult("User account locked out."));
+                return BadRequest(new BadRequestResult("User account locked out."));
             }
 
             if (result.Succeeded || result.RequiresTwoFactor)
             {
-                return Ok(new LogInResult
+                return Ok(new LogInVm
                 {
                     RequiresTwoFactor = result.RequiresTwoFactor
                 });
             }
             else
             {
-                return BadRequest(new ErrorResult("Invalid login attempt."));
+                return BadRequest(new BadRequestResult("Invalid login attempt."));
+            }
+        }
+
+        [HttpPost]
+        [Route("external-log-in")]
+        public IActionResult ExternalLogIn([FromBody] ExternalLogInIm im)
+        {
+            var redirectUrl = Url.Action("external-log-in-callback", new
+            {
+                ReturnUrl = im.ReturnUrl
+            });
+
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(im.AuthenticationScheme, redirectUrl);
+            return Challenge(properties, im.AuthenticationScheme);
+        }
+
+        [HttpGet]
+        [Route("external-log-in-callback")]
+        public async Task<IActionResult> ExternalLogInCallback(string returnUrl, string remoteError = null)
+        {
+            if (remoteError != null)
+            {
+                returnUrl += returnUrl.Contains("?") ? "&" : "?";
+                returnUrl += "errorMessage=" + remoteError;
+                return Redirect(returnUrl);
+            }
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                returnUrl += returnUrl.Contains("?") ? "&" : "?";
+                returnUrl += "errorMessage=You are not logged in. Please try again.";
+                return Redirect(returnUrl);
+            }
+
+            // Sign in the user with this external login provider if the user already has a login.
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+
+            if (result.Succeeded)
+            {
+                _logger.LogInformation(5, "User logged in with {Name} provider.", info.LoginProvider);
+                return Redirect(returnUrl);
+            }
+            if (result.RequiresTwoFactor)
+            {
+                returnUrl += returnUrl.Contains("?") ? "&" : "?";
+                returnUrl += "requiresTwoFactor=true";
+                return Redirect(returnUrl);
+            }
+            if (result.IsLockedOut)
+            {
+                returnUrl += returnUrl.Contains("?") ? "&" : "?";
+                returnUrl += "errorMessage=Account is lockout.";
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                returnUrl += returnUrl.Contains("?") ? "&" : "?";
+                returnUrl += "isNewAccount=true";
+                returnUrl += "&provider=" + info.LoginProvider;
+
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                if (!String.IsNullOrEmpty(email))
+                {
+                    returnUrl += "&email=" + email;
+                }
+
+                var mobilePhone = info.Principal.FindFirstValue(ClaimTypes.MobilePhone);
+                if (!String.IsNullOrEmpty(mobilePhone))
+                {
+                    returnUrl += "&phone=" + mobilePhone;
+                }
+
+                return Redirect(returnUrl);
             }
         }
     }
 
-    public class LogInDetails
+    public class LogInIm
     {
-        public string Email { get; set; }
-        public string Phone { get; set; }
+        public string UserName { get; set; }
         public string Password { get; set; }
         public bool RememberLogIn { get; set; }
     }
 
-    public class LogInResult
+    public class ExternalLogInIm
+    {
+        public string ReturnUrl { get; set; }
+        public string AuthenticationScheme { get; set; }
+    }
+
+    public class LogInVm
     {
         public bool RequiresTwoFactor { get; set; }
     }
 
-    public class ErrorResult
+    public class BadRequestResult
     {
-        public ErrorResult() { }
+        public BadRequestResult() { }
 
-        public ErrorResult(string message)
+        public BadRequestResult(string message)
         {
             Error = message;
         }
