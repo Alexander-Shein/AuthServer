@@ -1,13 +1,17 @@
 <div class="container-fluid mt-2">
     <div class="row">
-        <h2 class="col-12 text-center">Contact us.</h2>
+        <h3 class="col-12 text-center">We're here to Help!</h3>
+        <div class="col-12 text-center" *ngIf="!isMessageSent">We're friendly and available to chat.</div>
+        <div class="col-12 text-center" *ngIf="!isMessageSent">Reach out to us anytime and we'll happily answer your questions.</div>
     </div>
 
     <div class="row justify-content-center">
         <div class="col-12 text-center" *ngIf="isMessageSent">
-            Your message is sent successfully. We will answer you soon. Thank you.
+            <md-icon color="primary">done</md-icon>
+            <div>We've received your message. We will answer you soon.</div>
+            <div>Thank you!</div>
         </div>
-        <form class="col-12 col-md-6 col-lg-5 col-xl-4" (submit)="send()" *ngIf="!isMessageSent">
+        <form class="col-12 col-md-6 col-lg-5 col-xl-4" #sendMessageForm="ngForm" (submit)="send()" *ngIf="!isMessageSent">
 
             <div class="row">
                 <md-icon color="primary" class="col-auto mt-3 ml-3">perm_identity</md-icon>
@@ -15,28 +19,38 @@
                     <md-input-container class="w-100">
                         <input
                                 mdInput
-                                #firstName
                                 placeholder="First name"
                                 type="text"
                                 name="firstName"
                                 maxlength="50"
                                 required
-                                [(ngModel)]="im.firstName">
-                        <md-hint align="end">{{firstName.value.length}} / 50</md-hint>
+                                [(ngModel)]="im.firstName"
+                                #firstName="ngModel">
+                        <md-hint align="end">{{firstName.value?.length || 0}} / 50</md-hint>
+                        <md-hint *ngIf="firstName.errors && (firstName.dirty || firstName.touched)" style="color: red;">
+                            <span [hidden]="!firstName.errors.required">
+                                First Name is required.
+                            </span>
+                        </md-hint>
                     </md-input-container>
                 </div>
                 <div class="col">
                     <md-input-container class="w-100">
                         <input
                                 mdInput
-                                #lastName
+                                #lastName="ngModel"
                                 placeholder="Last name"
                                 type="text"
                                 name="lastName"
                                 maxlength="50"
                                 required
                                 [(ngModel)]="im.lastName">
-                        <md-hint align="end">{{lastName.value.length}} / 50</md-hint>
+                        <md-hint align="end">{{lastName.value?.length || 0}} / 50</md-hint>
+                        <md-hint *ngIf="lastName.errors && (lastName.dirty || lastName.touched)" style="color: red;">
+                            <span [hidden]="!lastName.errors.required">
+                                Last Name is required.
+                            </span>
+                        </md-hint>
                     </md-input-container>
                 </div>
             </div>
@@ -47,14 +61,19 @@
                     <md-input-container class="w-100">
                         <input
                                 mdInput
-                                #companyName
+                                #companyName="ngModel"
                                 placeholder="Company name"
                                 type="text"
                                 name="companyName"
                                 maxlength="100"
                                 required
                                 [(ngModel)]="im.companyName">
-                        <md-hint align="end">{{companyName.value.length}} / 100</md-hint>
+                        <md-hint align="end">{{companyName.value?.length || 0}} / 100</md-hint>
+                        <md-hint *ngIf="companyName.errors && (companyName.dirty || companyName.touched)" style="color: red;">
+                            <span [hidden]="!companyName.errors.required">
+                                Company Name is required.
+                            </span>
+                        </md-hint>
                     </md-input-container>
                 </div>
             </div>
@@ -65,14 +84,23 @@
                     <md-input-container class="w-100">
                         <input
                                 mdInput
-                                #email
+                                #email="ngModel"
                                 placeholder="Your email"
                                 type="email"
                                 name="email"
                                 maxlength="100"
                                 required
-                                [(ngModel)]="im.email">
-                        <md-hint align="end">{{email.value.length}} / 100</md-hint>
+                                email
+                                [(ngModel)]="im.fromEmail">
+                        <md-hint align="end">{{email.value?.length || 0}} / 100</md-hint>
+                        <md-hint *ngIf="email.errors && (email.dirty || email.touched)" style="color: red;">
+                                    <span [hidden]="!email.errors.required">
+                                        Email is required.
+                                    </span>
+                            <span [hidden]="!email.errors.email || email.errors.required">
+                                        Email is not valid.
+                                    </span>
+                        </md-hint>
                     </md-input-container>
                 </div>
             </div>
@@ -83,14 +111,19 @@
                     <md-input-container class="w-100">
                         <input
                                 mdInput
-                                #subject
+                                #subject="ngModel"
                                 placeholder="Subject"
                                 type="text"
                                 name="subject"
                                 maxlength="100"
                                 required
                                 [(ngModel)]="im.subject">
-                        <md-hint align="end">{{subject.value.length}} / 100</md-hint>
+                        <md-hint align="end">{{subject.value?.length || 0}} / 100</md-hint>
+                        <md-hint *ngIf="subject.errors && (subject.dirty || subject.touched)" style="color: red;">
+                            <span [hidden]="!subject.errors.required">
+                                Subject is required.
+                            </span>
+                        </md-hint>
                     </md-input-container>
                 </div>
             </div>
@@ -101,21 +134,29 @@
                     <md-input-container class="w-100">
                     <textarea
                             mdInput
-                            #message
+                            #message="ngModel"
                             placeholder="Message"
                             name="message"
-                            maxlength="1000"
+                            maxlength="4000"
                             required
                             [(ngModel)]="im.message">
                     </textarea>
-                        <md-hint align="end">{{message.value.length}} / 1000</md-hint>
+                        <md-hint align="end">{{message.value?.length || 0}} / 4000</md-hint>
+                        <md-hint *ngIf="message.errors && (message.dirty || message.touched)" style="color: red;">
+                            <span [hidden]="!message.errors.required">
+                                Message is required.
+                            </span>
+                        </md-hint>
                     </md-input-container>
                 </div>
             </div>
 
             <div class="row no-gutters">
                 <div class="col-12 mt-2 text-right">
-                    <button md-raised-button color="primary">send</button>
+                    <button
+                            md-raised-button
+                            [disabled]="!sendMessageForm.form.valid"
+                            color="primary">send message</button>
                 </div>
             </div>
         </form>

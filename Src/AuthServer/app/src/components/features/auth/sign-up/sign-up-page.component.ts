@@ -7,6 +7,7 @@ import {AuthBaseComponent} from "../auth-base.component";
 import {AppVm} from "../../business/apps/models/app-vm";
 import {ExternalProvider} from "../external-log-in/models/external-provider";
 import {SearchableExternalProvider} from "../external-log-in/models/searchable-external-provider";
+import {UsersService} from "../services/users.service";
 
 
 @Component({
@@ -18,6 +19,7 @@ export class SignUpPageComponent extends AuthBaseComponent {
 
     constructor(
         private authenticationService: AuthenticationService,
+        private usersService: UsersService,
         route: ActivatedRoute,
         router: Router,
         spinnerService: SpinnerService
@@ -46,7 +48,7 @@ export class SignUpPageComponent extends AuthBaseComponent {
     public validateUserName(): void {
         this.spinnerService.show();
 
-        this.authenticationService
+        this.usersService
             .isUserNameExists(this.signUp.userName)
             .subscribe(
                 () => {

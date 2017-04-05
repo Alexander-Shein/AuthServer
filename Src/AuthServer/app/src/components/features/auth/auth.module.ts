@@ -3,7 +3,7 @@ import {BrowserModule} from "@angular/platform-browser";
 import {FormsModule} from "@angular/forms";
 import {MaterialModule}   from "@angular/material";
 import {AuthRoutingModule} from "./auth-routing.module";
-import {LogInPageComponent} from "./log-in/log-in-page.component";
+import {LogInComponent} from "./log-in/log-in.component";
 import {SignUpPageComponent} from "./sign-up/sign-up-page.component";
 import {ForgotPasswordPageComponent} from "./manage-passwords/forgot-password-page.component";
 import {ResetPasswordPageComponent} from "./manage-passwords/reset-password-page.component";
@@ -33,7 +33,7 @@ import {SignInUpPageComponent} from "./sign-in-up/sign-in-up-page.component";
         AuthRoutingModule
     ],
     declarations: [
-        LogInPageComponent,
+        LogInComponent,
         EmailLogInComponent,
         PhoneLogInComponent,
         LogOutPageComponent,

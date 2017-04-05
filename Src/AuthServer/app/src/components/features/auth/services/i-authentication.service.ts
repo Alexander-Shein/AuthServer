@@ -19,6 +19,4 @@ export interface IAuthenticationService {
 
     logOut(): void;
 
-    isUserNameExists(userName: string): Observable<void>;
-
 }

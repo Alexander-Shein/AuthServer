@@ -1,8 +1,9 @@
 import {Message} from "../models/message";
+import {Observable} from "rxjs";
 
 
 export interface IMessagesService {
 
-    send(message: Message): Promise<void>;
+    send(message: Message): Observable<void>;
 
 }

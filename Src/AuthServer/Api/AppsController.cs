@@ -65,8 +65,8 @@ namespace AuthServer.Api
                 EmailSettings = new LocalAccountSettings
                 {
                     IsEnabled = true,
-                    IsPasswordlessEnabled = true,
-                    IsPasswordEnabled = false
+                    IsPasswordlessEnabled = false,
+                    IsPasswordEnabled = true
                 },
                 PhoneSettings = new LocalAccountSettings
                 {

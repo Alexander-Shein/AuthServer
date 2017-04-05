@@ -1,7 +1,5 @@
 import {NgModule} from "@angular/core";
 import {RouterModule, Routes} from "@angular/router";
-import {LogInPageComponent} from "./log-in/log-in-page.component";
-import {SignUpPageComponent} from "./sign-up/sign-up-page.component";
 import {ForgotPasswordPageComponent} from "./manage-passwords/forgot-password-page.component";
 import {ResetPasswordPageComponent} from "./manage-passwords/reset-password-page.component";
 import {EmailConfirmationPageComponent} from "./external-log-in/email-confirmation-page.component";
@@ -20,32 +18,26 @@ import {SearchableProvidersResolver} from "./external-log-in/services/searchable
 import {SignInUpPageComponent} from "./sign-in-up/sign-in-up-page.component";
 
 
-const appRoutes: Routes = [
-    {path: 'log-in2', component: SignInUpPageComponent,
+export const AuthRoutes: Routes = [
+    {
+        path: 'log-in',
+        component: SignInUpPageComponent,
         resolve:
             {
                 app: AppByUrlResolver,
                 searchableProviders: SearchableProvidersResolver
-            }},
-    {
-        path: 'log-in',
-        component: LogInPageComponent,
-        resolve:
-        {
-            app: AppByUrlResolver,
-            searchableProviders: SearchableProvidersResolver
-        }
+            }
     },
-    {path: 'log-out', component: LogOutPageComponent},
     {
         path: 'sign-up',
-        component: SignUpPageComponent,
+        component: SignInUpPageComponent,
         resolve:
-        {
-            app: AppByUrlResolver,
-            searchableProviders: SearchableProvidersResolver
-        }
+            {
+                app: AppByUrlResolver,
+                searchableProviders: SearchableProvidersResolver
+            }
     },
+    {path: 'log-out', component: LogOutPageComponent},
     {path: 'forgot-password', component: ForgotPasswordPageComponent},
     {path: 'reset-password', component: ResetPasswordPageComponent},
     {path: 'change-password', component: ChangePasswordPageComponent, canActivate: [LoggedInGuard]},
@@ -74,7 +66,7 @@ const appRoutes: Routes = [
 
 @NgModule({
     imports: [
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(AuthRoutes)
     ],
     exports: [
         RouterModule

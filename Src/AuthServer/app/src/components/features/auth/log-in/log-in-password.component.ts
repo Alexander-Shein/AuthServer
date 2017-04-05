@@ -1,13 +1,17 @@
 import {Component, Input} from "@angular/core";
 import {LogIn} from "../models/log-in";
 import {AppVm} from "../../business/apps/models/app-vm";
+import {AuthBaseComponent} from "../auth-base.component";
+import {ActivatedRoute, Router} from "@angular/router";
+import {AuthenticationService} from "../services/authentication.service";
+import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 
 
 @Component({
     selector: 'au-log-in-password',
     template: `
 
-        <form class="row" #logInForm="ngForm">
+        <form class="row mt-1" #logInForm="ngForm" (submit)="onSubmit()">
             <div class="col-12">
                 <div class="row">
                     <div class="col">
@@ -64,11 +68,27 @@ import {AppVm} from "../../business/apps/models/app-vm";
         </form>
     `
 })
-export class LogInPasswordComponent {
+export class LogInPasswordComponent extends AuthBaseComponent {
+
+    constructor(
+        route: ActivatedRoute,
+        router: Router,
+        private authenticationService: AuthenticationService,
+        spinnerService: SpinnerService
+    ) {
+        super(route, router, spinnerService);
+    }
 
     @Input()
     public logIn: LogIn;
 
     @Input()
     public app: AppVm;
+
+    public onSubmit() {
+        this.authenticationService
+            .logIn(this.logIn)
+            .subscribe(() => this.redirectAfterLogin());
+    }
+
 }

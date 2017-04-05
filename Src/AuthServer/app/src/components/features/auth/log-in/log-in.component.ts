@@ -7,19 +7,23 @@ import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {ExternalProvider} from "../external-log-in/models/external-provider";
 import {AppVm} from "../../business/apps/models/app-vm";
 import {SearchableExternalProvider} from "../external-log-in/models/searchable-external-provider";
+import {UsersService} from "../services/users.service";
+import {NotificationsService} from "angular2-notifications";
 
 
 @Component({
     selector: 'au-log-in',
-    templateUrl: './log-in-page.component.html',
-    styleUrls: ['../auth.scss', './log-in-page.component.scss']
+    templateUrl: './log-in.component.html',
+    styleUrls: ['../auth.scss', './log-in.component.scss']
 })
-export class LogInPageComponent extends AuthBaseComponent {
+export class LogInComponent extends AuthBaseComponent {
 
     constructor(
         route: ActivatedRoute,
         router: Router,
         private authenticationService: AuthenticationService,
+        private usersService: UsersService,
+        private notificationsService: NotificationsService,
         spinnerService: SpinnerService
     ) {
         super(route, router, spinnerService);
@@ -46,7 +50,7 @@ export class LogInPageComponent extends AuthBaseComponent {
     public validateUserName(): void {
         this.spinnerService.show();
 
-        this.authenticationService
+        this.usersService
             .isUserNameExists(this.logIn.userName)
             .subscribe(
                 () => {
@@ -54,7 +58,12 @@ export class LogInPageComponent extends AuthBaseComponent {
                     this.isEmail = this.logIn.userName.indexOf('@') != -1;
                     this.spinnerService.hide();
                 },
-                () => this.spinnerService.hide());
+                () => {
+                    this.notificationsService
+                        .error('Failed.', 'AuthGuardian can\'t find user. Please try again.');
+                    this.isValidUserName = false;
+                    this.spinnerService.hide()
+                });
     }
 
     public externalLogIn(externalProvider: ExternalProvider): void {

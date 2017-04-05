@@ -25,13 +25,13 @@ export class ContactPageComponent {
 
         this.messagesService
             .send(this.im)
-            .then(() => {
+            .subscribe(() => {
                 this.spinnerService
                     .hide();
 
                 this.isMessageSent = true;
-            })
-            .catch(() => this.spinnerService.hide());
+            },
+            () => this.spinnerService.hide());
     }
 
 }

@@ -1,39 +1,24 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewEncapsulation} from "@angular/core";
 import {AppVm} from "../../business/apps/models/app-vm";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 
 @Component({
     selector: 'au-sign-in-up',
-    template: `
-        <div class="container-fluid mt-2">
-
-            <div class="row">
-                <div class="col-12">
-                    <h3 class="text-center"><strong>{{app.name}}</strong>.</h3>
-                </div>
-            </div>
-
-            <div class="row justify-content-center">
-                <md-tab-group class="col-12 col-md-6 col-lg-5 col-xl-4" style="max-width: 320px;">
-                    <md-tab label="log in">
-                        <au-log-in></au-log-in>
-                    </md-tab>
-                    <md-tab label="sign up">
-                        <au-sign-up></au-sign-up>
-                    </md-tab>
-                </md-tab-group>
-            </div>
-            
-        </div>
-    `
+    templateUrl: './sign-in-up-page.component.html',
+    styleUrls: ['./sign-in-up-page.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class SignInUpPageComponent implements OnInit {
 
     constructor(
+        private router: Router,
         private route: ActivatedRoute
     ) {
+        this.selectedIndex = this.router.url.indexOf('sign-up') != -1 ? 1 : 0;
     }
+
+    public selectedIndex: number;
 
     public ngOnInit(): void {
         this.route
