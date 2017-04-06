@@ -71,7 +71,7 @@ namespace AuthServer.Api
             {
                 return Ok(new LogInVm
                 {
-                    RequiresTwoFactor = result.RequiresTwoFactor
+                    RequiresTwoFactor = true// result.RequiresTwoFactor
                 });
             }
             else
@@ -149,6 +149,44 @@ namespace AuthServer.Api
                 return Redirect(returnUrl);
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> SendCode([FromBody] string provider)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            if (user == null)
+            {
+                return BadRequest("An error is occured. Please try again.");
+            }
+
+            // Generate the token and send it
+            var code = await _userManager.GenerateTwoFactorTokenAsync(user, provider);
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                return BadRequest("An error is occured. Please try again.");
+            }
+
+            var message = "Your security code is: " + code;
+            if (provider == "Email")
+            {
+                await _emailSender.SendEmailAsync(await _userManager.GetEmailAsync(user), "Security Code", message);
+            }
+            else if (provider == "Phone")
+            {
+                await _smsSender.SendSmsAsync(await _userManager.GetPhoneNumberAsync(user), message);
+            }
+            else
+            {
+                return BadRequest("An error is occured. Please try again.");
+            }
+
+            return Ok();
+        }
     }
 
     public class LogInIm
@@ -179,5 +217,10 @@ namespace AuthServer.Api
         }
 
         public string Error { get; set; }
+    }
+
+    public class SendCodeIm
+    {
+        public string Provider { get; set; }
     }
 }

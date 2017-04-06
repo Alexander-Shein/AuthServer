@@ -162,7 +162,8 @@ export class UserNameComponent extends AuthBaseComponent {
         }
     }
 
-    public onSubmit() {
+    public onSubmit(): boolean {
         this.next.emit();
+        return false;
     }
 }

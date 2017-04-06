@@ -5,6 +5,7 @@ import {AuthBaseComponent} from "../auth-base.component";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AuthenticationService} from "../services/authentication.service";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
+import {LogInResult} from "../models/log-in-result";
 
 
 @Component({
@@ -88,7 +89,22 @@ export class LogInPasswordComponent extends AuthBaseComponent {
     public onSubmit() {
         this.authenticationService
             .logIn(this.logIn)
-            .subscribe(() => this.redirectAfterLogin());
+            .subscribe((result: LogInResult) => {
+
+                if (result.requiresTwoFactor) {
+                    this.router
+                        .navigate(['/two-factor', {
+                            rememberLogIn: this.logIn.rememberLogIn
+                        }], {
+                            queryParams: {
+                                redirectUrl: this.redirectUrl
+                            }
+                        });
+                    return;
+                }
+
+                this.redirectAfterLogin();
+            });
     }
 
 }

@@ -35,7 +35,7 @@ export class TwoFactorPageComponent extends AuthBaseComponent {
         this.route
             .params
             .subscribe((params: Params) => {
-                this.twoFactorVerification.rememberLogin = params[Consts.RememberLogin] || false;
+                this.twoFactorVerification.rememberLogIn = params[Consts.RememberLogIn] || false;
             });
 
         super.ngOnInit();

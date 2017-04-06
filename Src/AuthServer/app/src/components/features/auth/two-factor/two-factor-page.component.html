@@ -2,29 +2,33 @@
 
     <div class="row">
         <div class="col-12">
-            <h2 class="text-center">Two factor page.</h2>
+            <h3 class="text-center">Two factor page.</h3>
         </div>
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-12 col-md-6 col-lg-5 col-xl-4">
-            <form class="send-code-form row" (ngSubmit)="sendCode()" *ngIf="!isCodeSent">
-                <div class="col-6">
+        <div class="col-12 col-md-6 col-lg-5 col-xl-4" style="max-width: 320px;">
+            <form class="row" (ngSubmit)="sendCode()" *ngIf="!isCodeSent">
+                <div class="col-12 mt-3">
                     <md-select
                             placeholder="Provider"
                             [(ngModel)]="twoFactorVerification.provider"
                             name="provider"
-                            class="au-select">
-                        <md-option *ngFor="let provider of providers" [value]="provider.value">{{ provider.name }}</md-option>
+                            class="w-100">
+                        <md-option *ngFor="let provider of providers" [value]="provider">{{ provider.name }}</md-option>
                     </md-select>
                 </div>
 
-                <div class="col-6 text-right mt-3">
-                    <button md-raised-button color="primary">send code</button>
+                <div class="col-12 mt-1">
+                    <button
+                            md-raised-button
+                            color="primary"
+                            class="w-100"
+                            [disabled]="!twoFactorVerification.provider">send code</button>
                 </div>
             </form>
 
-            <form class="verify-code-form row" (ngSubmit)="verifyCode()" *ngIf="isCodeSent">
+            <form class="row" (ngSubmit)="verifyCode()" *ngIf="isCodeSent">
                 <div class="col-12">
                     <md-input-container class="w-100">
                         <input
@@ -40,18 +44,20 @@
                     </md-input-container>
                 </div>
 
-                <div class="col-12 mt-3">
-                    <div class="row au-action-container">
-                        <div class="col-8 mt-2">
-                            <md-checkbox
-                                    color="primary"
-                                    name="remember"
-                                    [(ngModel)]="twoFactorVerification.rememberBrowser">remember browser</md-checkbox>
-                        </div>
-                        <div class="col-4 text-right">
-                            <button md-raised-button color="primary">verify code</button>
-                        </div>
-                    </div>
+                <div class="col-12 mt-1">
+                    <button
+                            md-raised-button
+                            color="primary"
+                            [disabled]="!twoFactorVerification.code"
+                            class="w-100">verify code</button>
+                </div>
+
+                <div class="col-12 mt-1">
+                    <md-checkbox
+                            class="col-auto"
+                            color="primary"
+                            name="remember"
+                            [(ngModel)]="twoFactorVerification.rememberBrowser">remember browser</md-checkbox>
                 </div>
             </form>
         </div>

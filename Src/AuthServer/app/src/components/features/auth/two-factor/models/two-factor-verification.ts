@@ -5,7 +5,7 @@ export class TwoFactorVerification {
 
     public provider: Provider;
     public code: string = '';
-    public rememberBrowser: boolean;
-    public rememberLogin: boolean;
+    public rememberBrowser: boolean = true;
+    public rememberLogIn: boolean;
 
 }
