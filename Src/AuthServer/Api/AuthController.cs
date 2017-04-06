@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using System;
 using System.Security.Claims;
+using System.Net;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -81,15 +82,12 @@ namespace AuthServer.Api
 
         [HttpPost]
         [Route("external-log-in")]
-        public IActionResult ExternalLogIn([FromBody] ExternalLogInIm im)
+        public IActionResult ExternalLogIn(string authenticationScheme, string returnUrl)
         {
-            var redirectUrl = Url.Action("external-log-in-callback", new
-            {
-                ReturnUrl = im.ReturnUrl
-            });
+            var redirectUrl = $"http://localhost:5000/api/auth/external-log-in-callback?returnUrl={WebUtility.UrlEncode(returnUrl)}";
 
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(im.AuthenticationScheme, redirectUrl);
-            return Challenge(properties, im.AuthenticationScheme);
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(authenticationScheme, redirectUrl);
+            return Challenge(properties, authenticationScheme);
         }
 
         [HttpGet]

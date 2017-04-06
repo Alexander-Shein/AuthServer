@@ -17,6 +17,8 @@ export interface IAuthenticationService {
     externalLogIn(externalLogIn: ExternalLogIn): void;
     externalSignUp(signUp: SignUp): Promise<void>;
 
+    updateLoggedIn(value: boolean): void;
+
     logOut(): void;
 
 }

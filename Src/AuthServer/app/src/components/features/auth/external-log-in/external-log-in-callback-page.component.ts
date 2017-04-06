@@ -4,6 +4,7 @@ import {Consts} from "../../../consts";
 import {NotificationsService} from "angular2-notifications";
 import {AuthBaseComponent} from "../auth-base.component";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
+import {AuthenticationService} from "../services/authentication.service";
 
 
 @Component({
@@ -16,6 +17,7 @@ export class ExternalLogInCallbackPageComponent extends AuthBaseComponent {
         route: ActivatedRoute,
         router: Router,
         private notificationsService: NotificationsService,
+        private authenticationService: AuthenticationService,
         spinnerService: SpinnerService
     ) {
         super(route, router, spinnerService);
@@ -62,6 +64,7 @@ export class ExternalLogInCallbackPageComponent extends AuthBaseComponent {
                     return;
                 }
 
+                this.authenticationService.updateLoggedIn(true);
                 this.redirectAfterLogin();
             });
     }

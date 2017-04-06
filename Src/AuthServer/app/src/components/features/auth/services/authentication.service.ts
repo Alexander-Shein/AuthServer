@@ -85,6 +85,10 @@ export class AuthenticationService extends ServiceBase implements IAuthenticatio
         this.localStorageService.clear(Consts.IsLoggedIn);
     }
 
+    public updateLoggedIn(value: boolean): void {
+        this.localStorageService.store(Consts.IsLoggedIn, value);
+    }
+
     private setIsLoggedIn(value: boolean): void {
         if (value === this.loggedIn) return;
 
