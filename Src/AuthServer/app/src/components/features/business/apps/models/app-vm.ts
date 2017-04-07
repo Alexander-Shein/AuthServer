@@ -8,6 +8,7 @@ export class AppVm {
     public key: string;
     public isLocalAccountEnabled: boolean;
     public isRememberLogInEnabled: boolean;
+    public isSecurityQuestionsEnabled: boolean;
     public emailSettings: LocalAccountSettings;
     public phoneSettings: LocalAccountSettings;
     public externalProviders: ExternalProvider[] = [];

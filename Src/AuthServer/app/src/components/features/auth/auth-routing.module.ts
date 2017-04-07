@@ -18,27 +18,16 @@ import {SearchableProvidersResolver} from "./external-log-in/services/searchable
 import {SignInUpPageComponent} from "./sign-in-up/sign-in-up-page.component";
 
 
+let authResolve = {
+    app: AppByUrlResolver,
+    searchableProviders: SearchableProvidersResolver
+};
+
 export const AuthRoutes: Routes = [
-    {
-        path: 'log-in',
-        component: SignInUpPageComponent,
-        resolve:
-            {
-                app: AppByUrlResolver,
-                searchableProviders: SearchableProvidersResolver
-            }
-    },
-    {
-        path: 'sign-up',
-        component: SignInUpPageComponent,
-        resolve:
-            {
-                app: AppByUrlResolver,
-                searchableProviders: SearchableProvidersResolver
-            }
-    },
+    {path: 'log-in', component: SignInUpPageComponent, resolve: authResolve},
+    {path: 'sign-up', component: SignInUpPageComponent, resolve: authResolve},
     {path: 'log-out', component: LogOutPageComponent},
-    {path: 'forgot-password', component: ForgotPasswordPageComponent},
+    {path: 'forgot-password', component: ForgotPasswordPageComponent, resolve: authResolve},
     {path: 'reset-password', component: ResetPasswordPageComponent},
     {path: 'change-password', component: ChangePasswordPageComponent, canActivate: [LoggedInGuard]},
     {path: 'add-password', component: AddPasswordPageComponent, canActivate: [LoggedInGuard]},

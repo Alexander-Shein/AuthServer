@@ -35,6 +35,7 @@ export class AppsService extends ServiceBase implements IAppsService {
                     websiteUrl: 'http://localhost:8000',
                     usersCount: 435,
                     isRememberLogInEnabled: false,
+                    isSecurityQuestionsEnabled: false,
                     emailSettings: {
                         isEnabled : true,
                         isConfirmationRequired: true,
@@ -59,6 +60,7 @@ export class AppsService extends ServiceBase implements IAppsService {
                     websiteUrl: 'http://localhost:8000',
                     usersCount: 4476,
                     isRememberLogInEnabled: false,
+                    isSecurityQuestionsEnabled: false,
                     emailSettings: {
                         isEnabled : true,
                         isConfirmationRequired: true,
@@ -83,6 +85,7 @@ export class AppsService extends ServiceBase implements IAppsService {
                     websiteUrl: 'http://localhost:8000',
                     usersCount: 123435,
                     isRememberLogInEnabled: false,
+                    isSecurityQuestionsEnabled: false,
                     emailSettings: {
                         isEnabled : true,
                         isConfirmationRequired: true,
@@ -121,6 +124,7 @@ export class AppsService extends ServiceBase implements IAppsService {
                 websiteUrl: 'http://localhost:8000',
                 usersCount: 435,
                 isRememberLogInEnabled: false,
+                isSecurityQuestionsEnabled: false,
                 emailSettings: {
                     isEnabled : true,
                     isConfirmationRequired: true,
@@ -159,6 +163,7 @@ export class AppsService extends ServiceBase implements IAppsService {
                 usersCount: 435,
                 isLocalAccountEnabled: true,
                 isRememberLogInEnabled: false,
+                isSecurityQuestionsEnabled: false,
                 emailSettings: {
                     isEnabled : true,
                     isConfirmationRequired: true,

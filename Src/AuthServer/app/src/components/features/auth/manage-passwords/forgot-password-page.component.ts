@@ -1,9 +1,11 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
-import {Email} from "./models/email";
 import {AuthBaseComponent} from "../auth-base.component";
 import {PasswordsService} from "./services/passwords.service";
+import {UserName} from "../models/user-name";
+import {SearchableExternalProvider} from "../external-log-in/models/searchable-external-provider";
+import {AppVm} from "../../business/apps/models/app-vm";
 
 
 @Component({
@@ -22,9 +24,22 @@ export class ForgotPasswordPageComponent extends AuthBaseComponent {
         super(route, router, spinnerService);
     }
 
-    private isEmailSent: boolean = false;
+    public ngOnInit(): void {
+        this.route
+            .data
+            .subscribe((data: {app: AppVm, searchableProviders: SearchableExternalProvider[]}) => {
+                this.app = data.app;
+                this.searchableProviders = data.searchableProviders;
+            });
 
-    public im: Email = new Email();
+        super.ngOnInit();
+    }
+
+    public app: AppVm;
+    public im: UserName = new UserName();
+    public searchableProviders: SearchableExternalProvider[];
+
+    private isEmailSent: boolean = false;
 
     public onSubmit(): void {
         this.spinnerService.show();

@@ -35,6 +35,7 @@ export class CreateAppPageComponent implements OnInit {
             usersCount: 0,
             isLocalAccountEnabled: true,
             isRememberLogInEnabled: true,
+            isSecurityQuestionsEnabled: false,
             emailSettings: {
                 isEnabled : true,
                 isConfirmationRequired: true,

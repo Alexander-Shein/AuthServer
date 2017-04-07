@@ -13,7 +13,7 @@ import {ActivatedRoute, Router} from "@angular/router";
     selector: 'au-user-name',
     template: `
 
-        <form class="row" #userNameForm="ngForm" (submit)="onSubmit()"  *ngIf="app.isLocalAccountEnabled">
+        <form class="row" #userNameForm="ngForm" (submit)="onSubmit()" *ngIf="app.isLocalAccountEnabled">
             <div class="col">
 
                 <div class="row">
@@ -149,6 +149,7 @@ export class UserNameComponent extends AuthBaseComponent {
         this.searchResult = null;
 
         if (!this.im.userName) return;
+        if (!this.searchableProviders) return;
 
         let userName = this.im.userName.toLowerCase();
 
