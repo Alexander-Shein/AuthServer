@@ -5,7 +5,7 @@
                 *ngFor="let menuItem of (isLoggedId ? loggedInMenuItems : ghostMenuItems)"
                 md-button
                 [routerLink]="[menuItem.router]"
-                [routerLinkActive]="'active'">
+                [routerLinkActive]="['active']">
             <md-icon *ngIf="menuItem.icon">{{menuItem.icon}}</md-icon>
             <span>{{menuItem.name}}</span>
         </button>
@@ -20,7 +20,7 @@
                     *ngFor="let menuItem of (isLoggedId ? loggedInMenuItems : ghostMenuItems)"
                     md-menu-item
                     [routerLink]="[menuItem.router]"
-                    [routerLinkActive]="'active'">
+                    [routerLinkActive]="['disabled']">
                 <md-icon *ngIf="menuItem.icon">{{menuItem.icon}}</md-icon>
                 <span>{{menuItem.name}}</span>
             </button>

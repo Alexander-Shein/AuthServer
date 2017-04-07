@@ -1,13 +1,14 @@
 import {Provider} from "../models/provider";
 import {TwoFactorVerification} from "../models/two-factor-verification";
+import {Observable} from "rxjs";
+import {TwoFactorSettings} from "../models/two-factor-settings";
 
 
 export interface ITwoFactorService {
 
-    getTwoFactorProviders(): Promise<Provider[]>;
-    sendCode(provider: Provider): Promise<void>;
-    verifyCode(twoFactorVerification: TwoFactorVerification): Promise<void>;
-    enableTwoFactor(): Promise<void>;
-    disableTwoFactor(): Promise<void>;
+    getTwoFactorProviders(): Observable<Provider[]>;
+    sendCode(provider: Provider): Observable<void>;
+    verifyCode(twoFactorVerification: TwoFactorVerification): Observable<void>;
+    updateTwoFactorSettings(twoFactorSettings: TwoFactorSettings): Observable<TwoFactorSettings>;
 
 }

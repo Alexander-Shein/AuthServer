@@ -1,46 +1,50 @@
 import {Injectable} from "@angular/core";
 import {Provider} from "../models/provider";
-import {TwoFactorVerification} from "../models/two-factor-verification";
 import {ITwoFactorService} from "./i-two-factor.service";
+import {Observable} from "rxjs";
+import {ServiceBase} from "../../../../common/base.service";
+import {NotificationsService} from "angular2-notifications";
+import {Http} from "@angular/http";
+import {TwoFactorVerification} from "../models/two-factor-verification";
+import {TwoFactorSettings} from "../models/two-factor-settings";
 
 
 @Injectable()
-export class TwoFactorService implements ITwoFactorService {
+export class TwoFactorService extends ServiceBase implements ITwoFactorService {
+
+    private readonly apiUrl: string = 'http://localhost:5000/api/two-factor/';
 
     constructor(
-    ) {}
-
-    public getTwoFactorProviders(): Promise<Provider[]> {
-        let phoneProvider = new Provider();
-
-        phoneProvider.name = 'Phone';
-        phoneProvider.value = 'Phone';
-
-        let emailProvider = new Provider();
-
-        emailProvider.name = 'Email';
-        emailProvider.value = 'Email';
-
-        return Promise.resolve([
-            phoneProvider,
-            emailProvider
-        ]);
+        private http: Http,
+        notificationsService: NotificationsService)
+    {
+        super(notificationsService);
     }
 
-    public sendCode(provider: Provider): Promise<void> {
-        return Promise.resolve();
+    public getTwoFactorProviders(): Observable<Provider[]> {
+        return this.http
+            .get(this.apiUrl + 'providers')
+            .map((res) => this.extractData(res))
+            .catch((error) => this.handleError(error));
     }
 
-    public verifyCode(twoFactorVerification: TwoFactorVerification): Promise<void> {
-        return Promise.resolve();
+    public sendCode(provider: Provider): Observable<void> {
+        return this.http
+            .post(this.apiUrl + 'codes', provider)
+            .catch((error) => this.handleError(error));
     }
 
-    public enableTwoFactor(): Promise<void> {
-        return Promise.resolve();
+    public verifyCode(twoFactorVerification: TwoFactorVerification): Observable<void> {
+        return this.http
+            .post(this.apiUrl, twoFactorVerification)
+            .catch((error) => this.handleError(error));
     }
 
-    public disableTwoFactor(): Promise<void> {
-        return Promise.resolve();
+    public updateTwoFactorSettings(twoFactorSettings: TwoFactorSettings): Observable<TwoFactorSettings> {
+        return this.http
+            .put(this.apiUrl + 'settings', twoFactorSettings)
+            .map((res) => this.extractData(res))
+            .catch((error) => this.handleError(error));
     }
 
 }

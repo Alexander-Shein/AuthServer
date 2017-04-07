@@ -48,11 +48,12 @@ export class TwoFactorPageComponent extends AuthBaseComponent {
     public sendCode(): void {
         this.twoFactorService
             .sendCode(this.twoFactorVerification.provider)
-            .then(() => {
-                this.isCodeSent = true;
-                this.spinnerService.hide();
-            })
-            .catch(() => this.spinnerService.hide());
+            .subscribe(
+                () => {
+                    this.isCodeSent = true;
+                    this.spinnerService.hide(); },
+                () => this.spinnerService.hide()
+            );
     }
 
     public verifyCode(): void {
@@ -60,7 +61,9 @@ export class TwoFactorPageComponent extends AuthBaseComponent {
 
         this.twoFactorService
             .verifyCode(this.twoFactorVerification)
-            .then(() => this.redirectAfterLogin())
-            .catch(() => this.spinnerService.hide());
+            .subscribe(
+                () => this.redirectAfterLogin(),
+                () => this.spinnerService.hide()
+            );
     }
 }

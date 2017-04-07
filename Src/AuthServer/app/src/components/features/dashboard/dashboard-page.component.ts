@@ -7,6 +7,7 @@ import {TwoFactorService} from "../auth/two-factor/services/two-factor.service";
 import {App} from "../business/apps/models/app";
 import {ConfirmationDialogComponent} from "../../common/pop-ups/confirmation-dialog.component";
 import {MdDialog} from "@angular/material";
+import {TwoFactorSettings} from "../auth/two-factor/models/two-factor-settings";
 
 
 @Component({
@@ -60,23 +61,15 @@ export class DashboardPageComponent implements OnInit {
     public toggleTwoFactor(): void {
         this.spinnerService.show();
 
-        let request;
+        let twoFactorSettings: TwoFactorSettings = {
+            enabled: this.userSettings.twoFactor
+        };
 
-        if (this.userSettings.twoFactor) {
-            request =
-                this.twoFactorService
-                    .disableTwoFactor();
-        } else {
-            request =
-                this.twoFactorService
-                    .enableTwoFactor();
-        }
-
-        request
-            .then(() => {
-                this.spinnerService.hide();
-            })
-            .catch(() => this.spinnerService.hide());
+        this.twoFactorService
+            .updateTwoFactorSettings(twoFactorSettings)
+            .subscribe(
+                () => this.spinnerService.hide(),
+                () => this.spinnerService.hide());
     }
 
 }

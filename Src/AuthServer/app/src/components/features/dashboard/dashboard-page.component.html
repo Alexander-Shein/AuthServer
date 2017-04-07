@@ -59,7 +59,7 @@
                     <md-checkbox
                             [(ngModel)]="userSettings.twoFactor"
                             color="primary"
-                            (click)="toggleTwoFactor()"
+                            (change)="toggleTwoFactor()"
                             class="mt-3 au-two-factor-checkbox">
                         <span>Two-Factor Authentication</span>
                     </md-checkbox>
