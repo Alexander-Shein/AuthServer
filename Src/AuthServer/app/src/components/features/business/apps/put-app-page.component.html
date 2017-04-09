@@ -1,227 +1,276 @@
-<div class="container-fluid">
-
-    <div class="row">
-        <div class="col-12">
-            <h3 class="text-center">{{title}}</h3>
-        </div>
-    </div>
+<div class="container-fluid mt-2">
 
     <div class="row justify-content-center">
-        <form class="col-12 col-md-6 col-lg-5 col-xl-4" (submit)="save()">
+        <div class="col-12 col-md-6 col-lg-5 col-xl-4" style="max-width: 450px;">
 
             <div class="row">
+                <div class="col-12">
+                    <h3>
+                        <button
+                                class="mr-2"
+                                [routerLink]="['/dashboard']"
+                                md-mini-fab>
+                            <md-icon>arrow_back</md-icon>
+                        </button><span style="vertical-align: text-top;">Edit app</span></h3>
+                </div>
+            </div>
+
+            <form #putAppForm="ngForm" class="row" (submit)="save()">
+
                 <div class="col-12">
                     <md-input-container class="w-100">
                         <input
                                 mdInput
-                                #name
+                                #name="ngModel"
                                 placeholder="App name"
                                 type="text"
                                 name="name"
                                 maxlength="100"
                                 required
                                 [(ngModel)]="vm.name">
-                        <md-hint align="end">{{name.value.length}} / 100</md-hint>
+                        <md-hint align="end">{{name.value?.length || 0}} / 100</md-hint>
+                        <md-hint *ngIf="name.errors && (name.dirty || name.touched)" style="color: red;">
+                            <span [hidden]="!name.errors.required">
+                                App name is required.
+                            </span>
+                        </md-hint>
                     </md-input-container>
                 </div>
-            </div>
 
-            <div class="row">
                 <div class="col-12">
                     <md-input-container class="w-100">
                         <input
                                 mdInput
-                                #key
+                                #key="ngModel"
                                 placeholder="App key"
                                 type="text"
                                 name="key"
                                 maxlength="100"
                                 required
                                 [(ngModel)]="vm.key">
-                        <md-hint align="end">{{key.value.length}} / 100</md-hint>
+                        <md-hint align="end">{{key.value?.length || 0}} / 100</md-hint>
+                        <md-hint *ngIf="key.errors && (key.dirty || key.touched)" style="color: red;">
+                            <span [hidden]="!key.errors.required">
+                                App key is required.
+                            </span>
+                        </md-hint>
                     </md-input-container>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col">
+                <div class="col-12">
                     <md-input-container class="w-100">
                         <input
                                 mdInput
-                                #websiteUrl
+                                #websiteUrl="ngModel"
                                 placeholder="Website url"
                                 type="url"
                                 name="websiteUrl"
                                 maxlength="100"
                                 required
                                 [(ngModel)]="vm.websiteUrl">
-                        <md-hint align="end">{{websiteUrl.value.length}} / 100</md-hint>
+                        <md-hint align="end">{{websiteUrl.value?.length || 0}} / 100</md-hint>
+                        <md-hint *ngIf="websiteUrl.errors && (websiteUrl.dirty || websiteUrl.touched)" style="color: red;">
+                            <span [hidden]="!websiteUrl.errors.required">
+                                Website url is required.
+                            </span>
+                            <span [hidden]="!websiteUrl.errors.url">
+                                Url is not valid.
+                            </span>
+                        </md-hint>
                     </md-input-container>
                 </div>
-            </div>
 
-            <div class="row">
-                <md-checkbox
-                        class="col"
-                        color="primary"
-                        name="isActive"
-                        [(ngModel)]="vm.isActive">
-                    <span>Is app active</span>
-                </md-checkbox>
-            </div>
+                <div class="col-12">
+                    <md-checkbox
+                            color="primary"
+                            name="isActive"
+                            [(ngModel)]="vm.isActive">
+                        <span>Is app active</span>
+                    </md-checkbox>
+                </div>
 
-            <div class="row">
                 <div class="col-12">
                     <span><strong>Local accounts settings:</strong></span>
                 </div>
-            </div>
 
-            <div class="row">
-                <md-checkbox
-                        class="col"
-                        color="primary"
-                        name="isLocalAccountEnabled"
-                        [(ngModel)]="vm.isLocalAccountEnabled">
-                    <span>Enable local accounts</span>
-                </md-checkbox>
-            </div>
+                <div class="col-12">
+                    <md-checkbox
+                            color="primary"
+                            name="isLocalAccountEnabled"
+                            [(ngModel)]="vm.isLocalAccountEnabled">
+                        <span>Enable local accounts</span>
+                    </md-checkbox>
+                </div>
 
-            <div class="row">
-                <md-checkbox
-                        [disabled]="!vm.isLocalAccountEnabled"
-                        class="offset-1 col-10"
-                        color="primary"
-                        name="isRememberLogInEnabled"
-                        [(ngModel)]="vm.isRememberLogInEnabled">
-                    <span>Enable remember log in</span>
-                    <md-icon
-                            mdTooltip="Protection against log in on public\shared devives."
-                            [mdTooltipPosition]="'above'">info_outline</md-icon>
-                </md-checkbox>
-            </div>
+                <div class="col-12">
+                    <div class="row">
+                        <md-checkbox
+                                [disabled]="!vm.isLocalAccountEnabled"
+                                class="offset-1 col-10"
+                                color="primary"
+                                name="isRememberLogInEnabled"
+                                [(ngModel)]="vm.isRememberLogInEnabled">
+                            <span>Enable remember log in</span>
+                            <md-icon
+                                    mdTooltip="Protection against log in on public\shared devices."
+                                    [mdTooltipPosition]="'above'">info_outline</md-icon>
+                        </md-checkbox>
+                    </div>
+                </div>
 
-            <div class="row">
-                <md-checkbox
-                        [disabled]="!vm.isLocalAccountEnabled"
-                        class="offset-1 col-10"
-                        color="primary"
-                        name="isConfirmationEnabled"
-                        [(ngModel)]="vm.emailSettings.isEnabled">
-                    <span>Allow email as username</span>
-                </md-checkbox>
-            </div>
+                <div class="col-12">
+                    <div class="row">
+                        <md-checkbox
+                                [disabled]="!vm.isLocalAccountEnabled"
+                                class="offset-1 col-10"
+                                color="primary"
+                                name="isSecurityQuestionsEnabled"
+                                [(ngModel)]="vm.isSecurityQuestionsEnabled">
+                            <span>Enable security questions</span>
+                            <md-icon
+                                    mdTooltip="Allow to add security questions."
+                                    [mdTooltipPosition]="'above'">info_outline</md-icon>
+                        </md-checkbox>
+                    </div>
+                </div>
 
-            <div class="row">
-                <md-checkbox
-                        [disabled]="!(vm.isLocalAccountEnabled && vm.emailSettings.isEnabled)"
-                        class="offset-2 col-9"
-                        color="primary"
-                        name="isEmailSearchRelatedProviderEnabled"
-                        [(ngModel)]="vm.emailSettings.isSearchRelatedProviderEnabled">
-                    <span>Enable search related external provider</span>
-                    <md-icon
-                            mdTooltip="When related external provider exists for entered email the system proposes to use it."
-                            [mdTooltipPosition]="'above'">info_outline</md-icon>
-                </md-checkbox>
-            </div>
+                <div class="col-12">
+                    <div class="row">
+                        <md-checkbox
+                                [disabled]="!vm.isLocalAccountEnabled"
+                                class="offset-1 col-10"
+                                color="primary"
+                                name="isConfirmationEnabled"
+                                [(ngModel)]="vm.emailSettings.isEnabled">
+                            <span>Allow email as username</span>
+                        </md-checkbox>
+                    </div>
+                </div>
 
-            <div class="row">
-                <md-checkbox
-                        [disabled]="!(vm.isLocalAccountEnabled && vm.emailSettings.isEnabled)"
-                        class="offset-2 col-9"
-                        color="primary"
-                        name="isEmailPasswordEnabled"
-                        [(ngModel)]="vm.emailSettings.isPasswordEnabled">
-                    <span>Enable password</span>
-                </md-checkbox>
-            </div>
+                <div class="col-12">
+                    <div class="row">
+                        <md-checkbox
+                                [disabled]="!(vm.isLocalAccountEnabled && vm.emailSettings.isEnabled)"
+                                class="offset-2 col-9"
+                                color="primary"
+                                name="isEmailSearchRelatedProviderEnabled"
+                                [(ngModel)]="vm.emailSettings.isSearchRelatedProviderEnabled">
+                            <span>Enable search related external provider</span>
+                            <md-icon
+                                    mdTooltip="When related external provider exists for entered email the system proposes to use it."
+                                    [mdTooltipPosition]="'above'">info_outline</md-icon>
+                        </md-checkbox>
+                    </div>
+                </div>
 
-            <div class="row">
-                <md-checkbox
-                        [disabled]="!(vm.isLocalAccountEnabled && vm.emailSettings.isEnabled && vm.emailSettings.isPasswordEnabled)"
-                        class="offset-3 col-8"
-                        color="primary"
-                        name="isEmailConfirmationRequired"
-                        [(ngModel)]="vm.emailSettings.isConfirmationRequired">
-                    <span>Required email confirmation</span>
-                    <md-icon
-                            mdTooltip="On sign up a confirmation email will be send to user's email in order to validate email address."
-                            [mdTooltipPosition]="'above'">info_outline</md-icon>
-                </md-checkbox>
-            </div>
+                <div class="col-12">
+                    <div class="row">
+                        <md-checkbox
+                                [disabled]="!(vm.isLocalAccountEnabled && vm.emailSettings.isEnabled)"
+                                class="offset-2 col-9"
+                                color="primary"
+                                name="isEmailPasswordEnabled"
+                                [(ngModel)]="vm.emailSettings.isPasswordEnabled">
+                            <span>Enable password</span>
+                        </md-checkbox>
+                    </div>
+                </div>
 
-            <div class="row">
-                <md-checkbox
-                        [disabled]="!(vm.isLocalAccountEnabled && vm.emailSettings.isEnabled)"
-                        class="offset-2 col-9"
-                        color="primary"
-                        name="isEmailPasswordlessEnabled"
-                        [(ngModel)]="vm.emailSettings.isPasswordlessEnabled">
-                    <span>Enable passwordless feature</span>
-                    <md-icon
-                            mdTooltip="An email with link will be send to email in order to sign in/up. No password is required."
-                            [mdTooltipPosition]="'above'">info_outline</md-icon>
-                </md-checkbox>
-            </div>
+                <div class="col-12">
+                    <div class="row">
+                        <md-checkbox
+                                [disabled]="!(vm.isLocalAccountEnabled && vm.emailSettings.isEnabled && vm.emailSettings.isPasswordEnabled)"
+                                class="offset-3 col-8"
+                                color="primary"
+                                name="isEmailConfirmationRequired"
+                                [(ngModel)]="vm.emailSettings.isConfirmationRequired">
+                            <span>Required email confirmation</span>
+                            <md-icon
+                                    mdTooltip="On sign up a confirmation email will be send to user's email in order to validate email address."
+                                    [mdTooltipPosition]="'above'">info_outline</md-icon>
+                        </md-checkbox>
+                    </div>
+                </div>
 
-            <div class="row">
-                <md-checkbox
-                        [disabled]="!vm.isLocalAccountEnabled"
-                        class="offset-1 col-10"
-                        color="primary"
-                        name="isConfirmationEnabled"
-                        [(ngModel)]="vm.phoneSettings.isEnabled">
-                    <span>Allow phone as username</span>
-                </md-checkbox>
-            </div>
+                <div class="col-12">
+                    <div class="row">
+                        <md-checkbox
+                                [disabled]="!(vm.isLocalAccountEnabled && vm.emailSettings.isEnabled)"
+                                class="offset-2 col-9"
+                                color="primary"
+                                name="isEmailPasswordlessEnabled"
+                                [(ngModel)]="vm.emailSettings.isPasswordlessEnabled">
+                            <span>Enable passwordless feature</span>
+                            <md-icon
+                                    mdTooltip="An email with link will be send to email in order to sign in/up. No password is required."
+                                    [mdTooltipPosition]="'above'">info_outline</md-icon>
+                        </md-checkbox>
+                    </div>
+                </div>
 
-            <div class="row">
-                <md-checkbox
-                        [disabled]="!(vm.isLocalAccountEnabled && vm.phoneSettings.isEnabled)"
-                        class="offset-2 col-9"
-                        color="primary"
-                        name="isPhonePasswordEnabled"
-                        [(ngModel)]="vm.phoneSettings.isPasswordEnabled">
-                    <span>Enable password</span>
-                </md-checkbox>
-            </div>
+                <div class="col-12">
+                    <div class="row">
+                        <md-checkbox
+                                [disabled]="!vm.isLocalAccountEnabled"
+                                class="offset-1 col-10"
+                                color="primary"
+                                name="isConfirmationEnabled"
+                                [(ngModel)]="vm.phoneSettings.isEnabled">
+                            <span>Allow phone as username</span>
+                        </md-checkbox>
+                    </div>
+                </div>
 
-            <div class="row">
-                <md-checkbox
-                        [disabled]="!(vm.isLocalAccountEnabled && vm.phoneSettings.isEnabled && vm.phoneSettings.isPasswordEnabled)"
-                        class="offset-3 col-8"
-                        color="primary"
-                        name="isPhoneConfirmationRequired"
-                        [(ngModel)]="vm.phoneSettings.isConfirmationRequired">
-                    <span>Required phone confirmation</span>
-                    <md-icon
-                            mdTooltip="On sign up a confirmation code will be send to user's phone to validate it."
-                            [mdTooltipPosition]="'above'">info_outline</md-icon>
-                </md-checkbox>
-            </div>
+                <div class="col-12">
+                    <div class="row">
+                        <md-checkbox
+                                [disabled]="!(vm.isLocalAccountEnabled && vm.phoneSettings.isEnabled)"
+                                class="offset-2 col-9"
+                                color="primary"
+                                name="isPhonePasswordEnabled"
+                                [(ngModel)]="vm.phoneSettings.isPasswordEnabled">
+                            <span>Enable password</span>
+                        </md-checkbox>
+                    </div>
+                </div>
 
-            <div class="row">
-                <md-checkbox
-                        [disabled]="!(vm.isLocalAccountEnabled && vm.phoneSettings.isEnabled)"
-                        class="offset-2 col-9"
-                        color="primary"
-                        name="isPhonePasswordlessEnabled"
-                        [(ngModel)]="vm.phoneSettings.isPasswordlessEnabled">
-                    <span>Enable passwordless feature</span>
-                    <md-icon
-                            mdTooltip="Code will be send to phone number in order to sign in/up. No password is required."
-                            [mdTooltipPosition]="'above'">info_outline</md-icon>
-                </md-checkbox>
-            </div>
+                <div class="col-12">
+                    <div class="row">
+                        <md-checkbox
+                                [disabled]="!(vm.isLocalAccountEnabled && vm.phoneSettings.isEnabled && vm.phoneSettings.isPasswordEnabled)"
+                                class="offset-3 col-8"
+                                color="primary"
+                                name="isPhoneConfirmationRequired"
+                                [(ngModel)]="vm.phoneSettings.isConfirmationRequired">
+                            <span>Required phone confirmation</span>
+                            <md-icon
+                                    mdTooltip="On sign up a confirmation code will be send to user's phone to validate it."
+                                    [mdTooltipPosition]="'above'">info_outline</md-icon>
+                        </md-checkbox>
+                    </div>
+                </div>
 
-            <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <md-checkbox
+                                [disabled]="!(vm.isLocalAccountEnabled && vm.phoneSettings.isEnabled)"
+                                class="offset-2 col-9"
+                                color="primary"
+                                name="isPhonePasswordlessEnabled"
+                                [(ngModel)]="vm.phoneSettings.isPasswordlessEnabled">
+                            <span>Enable passwordless feature</span>
+                            <md-icon
+                                    mdTooltip="Code will be send to phone number in order to sign in/up. No password is required."
+                                    [mdTooltipPosition]="'above'">info_outline</md-icon>
+                        </md-checkbox>
+                    </div>
+                </div>
+
                 <div class="col-12">
                     <strong>External log in providers:</strong>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col">
+                <div class="col-12">
                     <div class="row">
                         <div class="col">
                             <md-select
@@ -247,19 +296,15 @@
                         </md-chip-list>
                     </div>
                 </div>
-            </div>
 
-            <div class="row mt-2">
-                <div class="col-12 text-right mr-3">
-                    <button md-raised-button color="primary">save</button>
+                <div class="col-12 text-right mt-1">
+                    <button
+                            [disabled]="!putAppForm.form.valid"
+                            md-raised-button
+                            color="primary">save</button>
                 </div>
-            </div>
-
-            <div class="row mt-2">
-                <a [routerLink]="['/dashboard']" class="col-12">back</a>
-            </div>
-        </form>
-
+            </form>
+        </div>
     </div>
 
 </div>

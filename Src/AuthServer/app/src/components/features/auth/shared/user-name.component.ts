@@ -75,7 +75,7 @@ import {ActivatedRoute, Router} from "@angular/router";
                                     phone
                                     [(ngModel)]="im.userName"
                                     #userName="ngModel">
-                            <md-hint align="end">{{userName.value?.length || 0}} / 254</md-hint>
+                            <md-hint align="end">{{userName.value?.length || 0}} / 50</md-hint>
                             <md-hint *ngIf="userName.errors && (userName.dirty || userName.touched)" style="color: red;">
                                     <span [hidden]="!userName.errors.required">
                                         Phone is required.

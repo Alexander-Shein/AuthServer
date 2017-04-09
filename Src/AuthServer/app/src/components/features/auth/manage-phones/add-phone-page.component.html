@@ -1,60 +1,76 @@
 <div class="container-fluid mt-2">
 
-    <div class="row">
-        <div class="col-12">
-            <h2 class="text-center">Add phone page.</h2>
-        </div>
-    </div>
-
     <div class="row justify-content-center">
-        <div class="col-12 col-md-6 col-lg-5 col-xl-4">
-            <form class="send-code-form row" (ngSubmit)="sendCode()" *ngIf="!isCodeSent">
+        <div class="col-12 col-md-6 col-lg-5 col-xl-4" style="max-width: 320px;">
+
+            <div class="row">
+                <div class="col-12">
+                    <h3>
+                        <button
+                                class="mr-2"
+                                [routerLink]="['/dashboard']"
+                                md-mini-fab>
+                            <md-icon>arrow_back</md-icon>
+                        </button><span style="vertical-align: text-top;">Add phone</span></h3>
+                </div>
+            </div>
+
+            <form #sendCodeForm="ngForm" class="send-code-form row" (ngSubmit)="sendCode()" *ngIf="!isCodeSent">
                 <div class="col-12">
                     <md-input-container class="w-100">
                         <input
                                 mdInput
-                                #phoneNumber
-                                placeholder="Phone number"
+                                placeholder="Phone"
                                 type="text"
-                                name="phoneNumber"
-                                maxlength="100"
+                                name="phone"
+                                maxlength="50"
                                 required
-                                [(ngModel)]="im.phoneNumber">
-                        <md-hint align="end">{{phoneNumber.value.length}} / 100</md-hint>
+                                phone
+                                [(ngModel)]="im.phoneNumber"
+                                #phone="ngModel">
+                        <md-hint align="end">{{phone.value?.length || 0}} / 50</md-hint>
+                        <md-hint *ngIf="phone.errors && (phone.dirty || phone.touched)" style="color: red;">
+                                    <span [hidden]="!phone.errors.required">
+                                        Phone is required.
+                                    </span>
+                            <span [hidden]="!phone.errors.phone || phone.errors.required">
+                                        Phone is not valid.
+                                    </span>
+                        </md-hint>
                     </md-input-container>
                 </div>
 
-                <div class="col-12 text-right mt-2">
-                    <button md-raised-button color="primary">send code</button>
-                </div>
-
-                <div class="col-12">
-                    <a [routerLink]="['/dashboard']">Back</a>
+                <div class="col-12 mt-1">
+                    <button
+                            [disabled]="!sendCodeForm.form.valid"
+                            class="w-100"
+                            md-raised-button
+                            color="primary">send code</button>
                 </div>
             </form>
 
-            <form class="verify-code-form row" (ngSubmit)="verifyCode()" *ngIf="isCodeSent">
+            <form #verifyCodeForm="ngForm" class="row" (ngSubmit)="verifyCode()" *ngIf="isCodeSent">
                 <div class="col-12">
                     <md-input-container class="w-100">
                         <input
                                 mdInput
-                                #code
+                                #code="ngModel"
                                 placeholder="Code"
                                 type="text"
                                 name="code"
                                 maxlength="100"
                                 required
                                 [(ngModel)]="im.code">
-                        <md-hint align="end">{{code.value.length}} / 100</md-hint>
+                        <md-hint align="end">{{code.value?.length || 0}} / 100</md-hint>
                     </md-input-container>
                 </div>
 
-                <div class="col-12 text-right mt-2">
-                    <button md-raised-button color="primary">add phone</button>
-                </div>
-
-                <div class="col-12">
-                    <a [routerLink]="['/dashboard']">Back</a>
+                <div class="col-12 mt-1">
+                    <button
+                            [disabled]="!verifyCodeForm.form.valid"
+                            class="w-100"
+                            md-raised-button
+                            color="primary">add phone</button>
                 </div>
             </form>
         </div>

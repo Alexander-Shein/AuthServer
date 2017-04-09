@@ -1,13 +1,19 @@
 <div class="container-fluid mt-2">
 
-    <div class="row">
-        <div class="col-12">
-            <h2 class="text-center">{{vm.name}} <small class="au-app-status" [ngClass]="{'au-active': vm.isActive }">{{vm.isActive ? '(active)' : '(inactive)'}}</small></h2>
-        </div>
-    </div>
-
     <div class="row justify-content-center">
-        <div class="col-12 col-md-6 col-lg-5 col-xl-4">
+        <div class="col-12 col-md-6 col-lg-5 col-xl-4" style="max-width: 450px;">
+
+            <div class="row">
+                <div class="col-12">
+                    <h3>
+                        <button
+                                class="mr-2"
+                                [routerLink]="['/dashboard']"
+                                md-mini-fab>
+                            <md-icon>arrow_back</md-icon>
+                        </button><span style="vertical-align: text-top;">{{vm.name}} <small class="au-app-status" [ngClass]="{'au-active': vm.isActive }">{{vm.isActive ? '(active)' : '(inactive)'}}</small></span></h3>
+                </div>
+            </div>
 
             <div class="row">
                 <div class="col-12">
@@ -52,7 +58,20 @@
                         [checked]="vm.isRememberLogInEnabled">
                     <span>Enable remember log in</span>
                     <md-icon
-                            mdTooltip="Protection against log in on public\shared devives."
+                            mdTooltip="Protection against log in on public\shared devices."
+                            [mdTooltipPosition]="'above'">info_outline</md-icon>
+                </md-checkbox>
+            </div>
+
+            <div class="row">
+                <md-checkbox
+                        class="offset-1 col-10"
+                        color="primary"
+                        [disabled]="true"
+                        [checked]="vm.isSecurityQuestionsEnabled">
+                    <span>Enable security questions</span>
+                    <md-icon
+                            mdTooltip="Allow to add security questions."
                             [mdTooltipPosition]="'above'">info_outline</md-icon>
                 </md-checkbox>
             </div>
@@ -182,10 +201,6 @@
                     <button md-button color="primary" (click)="removeBusinessApp()">remove</button>
                     <button md-raised-button color="primary" [routerLink]="['edit']">edit</button>
                 </div>
-            </div>
-
-            <div class="row mt-2">
-                <a [routerLink]="['/dashboard']" class="col-12">back</a>
             </div>
         </div>
 
