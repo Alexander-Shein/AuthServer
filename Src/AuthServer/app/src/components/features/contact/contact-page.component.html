@@ -11,10 +11,13 @@
             <div>We've received your message. We will answer you soon.</div>
             <div>Thank you!</div>
         </div>
-        <form class="col-12 col-md-6 col-lg-5 col-xl-4" #sendMessageForm="ngForm" (submit)="send()" *ngIf="!isMessageSent">
+        <form
+                class="col-12 col-md-6 col-lg-5 col-xl-4"
+                #sendMessageForm="ngForm"
+                (submit)="send()"
+                *ngIf="!isMessageSent">
 
             <div class="row">
-                <md-icon color="primary" class="col-auto mt-3 ml-3">perm_identity</md-icon>
                 <div class="col">
                     <md-input-container class="w-100">
                         <input
@@ -56,7 +59,6 @@
             </div>
 
             <div class="row">
-                <md-icon color="primary" class="col-auto mt-3 ml-3">business</md-icon>
                 <div class="col">
                     <md-input-container class="w-100">
                         <input
@@ -79,7 +81,6 @@
             </div>
 
             <div class="row">
-                <md-icon color="primary" class="col-auto mt-3 ml-3">mail_outline</md-icon>
                 <div class="col">
                     <md-input-container class="w-100">
                         <input
@@ -106,7 +107,7 @@
             </div>
 
             <div class="row">
-                <md-icon color="primary" class="col-auto mt-3 ml-3">short_text</md-icon>
+
                 <div class="col">
                     <md-input-container class="w-100">
                         <input
@@ -129,18 +130,17 @@
             </div>
 
             <div class="row">
-                <md-icon color="primary" class="col-auto mt-3 ml-3">comment</md-icon>
                 <div class="col">
                     <md-input-container class="w-100">
-                    <textarea
-                            mdInput
-                            #message="ngModel"
-                            placeholder="Message"
-                            name="message"
-                            maxlength="4000"
-                            required
-                            [(ngModel)]="im.message">
-                    </textarea>
+                        <textarea
+                                mdInput
+                                #message="ngModel"
+                                placeholder="Message"
+                                name="message"
+                                maxlength="4000"
+                                required
+                                [(ngModel)]="im.message">
+                        </textarea>
                         <md-hint align="end">{{message.value?.length || 0}} / 4000</md-hint>
                         <md-hint *ngIf="message.errors && (message.dirty || message.touched)" style="color: red;">
                             <span [hidden]="!message.errors.required">

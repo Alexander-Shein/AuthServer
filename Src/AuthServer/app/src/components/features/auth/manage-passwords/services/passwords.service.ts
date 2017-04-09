@@ -4,13 +4,14 @@ import {OldNewPassword} from "../models/old-new-password";
 import {NewPassword} from "../models/new-password";
 import {IPasswordsService} from "./i-passwords.service";
 import {UserName} from "../../models/user-name";
+import {Observable} from "rxjs";
 
 
 @Injectable()
 export class PasswordsService implements IPasswordsService {
 
-    public forgotPassword(userName: UserName): Promise<void> {
-        return Promise.resolve();
+    public sendResetPasswordCode(userName: UserName): Observable<void> {
+        return null;
     }
 
     public resetPassword(resetPassword: ResetPassword): Promise<void> {

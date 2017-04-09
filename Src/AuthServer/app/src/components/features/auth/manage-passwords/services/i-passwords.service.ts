@@ -2,11 +2,12 @@ import {ResetPassword} from "../models/reset-password";
 import {OldNewPassword} from "../models/old-new-password";
 import {NewPassword} from "../models/new-password";
 import {UserName} from "../../models/user-name";
+import {Observable} from "rxjs";
 
 
 export interface IPasswordsService {
 
-    forgotPassword(userName: UserName): Promise<void>;
+    sendResetPasswordCode(userName: UserName): Observable<void>;
     resetPassword(resetPassword: ResetPassword): Promise<void>;
     changePassword(changePassword: OldNewPassword): Promise<void>;
     addPassword(newPassword: NewPassword): Promise<void>;

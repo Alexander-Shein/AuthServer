@@ -1,0 +1,12 @@
+@import "~bootstrap/scss/mixins/_breakpoints.scss";
+@import "~bootstrap/scss/_variables.scss";
+
+form {
+    max-width: 450px;
+}
+
+@include media-breakpoint-down(xs) {
+    button {
+        width: 100%;
+    }
+}

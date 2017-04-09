@@ -17,10 +17,10 @@
                         </div>
                     </div>
                     <div class="row mt-1">
-                        <div class="col-12">
+                        <div class="col-12"
+                             *ngFor="let sn of app.externalProviders">
                             <au-social-network-button
                                     [namePrefix]="'log in with'"
-                                    *ngFor="let sn of app.externalProviders"
                                     (click)="externalLogIn(sn)"
                                     [provider]="sn"
                             ></au-social-network-button>

@@ -6,6 +6,8 @@ import {PasswordsService} from "./services/passwords.service";
 import {UserName} from "../models/user-name";
 import {SearchableExternalProvider} from "../external-log-in/models/searchable-external-provider";
 import {AppVm} from "../../business/apps/models/app-vm";
+import {UsersService} from "../services/users.service";
+import {NotificationsService} from "angular2-notifications";
 
 
 @Component({
@@ -17,6 +19,8 @@ export class ForgotPasswordPageComponent extends AuthBaseComponent {
 
     constructor(
         private passwordsService: PasswordsService,
+        private usersService: UsersService,
+        private notificationsService: NotificationsService,
         route: ActivatedRoute,
         router: Router,
         spinnerService: SpinnerService
@@ -39,20 +43,34 @@ export class ForgotPasswordPageComponent extends AuthBaseComponent {
     public im: UserName = new UserName();
     public searchableProviders: SearchableExternalProvider[];
 
-    private isEmailSent: boolean = false;
+    public isCodeSent: boolean = false;
+    public isEmail: boolean = false;
 
-    public onSubmit(): void {
+    public sendResetPasswordCode(): void {
         this.spinnerService.show();
 
-        this.passwordsService
-            .forgotPassword(this.im)
-            .then(() => this.handle())
-            .catch(() => this.spinnerService.hide());
-    }
-
-    private handle(): void {
-        this.isEmailSent = true;
-        this.spinnerService.hide();
+        this.usersService
+            .isUserNameExists(this.im.userName)
+            .subscribe(
+                () => {
+                    this.passwordsService
+                        .sendResetPasswordCode(this.im)
+                        .subscribe(() => {
+                            this.isEmail = this.im.userName.indexOf('@') != -1;
+                            this.isCodeSent = true;
+                            this.spinnerService.hide();
+                        },
+                            () => {
+                                this.notificationsService
+                                    .error('Failed.', 'Cannot send code. Please try again.');
+                                this.spinnerService.hide();
+                            });
+                },
+                () => {
+                    this.notificationsService
+                        .error('Failed.', 'AuthGuardian can\'t find user. Please try again.');
+                    this.spinnerService.hide();
+                });
     }
 
 }
