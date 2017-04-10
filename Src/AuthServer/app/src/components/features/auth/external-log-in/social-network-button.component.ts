@@ -2,6 +2,7 @@ import {Component, Input} from "@angular/core";
 import "../../../../assets/icons/facebook.svg";
 import "../../../../assets/icons/google.svg";
 import "../../../../assets/icons/microsoft.svg";
+import "../../../../assets/icons/vk.svg";
 import {MdIconRegistry} from "@angular/material";
 import {DomSanitizer} from "@angular/platform-browser";
 import {ExternalProvider} from "./models/external-provider";
@@ -16,7 +17,7 @@ import {ExternalProvider} from "./models/external-provider";
                 md-raised-button
                 color="primary">
             <md-icon svgIcon="{{getIconName()}}"></md-icon>
-            <span class="ml-2">{{namePrefix}} {{provider.displayName}} {{namePostfix}}</span>
+            <span class="ml-2">{{namePrefix}} <strong>{{provider.displayName}}</strong> {{namePostfix}}</span>
         </button>
     `,
     styleUrls: ['./social-network-button.component.scss']
@@ -46,6 +47,10 @@ export class SocialNetworkButtonComponent {
         iconRegistry.addSvgIcon(
             'microsoft',
             sanitizer.bypassSecurityTrustResourceUrl('/assets/microsoft.svg'));
+
+        iconRegistry.addSvgIcon(
+            'vk',
+            sanitizer.bypassSecurityTrustResourceUrl('/assets/vk.svg'));
     }
 
     public getIconName() {

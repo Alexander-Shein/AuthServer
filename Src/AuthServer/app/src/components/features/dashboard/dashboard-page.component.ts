@@ -29,11 +29,7 @@ export class DashboardPageComponent implements OnInit {
 
     public ngOnInit(): void {
         this.route.data
-            .subscribe((data:
-                            {
-                                userSettings: UserSettings,
-                                apps: App[]
-                            }) => {
+            .subscribe((data: {userSettings: UserSettings, apps: App[]}) => {
                 this.userSettings = data.userSettings;
                 this.apps = data.apps;
             });

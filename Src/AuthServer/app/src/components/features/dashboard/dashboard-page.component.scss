@@ -1,11 +1,8 @@
-.au-app-link {
-    &:hover {
-        background-color: gainsboro;
-        cursor: pointer;
-        border-radius: 5px;
-    }
-}
+@import "~bootstrap/scss/mixins/_breakpoints.scss";
+@import "~bootstrap/scss/_variables.scss";
 
-.au-card {
-    border: 1px solid rgba(0, 0, 0, 0.14);
+@include media-breakpoint-down(xs) {
+    button {
+        width: 100%;
+    }
 }

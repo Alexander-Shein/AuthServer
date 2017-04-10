@@ -23,7 +23,7 @@ export class CreateAppPageComponent implements OnInit {
 
     public vm: App;
     public externalProviders: ExternalProvider[] = [];
-    public title: string = 'Create business app.';
+    public title: string = 'Create app';
 
     public ngOnInit(): void {
         this.vm = {
