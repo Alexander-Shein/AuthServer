@@ -1,17 +1,17 @@
 import {Component, Input, OnInit} from "@angular/core";
-import {LogIn} from "../models/log-in";
 import {AppVm} from "../../business/apps/models/app-vm";
+import {SignUp} from "../models/sign-up";
 
 
 @Component({
-    selector: 'au-phone-log-in',
+    selector: 'au-phone-sign-up',
     template: `
 
-        <au-log-in-password [logIn]="logIn" [app]="app" *ngIf="!isCodeSent"></au-log-in-password>
+        <au-sign-up-password [signUp]="signUp" [app]="app" *ngIf="!isCodeSent"></au-sign-up-password>
 
         <div class="row" *ngIf="app.phoneSettings.isPasswordlessEnabled && !isCodeSent">
             <div class="col-12 mt-3 mb-3 text-center">
-                <span>Or log in without password</span>
+                <span>Or sign up without password</span>
             </div>
             <div class="col-12">
                 <button
@@ -34,7 +34,7 @@ import {AppVm} from "../../business/apps/models/app-vm";
                             name="text"
                             maxlength="100"
                             required
-                            [(ngModel)]="logIn.password"
+                            [(ngModel)]="signUp.password"
                             #code="ngModel">
                     <md-hint align="end">{{code.value?.length || 0}} / 100</md-hint>
                     <md-hint *ngIf="code.errors && (code.dirty || code.touched)" style="color: red;">
@@ -48,7 +48,7 @@ import {AppVm} from "../../business/apps/models/app-vm";
                 <button
                         class="w-100"
                         [disabled]="!codeConfirmation.form.valid"
-                        md-raised-button color="primary">log in</button>
+                        md-raised-button color="primary">sign up</button>
             </div>
         </form>
         <div class="row mt-1" *ngIf="isCodeSent">
@@ -60,7 +60,7 @@ import {AppVm} from "../../business/apps/models/app-vm";
         </div>
     `
 })
-export class PhoneLogInComponent implements OnInit{
+export class PhoneSignUpComponent implements OnInit{
 
     public ngOnInit(): void {
         let stgs = this.app.phoneSettings;
@@ -71,7 +71,7 @@ export class PhoneLogInComponent implements OnInit{
     }
 
     @Input()
-    public logIn: LogIn;
+    public signUp: SignUp;
 
     @Input()
     public app: AppVm;

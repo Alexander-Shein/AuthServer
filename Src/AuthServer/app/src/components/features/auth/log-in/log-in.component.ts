@@ -62,7 +62,7 @@ export class LogInComponent extends AuthBaseComponent {
                     this.notificationsService
                         .error('Failed.', 'AuthGuardian can\'t find user. Please try again.');
                     this.isValidUserName = false;
-                    this.spinnerService.hide()
+                    this.spinnerService.hide();
                 });
     }
 

@@ -4,7 +4,7 @@ import {FormsModule} from "@angular/forms";
 import {MaterialModule}   from "@angular/material";
 import {AuthRoutingModule} from "./auth-routing.module";
 import {LogInComponent} from "./log-in/log-in.component";
-import {SignUpPageComponent} from "./sign-up/sign-up-page.component";
+import {SignUpComponent} from "./sign-up/sign-up.component";
 import {ForgotPasswordPageComponent} from "./manage-passwords/forgot-password-page.component";
 import {ResetPasswordPageComponent} from "./manage-passwords/reset-password-page.component";
 import {EmailConfirmationPageComponent} from "./external-log-in/email-confirmation-page.component";
@@ -23,6 +23,9 @@ import {SocialNetworkButtonComponent} from "./external-log-in/social-network-but
 import {LogInPasswordComponent} from "./log-in/log-in-password.component";
 import {UserNameComponent} from "./shared/user-name.component";
 import {SignInUpPageComponent} from "./sign-in-up/sign-in-up-page.component";
+import {SignUpPasswordComponent} from "./sign-up/sign-up-password.component";
+import {EmailSignUpComponent} from "./sign-up/email-sign-up.component";
+import {PhoneSignUpComponent} from "./sign-up/phone-sign-up.component";
 
 
 @NgModule({
@@ -37,7 +40,7 @@ import {SignInUpPageComponent} from "./sign-in-up/sign-in-up-page.component";
         EmailLogInComponent,
         PhoneLogInComponent,
         LogOutPageComponent,
-        SignUpPageComponent,
+        SignUpComponent,
         ForgotPasswordPageComponent,
         ResetPasswordPageComponent,
         EmailConfirmationPageComponent,
@@ -52,7 +55,10 @@ import {SignInUpPageComponent} from "./sign-in-up/sign-in-up-page.component";
         SocialNetworkButtonComponent,
         LogInPasswordComponent,
         UserNameComponent,
-        SignInUpPageComponent
+        SignInUpPageComponent,
+        SignUpPasswordComponent,
+        EmailSignUpComponent,
+        PhoneSignUpComponent
     ],
     providers: []
 })

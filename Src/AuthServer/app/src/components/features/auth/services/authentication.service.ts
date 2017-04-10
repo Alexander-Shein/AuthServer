@@ -73,8 +73,8 @@ export class AuthenticationService extends ServiceBase implements IAuthenticatio
         form.submit();
     }
 
-    public signUp(signUp: SignUp): Promise<void> {
-        return Promise.resolve();
+    public signUp(signUp: SignUp): Observable<void> {
+        return null;
     }
 
     public externalSignUp(signUp: SignUp): Promise<void> {
