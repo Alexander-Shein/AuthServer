@@ -9,7 +9,6 @@ import {AddPasswordPageComponent} from "./manage-passwords/add-password-page.com
 import {AddPhonePageComponent} from "./manage-phones/add-phone-page.component";
 import {ManageExternalProvidersPageComponent} from "./external-log-in/manage-external-providers-page.component";
 import {TwoFactorProvidersResolver} from "./two-factor/services/two-factor-providers-resolver.service";
-import {ExternalProvidersSettingsResolver} from "./external-log-in/services/external-providers-settings-resolver.service";
 import {AppByUrlResolver} from "../business/apps/services/app-by-url-resolver.service";
 import {LogOutPageComponent} from "./log-out/log-out-page.component";
 import {ExternalLogInCallbackPageComponent} from "./external-log-in/external-log-in-callback-page.component";
@@ -17,6 +16,8 @@ import {LoggedInGuard} from "./services/logged-in.guard";
 import {SearchableProvidersResolver} from "./external-log-in/services/searchable-providers-resolver";
 import {SignInUpPageComponent} from "./sign-in-up/sign-in-up-page.component";
 import {AddEmailPageComponent} from "./manage-emails/add-email-page.component";
+import {CurrentUserResolver} from "./services/current-user-resolver.service";
+import {ExternalProvidersResolver} from "./external-log-in/services/external-providers-resolver.service";
 
 
 let authResolve = {
@@ -48,7 +49,8 @@ export const AuthRoutes: Routes = [
         component: ManageExternalProvidersPageComponent,
         resolve:
         {
-            externalProvidersSettings: ExternalProvidersSettingsResolver
+            user: CurrentUserResolver,
+            externalProviders: ExternalProvidersResolver
         },
         canActivate: [LoggedInGuard]
     },

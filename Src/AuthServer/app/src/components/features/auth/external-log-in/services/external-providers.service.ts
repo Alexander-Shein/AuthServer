@@ -1,5 +1,4 @@
 import {Injectable} from "@angular/core";
-import {ExternalProvidersSettings} from "../models/external-providers-settings";
 import {IExternalProvidersService} from "./i-external-providers.service";
 import {ExternalProvider} from "../models/external-provider";
 import {SearchableExternalProvider} from "../models/searchable-external-provider";
@@ -22,34 +21,6 @@ export class ExternalProvidersService implements IExternalProvidersService {
                     authenticationScheme: 'Google'
                 }
             ]);
-    }
-
-    public getExternalProvidersSettings(): Promise<ExternalProvidersSettings> {
-        return Promise.resolve({
-            hasPassword: true,
-            otherLogIns: [
-                {
-                    displayName: 'vk',
-                    authenticationScheme: 'Vk'
-                },
-                {
-                    displayName: 'google',
-                    authenticationScheme: 'Google'
-                }
-            ],
-            currentLogIns: [
-                {
-                    authenticationScheme: 'twitter',
-                    key: 'key',
-                    displayName: 'twitter'
-                },
-                {
-                    authenticationScheme: 'facebook',
-                    key: 'key',
-                    displayName: 'facebook'
-                }
-            ]
-        });
     }
 
     public linkExternalLogIn(provider: string): void {

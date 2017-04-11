@@ -15,13 +15,13 @@
                 </div>
             </div>
 
-            <div class="row" *ngIf="externalProvidersSettings.currentLogIns.length">
+            <div class="row" *ngIf="user.externalProviders.length">
                 <div class="col-12">
                     <span><strong>Delete external log ins from account:</strong></span>
                 </div>
                 <div class="col-12">
-                    <div class="row" *ngFor="let lp of externalProvidersSettings.currentLogIns">
-                        <div class="col-6"><p class="text-right pt-1">{{lp.providerDisplayName}}:</p></div>
+                    <div class="row" *ngFor="let lp of user.externalProviders">
+                        <div class="col-6"><p class="text-right pt-1">{{lp.displayName}}:</p></div>
                         <div class="col-6">
                             <button
                                     *ngIf="canDeleteExternalLogIn"
@@ -35,14 +35,14 @@
                 </div>
             </div>
 
-            <div class="row" *ngIf="externalProvidersSettings.otherLogIns.length">
+            <div class="row" *ngIf="externalProviders.length">
                 <div class="col-12">
                     <span><strong>Link external provider to account:</strong></span>
                 </div>
 
                 <div class="col-12 au-external-login text-center">
                     <au-social-network-button
-                            *ngFor="let sn of externalProvidersSettings.otherLogIns"
+                            *ngFor="let sn of externalProviders"
                             [namePrefix]="'add'"
                             [namePostfix]="'to account'"
                             (click)="linkExternalLogIn(sn)"

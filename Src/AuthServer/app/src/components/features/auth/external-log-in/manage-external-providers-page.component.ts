@@ -4,8 +4,8 @@ import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {AuthBaseComponent} from "../auth-base.component";
 import {ExternalProvidersService} from "./services/external-providers.service";
 import {ExternalProvider} from "./models/external-provider";
-import {ExternalProvidersSettings} from "./models/external-providers-settings";
 import {UserExternalProvider} from "./models/user-external-provider";
+import {User} from "../models/user";
 
 
 @Component({
@@ -24,15 +24,22 @@ export class ManageExternalProvidersPageComponent extends AuthBaseComponent {
         super(route, router, spinnerService);
     }
 
-    public externalProvidersSettings: ExternalProvidersSettings;
     public canDeleteExternalLogIn: boolean;
+    public externalProviders: ExternalProvider[];
+    public user: User;
 
     public ngOnInit(): void {
         this.route.data
-            .subscribe((data: { externalProvidersSettings: ExternalProvidersSettings }) => {
-                let stgs = this.externalProvidersSettings = data.externalProvidersSettings;
+            .subscribe((data: {externalProviders: ExternalProvider[], user: User}) => {
+                this.canDeleteExternalLogIn = data.user.hasPassword || data.user.externalProviders.length > 1;
 
-                this.canDeleteExternalLogIn = stgs.hasPassword || stgs.currentLogIns.length > 1;
+                this.externalProviders =
+                    data.externalProviders
+                        .filter(
+                            (x: ExternalProvider) =>
+                                !data.user.externalProviders.some(
+                                    c => c.authenticationScheme === x.authenticationScheme));
+                this.user = data.user;
             });
     }
 
@@ -42,10 +49,8 @@ export class ManageExternalProvidersPageComponent extends AuthBaseComponent {
         this.externalProvidersService
             .deleteExternalLogIn(userExternalProvider)
             .then(() => {
-                let stgs = this.externalProvidersSettings;
-
-                stgs.currentLogIns = stgs.currentLogIns.filter((x: UserExternalProvider) => x !== userExternalProvider);
-                this.canDeleteExternalLogIn = stgs.hasPassword || stgs.currentLogIns.length > 1;
+                this.externalProviders = this.externalProviders.filter((x: ExternalProvider) => x.authenticationScheme !== userExternalProvider.authenticationScheme);
+                this.canDeleteExternalLogIn = this.user.hasPassword || this.user.externalProviders.length > 1;
 
                 this.spinnerService.hide();
             })

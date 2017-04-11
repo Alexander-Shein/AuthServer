@@ -3,6 +3,7 @@ using IdentityServerWithAspNetIdentity.Services;
 using IdentityServerWithAspNetIdentity.Services.Users.Models.View;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -44,7 +45,15 @@ namespace AuthServer.Api
                 HasPassword = true,
                 IsTwoFactorEnabled = true,
                 PhoneNumber = "375259065234",
-                ExternalProviders = Enumerable.Empty<UserExternalProviderVm>()
+                ExternalProviders = new List<UserExternalProviderVm>
+                {
+                    new UserExternalProviderVm
+                    {
+                        AuthenticationScheme = "Facebook",
+                        DisplayName = "Facebook",
+                        Key = "123"
+                    }
+                }
             });
 
             var user = await usersService.GetCurrentUserAsync(HttpContext.User);

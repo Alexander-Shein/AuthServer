@@ -20,7 +20,6 @@ import {PasswordsService} from "./features/auth/manage-passwords/services/passwo
 import {PhonesService} from "./features/auth/manage-phones/services/phones.service";
 import {TwoFactorService} from "./features/auth/two-factor/services/two-factor.service";
 import {TwoFactorProvidersResolver} from "./features/auth/two-factor/services/two-factor-providers-resolver.service";
-import {ExternalProvidersSettingsResolver} from "./features/auth/external-log-in/services/external-providers-settings-resolver.service";
 import {ExternalProvidersService} from "./features/auth/external-log-in/services/external-providers.service";
 import {AppsService} from "./features/business/apps/services/apps.service";
 import {AppsResolver} from "./features/business/apps/services/apps-resolver.service";
@@ -78,7 +77,6 @@ import {EmailsService} from "./features/auth/manage-emails/services/emails.servi
         AppResolver,
         AppByUrlResolver,
         TwoFactorProvidersResolver,
-        ExternalProvidersSettingsResolver,
         ExternalProvidersService,
         UsersService,
         ExternalProvidersResolver,
