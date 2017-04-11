@@ -43,6 +43,7 @@ export class DashboardPageComponent implements OnInit {
                     phoneNumber: null,
                     phoneNumberCode: null,
                     email: '',
+                    emailCode: null,
                     isTwoFactorEnabled: null
                 };
 
@@ -68,6 +69,7 @@ export class DashboardPageComponent implements OnInit {
                     phoneNumber: '',
                     phoneNumberCode: null,
                     email: null,
+                    emailCode: null,
                     isTwoFactorEnabled: null
                 };
 
@@ -90,6 +92,7 @@ export class DashboardPageComponent implements OnInit {
             phoneNumber: null,
             phoneNumberCode: null,
             email: null,
+            emailCode: null,
             isTwoFactorEnabled: this.user.isTwoFactorEnabled
         };
 

@@ -16,6 +16,7 @@ import {ExternalLogInCallbackPageComponent} from "./external-log-in/external-log
 import {LoggedInGuard} from "./services/logged-in.guard";
 import {SearchableProvidersResolver} from "./external-log-in/services/searchable-providers-resolver";
 import {SignInUpPageComponent} from "./sign-in-up/sign-in-up-page.component";
+import {AddEmailPageComponent} from "./manage-emails/add-email-page.component";
 
 
 let authResolve = {
@@ -32,6 +33,7 @@ export const AuthRoutes: Routes = [
     {path: 'change-password', component: ChangePasswordPageComponent, canActivate: [LoggedInGuard]},
     {path: 'add-password', component: AddPasswordPageComponent, canActivate: [LoggedInGuard]},
     {path: 'add-phone', component: AddPhonePageComponent, canActivate: [LoggedInGuard]},
+    {path: 'add-email', component: AddEmailPageComponent, canActivate: [LoggedInGuard]},
     {path: 'email-confirmation', component: EmailConfirmationPageComponent},
     {
         path: 'two-factor',

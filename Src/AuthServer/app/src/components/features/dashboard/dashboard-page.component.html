@@ -20,7 +20,7 @@
                                     <span>Email
                                         <small *ngIf="user.isEmailConfirmed" style="color: green;">(confirmed)</small>
                                         <small *ngIf="user.email && !user.isEmailConfirmed">
-                                            (<a routerLink="/confirm-email">confirm</a>)
+                                            (<a [routerLink]="['/add-email', {email: user.email}]">confirm</a>)
                                         </small>:
                                         <strong>{{user.email}}</strong>
                                     </span>
@@ -50,7 +50,7 @@
                                 </div>
                                 <div class="col-auto">
                                     <a href="#" (click)="deletePhoneNumber()" *ngIf="user.phoneNumber">delete</a>
-                                    <a routerLink="/add-phone" *ngIf="!user.phoneNumber">add</a>
+                                    <a [routerLink]="['/add-phone']" *ngIf="!user.phoneNumber">add</a>
                                 </div>
                             </div>
                         </div>

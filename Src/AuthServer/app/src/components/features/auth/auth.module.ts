@@ -26,6 +26,7 @@ import {SignInUpPageComponent} from "./sign-in-up/sign-in-up-page.component";
 import {SignUpPasswordComponent} from "./sign-up/sign-up-password.component";
 import {EmailSignUpComponent} from "./sign-up/email-sign-up.component";
 import {PhoneSignUpComponent} from "./sign-up/phone-sign-up.component";
+import {AddEmailPageComponent} from "./manage-emails/add-email-page.component";
 
 
 @NgModule({
@@ -48,6 +49,7 @@ import {PhoneSignUpComponent} from "./sign-up/phone-sign-up.component";
         ChangePasswordPageComponent,
         AddPasswordPageComponent,
         AddPhonePageComponent,
+        AddEmailPageComponent,
         ManageExternalProvidersPageComponent,
         ExternalLogInCallbackPageComponent,
         EmailOrPhoneValidatorDirective,

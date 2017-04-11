@@ -37,6 +37,7 @@ import {LoggedInGuard} from "./features/auth/services/logged-in.guard";
 import {JwtService} from "./features/auth/services/jwt.service";
 import {SearchableProvidersResolver} from "./features/auth/external-log-in/services/searchable-providers-resolver";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {EmailsService} from "./features/auth/manage-emails/services/emails.service";
 
 
 @NgModule({
@@ -70,6 +71,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
         PasswordsService,
         CurrentUserResolver,
         PhonesService,
+        EmailsService,
         TwoFactorService,
         AppsService,
         AppsResolver,

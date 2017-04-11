@@ -12,7 +12,7 @@
                                 md-mini-fab>
                             <md-icon>arrow_back</md-icon>
                         </button>
-                        <span style="vertical-align: text-top;">Add phone</span>
+                        <span style="vertical-align: text-top;">Add email</span>
                     </h3>
                 </div>
             </div>
@@ -22,21 +22,21 @@
                     <md-input-container class="w-100">
                         <input
                                 mdInput
-                                placeholder="Phone"
+                                placeholder="Email"
                                 type="text"
-                                name="phone"
-                                maxlength="50"
+                                name="email"
+                                maxlength="256"
                                 required
-                                phone
-                                [(ngModel)]="im.phoneNumber"
-                                #phone="ngModel">
-                        <md-hint align="end">{{phone.value?.length || 0}} / 50</md-hint>
-                        <md-hint *ngIf="phone.errors && (phone.dirty || phone.touched)" style="color: red;">
-                                    <span [hidden]="!phone.errors.required">
-                                        Phone is required.
+                                email
+                                [(ngModel)]="im.email"
+                                #email="ngModel">
+                        <md-hint align="end">{{email.value?.length || 0}} / 256</md-hint>
+                        <md-hint *ngIf="email.errors && (email.dirty || email.touched)" style="color: red;">
+                                    <span [hidden]="!email.errors.required">
+                                        Email is required.
                                     </span>
-                            <span [hidden]="!phone.errors.phone || phone.errors.required">
-                                        Phone is not valid.
+                            <span [hidden]="!email.errors.phone || email.errors.required">
+                                        Email is not valid.
                                     </span>
                         </md-hint>
                     </md-input-container>
@@ -51,10 +51,10 @@
                 </div>
             </form>
 
-            <form #verifyCodeForm="ngForm" class="row" (ngSubmit)="addPhone()" *ngIf="isCodeSent">
+            <form #verifyCodeForm="ngForm" class="row" (ngSubmit)="addEmail()" *ngIf="isCodeSent">
                 <div class="col-12 text-center">
                     <md-icon color="primary">done</md-icon>
-                    <div><span>Please check your phone. We've sent you a sms with code.</span></div>
+                    <div><span>Please check your email. We've sent you an email with code.</span></div>
                 </div>
                 <div class="col-12">
                     <md-input-container class="w-100">
@@ -66,7 +66,7 @@
                                 name="code"
                                 maxlength="100"
                                 required
-                                [(ngModel)]="im.phoneNumberCode">
+                                [(ngModel)]="im.emailCode">
                         <md-hint align="end">{{code.value?.length || 0}} / 100</md-hint>
                     </md-input-container>
                 </div>
@@ -76,7 +76,7 @@
                             [disabled]="!verifyCodeForm.form.valid"
                             class="w-100"
                             md-raised-button
-                            color="primary">add phone</button>
+                            color="primary">add email</button>
                 </div>
             </form>
 
@@ -85,6 +85,7 @@
                     <span style="font-size: 10px;">Protected by <strong>AuthGuardian</strong></span>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
