@@ -5,6 +5,7 @@ import {Observable} from "rxjs";
 import {ServiceBase} from "../../../common/base.service";
 import {NotificationsService} from "angular2-notifications";
 import {Http} from "@angular/http";
+import {UserIm} from "../models/user-im";
 
 
 @Injectable()
@@ -32,6 +33,13 @@ export class UsersService  extends ServiceBase implements IUsersService {
 
         return this.http
             .head(this.apiUrl + '?userName=' + encodeURIComponent(userName))
+            .catch((error) => this.handleError(error));
+    }
+
+    public update(im: UserIm): Observable<User> {
+        return this.http
+            .patch(this.apiUrl + 'me', im)
+            .map((res) => this.extractData(res))
             .catch((error) => this.handleError(error));
     }
 

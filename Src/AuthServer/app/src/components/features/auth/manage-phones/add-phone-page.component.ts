@@ -1,9 +1,11 @@
 import {Component} from "@angular/core";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Params, Router} from "@angular/router";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {AuthBaseComponent} from "../auth-base.component";
 import {PhonesService} from "./services/phones.service";
-import {NewPhone} from "./models/new-phone";
+import {Consts} from "../../../consts";
+import {UserIm} from "../models/user-im";
+import {UsersService} from "../services/users.service";
 
 
 @Component({
@@ -15,6 +17,7 @@ export class AddPhonePageComponent extends AuthBaseComponent {
 
     constructor(
         private phonesService: PhonesService,
+        private usersService: UsersService,
         route: ActivatedRoute,
         router: Router,
         spinnerService: SpinnerService
@@ -22,7 +25,22 @@ export class AddPhonePageComponent extends AuthBaseComponent {
         super(route, router, spinnerService);
     }
 
-    public im: NewPhone = new NewPhone();
+    public ngOnInit() {
+        this.route
+            .params
+            .subscribe((params: Params) => {
+                let phone = params[Consts.Phone];
+
+                if (phone) {
+                    this.im.phoneNumber = phone;
+                    this.sendCode();
+                }
+            });
+
+        super.ngOnInit();
+    }
+
+    public im: UserIm = new UserIm();
     public isCodeSent: boolean = false;
 
     public sendCode(): void {
@@ -35,12 +53,14 @@ export class AddPhonePageComponent extends AuthBaseComponent {
             .catch(() => this.spinnerService.hide());
     }
 
-    public verifyCode(): void {
+    public addPhone(): void {
         this.spinnerService.show();
 
-        this.phonesService
-            .add(this.im)
-            .then(() => this.redirectAfterLogin())
-            .catch(() => this.spinnerService.hide());
+        this.usersService
+            .update(this.im)
+            .subscribe(
+                () => this.redirectAfterLogin(),
+                () => this.spinnerService.hide()
+            );
     }
 }

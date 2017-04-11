@@ -1,5 +1,5 @@
 export class Phone {
 
-    public phoneNumber: string = '';
+    public phoneNumber: string;
 
 }

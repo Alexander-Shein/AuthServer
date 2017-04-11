@@ -1,13 +1,12 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
 import {SpinnerService} from "../../common/spinner/services/spinner.service";
-import {PhonesService} from "../auth/manage-phones/services/phones.service";
-import {TwoFactorService} from "../auth/two-factor/services/two-factor.service";
 import {App} from "../business/apps/models/app";
 import {ConfirmationDialogComponent} from "../../common/pop-ups/confirmation-dialog.component";
 import {MdDialog} from "@angular/material";
-import {TwoFactorSettings} from "../auth/two-factor/models/two-factor-settings";
 import {User} from "../auth/models/user";
+import {UsersService} from "../auth/services/users.service";
+import {UserIm} from "../auth/models/user-im";
 
 
 @Component({
@@ -19,10 +18,9 @@ export class DashboardPageComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
+        private usersService: UsersService,
         private spinnerService: SpinnerService,
-        private phonesService: PhonesService,
-        private dialog: MdDialog,
-        private twoFactorService: TwoFactorService) {}
+        private dialog: MdDialog) {}
 
     public user: User;
     public apps: App[];
@@ -35,19 +33,50 @@ export class DashboardPageComponent implements OnInit {
             });
     }
 
+    public deleteEmail(): boolean {
+        let dialogRef = this.dialog.open(ConfirmationDialogComponent);
+        dialogRef.afterClosed().subscribe((result: boolean) => {
+            if (result) {
+                this.spinnerService.show();
+
+                let im: UserIm = {
+                    phoneNumber: null,
+                    phoneNumberCode: null,
+                    email: '',
+                    isTwoFactorEnabled: null
+                };
+
+                this.usersService
+                    .update(im)
+                    .subscribe((user: User) => {
+                        this.user = user;
+                        this.spinnerService.hide();
+                    }, () => this.spinnerService.hide());
+            }
+        });
+
+        return false;
+    }
+
     public deletePhoneNumber(): boolean {
         let dialogRef = this.dialog.open(ConfirmationDialogComponent);
         dialogRef.afterClosed().subscribe((result: boolean) => {
             if (result) {
                 this.spinnerService.show();
 
-                this.phonesService
-                    .remove()
-                    .then(() => {
-                        this.user.phoneNumber = '';
+                let im: UserIm = {
+                    phoneNumber: '',
+                    phoneNumberCode: null,
+                    email: null,
+                    isTwoFactorEnabled: null
+                };
+
+                this.usersService
+                    .update(im)
+                    .subscribe((user: User) => {
+                        this.user = user;
                         this.spinnerService.hide();
-                    })
-                    .catch(() => this.spinnerService.hide());
+                    }, () => this.spinnerService.hide());
             }
         });
 
@@ -57,15 +86,19 @@ export class DashboardPageComponent implements OnInit {
     public toggleTwoFactor(): void {
         this.spinnerService.show();
 
-        let twoFactorSettings: TwoFactorSettings = {
-            enabled: this.user.isTwoFactorEnabled
+        let im: UserIm = {
+            phoneNumber: null,
+            phoneNumberCode: null,
+            email: null,
+            isTwoFactorEnabled: this.user.isTwoFactorEnabled
         };
 
-        this.twoFactorService
-            .updateTwoFactorSettings(twoFactorSettings)
-            .subscribe(
-                () => this.spinnerService.hide(),
-                () => this.spinnerService.hide());
+        this.usersService
+            .update(im)
+            .subscribe((user: User) => {
+                this.user = user;
+                this.spinnerService.hide();
+            }, () => this.spinnerService.hide());
     }
 
 }

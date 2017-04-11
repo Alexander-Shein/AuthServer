@@ -11,7 +11,9 @@
                                 [routerLink]="['/dashboard']"
                                 md-mini-fab>
                             <md-icon>arrow_back</md-icon>
-                        </button><span style="vertical-align: text-top;">Add phone</span></h3>
+                        </button>
+                        <span style="vertical-align: text-top;">Add phone</span>
+                    </h3>
                 </div>
             </div>
 
@@ -50,6 +52,10 @@
             </form>
 
             <form #verifyCodeForm="ngForm" class="row" (ngSubmit)="verifyCode()" *ngIf="isCodeSent">
+                <div class="col-12 text-center">
+                    <md-icon color="primary">done</md-icon>
+                    <div><span>Please check your phone. We've sent you a sms with code.</span></div>
+                </div>
                 <div class="col-12">
                     <md-input-container class="w-100">
                         <input
@@ -60,7 +66,7 @@
                                 name="code"
                                 maxlength="100"
                                 required
-                                [(ngModel)]="im.code">
+                                [(ngModel)]="im.phoneNumberCode">
                         <md-hint align="end">{{code.value?.length || 0}} / 100</md-hint>
                     </md-input-container>
                 </div>

@@ -1,4 +1,5 @@
-﻿using IdentityServerWithAspNetIdentity.Services;
+﻿using AuthServer.Services.Users.Models.Input;
+using IdentityServerWithAspNetIdentity.Services;
 using IdentityServerWithAspNetIdentity.Services.Users.Models.View;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -42,10 +43,27 @@ namespace AuthServer.Api
                 Email = "alex@live.com",
                 HasPassword = true,
                 IsTwoFactorEnabled = true,
+                PhoneNumber = "375259065234",
                 ExternalProviders = Enumerable.Empty<UserExternalProviderVm>()
             });
 
             var user = await usersService.GetCurrentUserAsync(HttpContext.User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(user);
+            }
+        }
+
+        [HttpPatch]
+        [Route("me")]
+        public async Task<IActionResult> Update(UserIm im)
+        {
+            var user = await usersService.Update(HttpContext.User, im);
 
             if (user == null)
             {
