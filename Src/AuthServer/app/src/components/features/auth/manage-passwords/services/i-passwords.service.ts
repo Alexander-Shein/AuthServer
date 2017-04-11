@@ -9,7 +9,7 @@ export interface IPasswordsService {
 
     sendResetPasswordCode(userName: UserName): Observable<void>;
     resetPassword(resetPassword: ResetPassword): Promise<void>;
-    changePassword(changePassword: OldNewPassword): Promise<void>;
-    addPassword(newPassword: NewPassword): Promise<void>;
+    changePassword(changePassword: OldNewPassword): Observable<void>;
+    addPassword(newPassword: NewPassword): Observable<void>;
 
 }

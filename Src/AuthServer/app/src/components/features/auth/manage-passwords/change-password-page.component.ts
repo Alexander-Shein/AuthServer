@@ -29,8 +29,10 @@ export class ChangePasswordPageComponent extends AuthBaseComponent {
 
         this.passwordsService
             .changePassword(this.im)
-            .then(() => this.redirectAfterLogin())
-            .catch(() => this.spinnerService.hide());
+            .subscribe(
+                () => this.redirectAfterLogin(),
+                () => this.spinnerService.hide()
+            );
     }
 
 }

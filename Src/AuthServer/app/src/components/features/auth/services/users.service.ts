@@ -9,7 +9,7 @@ import {UserIm} from "../models/user-im";
 
 
 @Injectable()
-export class UsersService  extends ServiceBase implements IUsersService {
+export class UsersService extends ServiceBase implements IUsersService {
 
     private readonly apiUrl: string = 'http://localhost:5000/api/users/';
 

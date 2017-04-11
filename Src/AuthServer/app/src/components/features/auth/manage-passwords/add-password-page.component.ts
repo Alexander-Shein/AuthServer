@@ -29,8 +29,10 @@ export class AddPasswordPageComponent extends AuthBaseComponent {
 
         this.passwordsService
             .addPassword(this.im)
-            .then(() => this.redirectAfterLogin())
-            .catch(() => this.spinnerService.hide());
+            .subscribe(
+                () => this.redirectAfterLogin(),
+                () => this.spinnerService.hide()
+            );
     }
 
 }
