@@ -14,7 +14,7 @@ import {SpinnerComponent} from "./common/spinner/spinner.component";
 import {SpinnerService} from "./common/spinner/services/spinner.service";
 import {ErrorPageComponent} from "./common/error-page.component";
 import {DashboardPageComponent} from "./features/dashboard/dashboard-page.component";
-import {UserSettingsResolver} from "./features/auth/services/user-settings-resolver.service";
+import {CurrentUserResolver} from "./features/auth/services/current-user-resolver.service";
 import {AuthenticationService} from "./features/auth/services/authentication.service";
 import {PasswordsService} from "./features/auth/manage-passwords/services/passwords.service";
 import {PhonesService} from "./features/auth/manage-phones/services/phones.service";
@@ -68,7 +68,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
         SpinnerService,
         AuthenticationService,
         PasswordsService,
-        UserSettingsResolver,
+        CurrentUserResolver,
         PhonesService,
         TwoFactorService,
         AppsService,

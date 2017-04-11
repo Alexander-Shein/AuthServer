@@ -59,6 +59,7 @@ namespace IdentityServerWithAspNetIdentity
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+            services.AddScoped<IUsersService, UsersService>();
 
             services.AddIdentityServer()
                 .AddTemporarySigningCredential()

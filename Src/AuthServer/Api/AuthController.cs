@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Cors;
 using System;
 using System.Security.Claims;
 using System.Net;
+using System.Linq;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -29,6 +30,7 @@ namespace AuthServer.Api
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IClientStore _clientStore;
         private readonly AccountService _account;
+        private readonly IUsersService usersService;
 
         public AuthController(
             UserManager<ApplicationUser> userManager,
@@ -38,7 +40,8 @@ namespace AuthServer.Api
             ILoggerFactory loggerFactory,
             IIdentityServerInteractionService interaction,
             IHttpContextAccessor httpContext,
-            IClientStore clientStore)
+            IClientStore clientStore,
+            IUsersService usersService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -47,20 +50,72 @@ namespace AuthServer.Api
             _logger = loggerFactory.CreateLogger<AppsController>();
             _interaction = interaction;
             _clientStore = clientStore;
+            this.usersService = usersService;
 
             _account = new AccountService(interaction, httpContext, clientStore);
         }
 
         [HttpPost]
-        [Route("log-in")]
-        public async Task<IActionResult> LogIn([FromBody] LogInIm im)
+        [Route("sign-up")]
+        public async Task<IActionResult> SignUpAsunc([FromBody] SignUpIm im)
         {
             if (String.IsNullOrWhiteSpace(im?.UserName) || String.IsNullOrWhiteSpace(im?.Password))
             {
-                return BadRequest(new BadRequestResult("Invalid login attempt."));
+                return BadRequest(new BadRequestResult("Invalid username or password."));
             }
 
-            var result = await _signInManager.PasswordSignInAsync(im.UserName, im.Password, im.RememberLogIn, lockoutOnFailure: true);
+            ApplicationUser user;
+            var isEmail = im.UserName.Contains("@");
+
+            if (isEmail)
+            {
+                user = new ApplicationUser
+                {
+                    UserName = im.UserName,
+                    Email = im.UserName
+                };
+            }
+            else
+            {
+                var phone = usersService.CleanPhoneNumber(im.UserName);
+
+                user = new ApplicationUser
+                {
+                    UserName = phone,
+                    PhoneNumber = phone
+                };
+            }
+
+            var result = await _userManager.CreateAsync(user, im.Password);
+            if (result.Succeeded)
+            {
+                // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
+                // Send an email with this link
+                //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                //await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
+                //    $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                _logger.LogInformation(3, "User created a new account with password.");
+                return Ok();
+            }
+
+            return BadRequest(new BadRequestResult(result.Errors.First().Description));
+        }
+
+        [HttpPost]
+        [Route("log-in")]
+        public async Task<IActionResult> LogInAsync([FromBody] LogInIm im)
+        {
+            if (String.IsNullOrWhiteSpace(im?.UserName) || String.IsNullOrWhiteSpace(im?.Password))
+            {
+                return BadRequest(new BadRequestResult("Invalid log in attempt."));
+            }
+
+            var user = await usersService.GetUserByEmailOrPhoneAsync(im.UserName);
+            if (user == null) return BadRequest(new BadRequestResult("Invalid login attempt."));
+
+            var result = await _signInManager.PasswordSignInAsync(user, im.Password, im.RememberLogIn, lockoutOnFailure: true);
 
             if (result.IsLockedOut)
             {
@@ -69,7 +124,7 @@ namespace AuthServer.Api
 
             if (result.Succeeded || result.RequiresTwoFactor)
             {
-                return Ok(new LogInVm
+                return Ok(new LogInResultVm
                 {
                     RequiresTwoFactor = result.RequiresTwoFactor
                 });
@@ -158,13 +213,24 @@ namespace AuthServer.Api
         public bool RememberLogIn { get; set; }
     }
 
+    public class SignUpIm
+    {
+        public string UserName { get; set; }
+        public string Password { get; set; }
+    }
+
+    public class SignUpResultVm
+    {
+        public bool IsConfirmationRequired { get; set; }
+    }
+
     public class ExternalLogInIm
     {
         public string ReturnUrl { get; set; }
         public string AuthenticationScheme { get; set; }
     }
 
-    public class LogInVm
+    public class LogInResultVm
     {
         public bool RequiresTwoFactor { get; set; }
     }

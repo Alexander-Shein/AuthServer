@@ -44,7 +44,6 @@ export class AuthenticationService extends ServiceBase implements IAuthenticatio
     }
 
     public logIn(logIn:LogIn): Observable<LogInResult> {
-
         let result = this.http
             .post(this.apiUrl + 'log-in', logIn)
             .map((res) => this.extractData(res));
@@ -74,7 +73,14 @@ export class AuthenticationService extends ServiceBase implements IAuthenticatio
     }
 
     public signUp(signUp: SignUp): Observable<void> {
-        return null;
+        let result = this.http
+            .post(this.apiUrl + 'sign-up', signUp);
+
+        result.subscribe(() => {
+            this.updateLoggedIn(true);
+        });
+
+        return result.catch((error) => this.handleError(error));
     }
 
     public externalSignUp(signUp: SignUp): Promise<void> {

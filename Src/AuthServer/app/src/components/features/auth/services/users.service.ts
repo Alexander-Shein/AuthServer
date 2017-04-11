@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {UserSettings} from "../models/user-settings";
+import {User} from "../models/user";
 import {IUsersService} from "./i-users.service";
 import {Observable} from "rxjs";
 import {ServiceBase} from "../../../common/base.service";
@@ -10,7 +10,7 @@ import {Http} from "@angular/http";
 @Injectable()
 export class UsersService  extends ServiceBase implements IUsersService {
 
-    private readonly apiUrl: string = 'http://localhost:5000/api/users';
+    private readonly apiUrl: string = 'http://localhost:5000/api/users/';
 
     constructor(
         private http: Http,
@@ -19,14 +19,11 @@ export class UsersService  extends ServiceBase implements IUsersService {
         super(notificationsService);
     }
 
-    public getUserSettings(): Promise<UserSettings> {
-        return Promise.resolve({
-            hasPassword: true,
-            phoneNumber: '+375259065587',
-            twoFactor: false,
-            logIns: [],
-            browserRemembered: false
-        });
+    public getUser(): Observable<User> {
+        return this.http
+            .get(this.apiUrl + 'me')
+            .map((res) => this.extractData(res))
+            .catch((error) => this.handleError(error));
     }
 
     public isUserNameExists(userName: string): Observable<void> {

@@ -1,10 +1,10 @@
-import {UserSettings} from "../models/user-settings";
+import {User} from "../models/user";
 import {Observable} from "rxjs";
 
 
 export interface IUsersService {
 
-    getUserSettings(): Promise<UserSettings>;
+    getUser(): Observable<User>;
     isUserNameExists(userName: string): Observable<void>;
 
 }

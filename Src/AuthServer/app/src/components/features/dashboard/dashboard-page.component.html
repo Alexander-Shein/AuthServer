@@ -11,14 +11,45 @@
         <md-tab-group class="col-12 col-md-6 col-lg-5 col-xl-4" style="max-width: 450px;">
             <md-tab label="My user account" class="row">
                 <div class="col mt-2">
+
+                    <div class="row">
+                        <md-icon color="primary" class="col-auto">email</md-icon>
+                        <div class="col">
+                            <div class="row">
+                                <div class="col"><span>Email <small *ngIf="user.email">({{user.isEmailConfirmed ? 'confirmed' : 'not confirmed'}})</small>: <strong>{{user.email}}</strong></span></div>
+                                <div class="col-auto">
+                                    <a href="#" (click)="deleteEmail()" *ngIf="user.email">delete</a>
+                                    <a routerLink="/add-email" *ngIf="!user.email">add</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2 mb-2" style="border-bottom: 1px solid rgba(0,0,0,0.14);"></div>
+
+                    <div class="row">
+                        <md-icon color="primary" class="col-auto">phone</md-icon>
+                        <div class="col">
+                            <div class="row">
+                                <div class="col"><span>Phone <small *ngIf="user.phoneNumber">({{user.isPhoneNumberConfirmed ? 'confirmed' : 'not confirmed'}})</small>: <strong>{{user.phoneNumber}}</strong></span></div>
+                                <div class="col-auto">
+                                    <a href="#" (click)="deletePhoneNumber()" *ngIf="user.phoneNumber">delete</a>
+                                    <a routerLink="/add-phone" *ngIf="!user.phoneNumber">add</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2 mb-2" style="border-bottom: 1px solid rgba(0,0,0,0.14);"></div>
+
                     <div class="row">
                         <md-icon color="primary" class="col-auto">lock</md-icon>
                         <div class="col">
                             <div class="row">
                                 <div class="col">Password:</div>
                                 <div class="col-auto">
-                                    <a routerLink="/change-password" *ngIf="userSettings.hasPassword">change</a>
-                                    <a routerLink="/add-password" *ngIf="!userSettings.hasPassword">add</a>
+                                    <a routerLink="/change-password" *ngIf="user.hasPassword">change</a>
+                                    <a routerLink="/add-password" *ngIf="!user.hasPassword">add</a>
                                 </div>
                             </div>
                         </div>
@@ -41,21 +72,6 @@
                     <div class="row mt-2 mb-2" style="border-bottom: 1px solid rgba(0,0,0,0.14);"></div>
 
                     <div class="row">
-                        <md-icon color="primary" class="col-auto">phone</md-icon>
-                        <div class="col">
-                            <div class="row">
-                                <div class="col"><span>Phone: <strong>{{userSettings.phoneNumber}}</strong></span></div>
-                                <div class="col-auto">
-                                    <a href="#" (click)="deletePhoneNumber()" *ngIf="userSettings.phoneNumber">delete</a>
-                                    <a routerLink="/add-phone" *ngIf="!userSettings.phoneNumber">add</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mt-2 mb-2" style="border-bottom: 1px solid rgba(0,0,0,0.14);"></div>
-
-                    <div class="row">
                         <div style="width: 24px;" class="col-auto"></div>
                         <div class="col">
                             <div class="row">
@@ -65,7 +81,7 @@
                                             class="mt-0 mb-0"
                                             color="primary"
                                             (change)="toggleTwoFactor()"
-                                            [(ngModel)]="userSettings.twoFactor">
+                                            [(ngModel)]="user.isTwoFactorEnabled">
                                     </md-slide-toggle>
                                 </div>
                             </div>

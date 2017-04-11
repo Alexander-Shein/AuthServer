@@ -1,9 +1,9 @@
 import {Injectable} from "@angular/core";
 import {ExternalProvidersSettings} from "../models/external-providers-settings";
-import {UserLogInInfo} from "../models/user-log-in-info";
 import {IExternalProvidersService} from "./i-external-providers.service";
 import {ExternalProvider} from "../models/external-provider";
 import {SearchableExternalProvider} from "../models/searchable-external-provider";
+import {UserExternalProvider} from "../models/user-external-provider";
 
 
 @Injectable()
@@ -39,14 +39,14 @@ export class ExternalProvidersService implements IExternalProvidersService {
             ],
             currentLogIns: [
                 {
-                    loginProvider: 'login',
-                    providerKey: 'key',
-                    providerDisplayName: 'twitter'
+                    authenticationScheme: 'twitter',
+                    key: 'key',
+                    displayName: 'twitter'
                 },
                 {
-                    loginProvider: 'login',
-                    providerKey: 'key',
-                    providerDisplayName: 'facebook'
+                    authenticationScheme: 'facebook',
+                    key: 'key',
+                    displayName: 'facebook'
                 }
             ]
         });
@@ -55,7 +55,7 @@ export class ExternalProvidersService implements IExternalProvidersService {
     public linkExternalLogIn(provider: string): void {
     }
 
-    public deleteExternalLogIn(userLogInInfo: UserLogInInfo): Promise<void> {
+    public deleteExternalLogIn(userExternalProvider: UserExternalProvider): Promise<void> {
         return Promise.resolve();
     }
 

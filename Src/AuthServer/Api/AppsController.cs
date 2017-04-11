@@ -109,6 +109,7 @@ namespace AuthServer.Api
         public string Key { get; set; }
         public bool IsLocalAccountEnabled { get; set; }
         public bool IsRememberLogInEnabled { get; set; }
+        public bool IsSecurityQuestionsEnabled { get; set; }
         public LocalAccountSettings EmailSettings { get; set; }
         public LocalAccountSettings PhoneSettings { get; set; }
         public IEnumerable<ExternalProvider> ExternalProviders { get; set; }

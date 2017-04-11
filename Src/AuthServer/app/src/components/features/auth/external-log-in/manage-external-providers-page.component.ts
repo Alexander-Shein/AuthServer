@@ -3,9 +3,9 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {AuthBaseComponent} from "../auth-base.component";
 import {ExternalProvidersService} from "./services/external-providers.service";
-import {UserLogInInfo} from "./models/user-log-in-info";
 import {ExternalProvider} from "./models/external-provider";
 import {ExternalProvidersSettings} from "./models/external-providers-settings";
+import {UserExternalProvider} from "./models/user-external-provider";
 
 
 @Component({
@@ -36,15 +36,15 @@ export class ManageExternalProvidersPageComponent extends AuthBaseComponent {
             });
     }
 
-    public deleteExternalLogIn(userLogInInfo: UserLogInInfo): void {
+    public deleteExternalLogIn(userExternalProvider: UserExternalProvider): void {
         this.spinnerService.show();
 
         this.externalProvidersService
-            .deleteExternalLogIn(userLogInInfo)
+            .deleteExternalLogIn(userExternalProvider)
             .then(() => {
                 let stgs = this.externalProvidersSettings;
 
-                stgs.currentLogIns = stgs.currentLogIns.filter((x: UserLogInInfo) => x !== userLogInInfo);
+                stgs.currentLogIns = stgs.currentLogIns.filter((x: UserExternalProvider) => x !== userExternalProvider);
                 this.canDeleteExternalLogIn = stgs.hasPassword || stgs.currentLogIns.length > 1;
 
                 this.spinnerService.hide();

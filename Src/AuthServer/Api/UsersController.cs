@@ -1,7 +1,8 @@
-﻿using IdentityServerWithAspNetIdentity.Models;
+﻿using IdentityServerWithAspNetIdentity.Services;
+using IdentityServerWithAspNetIdentity.Services.Users.Models.View;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AuthServer.Api
@@ -10,17 +11,17 @@ namespace AuthServer.Api
     [Route("api/[controller]")]
     public class UsersController : Controller
     {
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly IUsersService usersService;
 
-        public UsersController(UserManager<ApplicationUser> userManager)
+        public UsersController(IUsersService usersService)
         {
-            this.userManager = userManager;
+            this.usersService = usersService;
         }
 
         [HttpHead]
-        public async Task<IActionResult> IsUserNameExists(string userName)
+        public async Task<IActionResult> IsUserNameExistsAsync(string userName)
         {
-            var user = await userManager.FindByNameAsync(userName);
+            var user = await usersService.GetUserByEmailOrPhoneAsync(userName);
 
             if (user == null)
             {
@@ -29,6 +30,30 @@ namespace AuthServer.Api
             else
             {
                 return Ok();
+            }
+        }
+
+        [HttpGet]
+        [Route("me")]
+        public async Task<IActionResult> GetCurrentUserAsync()
+        {
+            return Ok(new UserVm
+            {
+                Email = "alex@live.com",
+                HasPassword = true,
+                IsTwoFactorEnabled = true,
+                ExternalProviders = Enumerable.Empty<UserExternalProviderVm>()
+            });
+
+            var user = await usersService.GetCurrentUserAsync(HttpContext.User);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(user);
             }
         }
     }
