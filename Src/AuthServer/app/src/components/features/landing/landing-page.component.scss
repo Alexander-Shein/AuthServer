@@ -1,0 +1,8 @@
+@import "~bootstrap/scss/mixins/_breakpoints.scss";
+@import "~bootstrap/scss/_variables.scss";
+
+@include media-breakpoint-down(xs) {
+    button {
+        width: 100%;
+    }
+}

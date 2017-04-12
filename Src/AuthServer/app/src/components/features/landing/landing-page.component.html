@@ -1,50 +1,60 @@
-<div class="container mt-2">
+<div class="container-fluid mt-2">
 
-    <div class="row">
-        <div class="col-12">
-            <h3 class="text-center">Landing</h3>
+    <div color="row justify-content-center">
+
+        <div class="col-12 col-md-6 col-lg-5 col-xl-4" style="max-width: 450px; margin: auto;">
+
+            <div class="row">
+                <div class="col-12">
+                    <h3 class="text-center">Landing</h3>
+                </div>
+            </div>
+
+            <div class="row">
+                <p class="col-12">
+                    <md-icon color="primary">offline_pin</md-icon>
+                    <span>Free and always free.</span>
+                </p>
+                <p class="col-12">
+                    <md-icon color="primary">offline_pin</md-icon>
+                    <span>OpenID + OAuth2 implementation.</span>
+                </p>
+                <p class="col-12">
+                    <md-icon color="primary">offline_pin</md-icon>
+                    <span>Token based authentication for your website.</span>
+                </p>
+                <p class="col-12">
+                    <md-icon color="primary">offline_pin</md-icon>
+                    <span>Support almost all social network log ins. If any is missed contact us and we'll add it.</span>
+                </p>
+                <p class="col-12">
+                    <md-icon color="primary">offline_pin</md-icon>
+                    <span>Single Sign On (SSO) for all your web apps.</span>
+                </p>
+                <p class="col-12">
+                    <md-icon color="primary">offline_pin</md-icon>
+                    <span>Fully customizable.</span>
+                </p>
+                <p class="col-12">
+                    <md-icon color="primary">offline_pin</md-icon>
+                    <span>10 minutes to integrate.</span>
+                </p>
+            </div>
+
+            <div class="row text-right">
+                <div class="col-12">
+                    <button md-raised-button color="primary" [routerLink]="['/sign-up']" *ngIf="!isLoggedIn">
+                        <md-icon>person_add</md-icon>
+                        <span>sign up</span>
+                    </button>
+                    <button md-raised-button color="primary" [routerLink]="['/dashboard']" *ngIf="isLoggedIn">
+                        <md-icon>settings</md-icon>
+                        <span>dashboard</span>
+                    </button>
+                </div>
+            </div>
+
         </div>
-    </div>
 
-    <div class="row">
-        <md-list>
-            <md-list-item>
-                <md-icon md-list-icon color="primary">offline_pin</md-icon>
-                <span md-line>Free and always free.</span>
-            </md-list-item>
-            <md-list-item>
-                <md-icon md-list-icon color="primary">offline_pin</md-icon>
-                <span md-line>OpenID + OAuth2 implementation.</span>
-            </md-list-item>
-            <md-list-item>
-                <md-icon md-list-icon color="primary">offline_pin</md-icon>
-                <span md-line>Token based authentication for your website.</span>
-            </md-list-item>
-            <md-list-item>
-                <md-icon md-list-icon color="primary">offline_pin</md-icon>
-                <span md-line>Support almost all social network log ins. If any is missed contact us and we'll add it.</span>
-            </md-list-item>
-            <md-list-item>
-                <md-icon md-list-icon color="primary">offline_pin</md-icon>
-                <span md-line>Single Sign On (SSO) for all your web apps.</span>
-            </md-list-item>
-            <md-list-item>
-                <md-icon md-list-icon color="primary">offline_pin</md-icon>
-                <span md-line>Fully customizable.</span>
-            </md-list-item>
-            <md-list-item>
-                <md-icon md-list-icon color="primary">offline_pin</md-icon>
-                <span md-line>10 minutes to integrate.</span>
-            </md-list-item>
-        </md-list>
-        <p>Autofocus on first element</p>
-        <p>Show password button</p>
     </div>
-
-    <div class="row text-center">
-        <div class="col-12">
-            <button md-raised-button color="primary" [routerLink]="['/sign-up']">sign up</button>
-        </div>
-    </div>
-
 </div>

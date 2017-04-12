@@ -20,7 +20,7 @@
                     *ngFor="let menuItem of (isLoggedId ? loggedInMenuItems : ghostMenuItems)"
                     md-menu-item
                     [routerLink]="[menuItem.router]"
-                    [routerLinkActive]="['disabled']">
+                    [routerLinkActive]="['active']">
                 <md-icon *ngIf="menuItem.icon">{{menuItem.icon}}</md-icon>
                 <span>{{menuItem.name}}</span>
             </button>

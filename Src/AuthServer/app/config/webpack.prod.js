@@ -1,7 +1,8 @@
 let webpack = require('webpack'),
     webpackMerge = require('webpack-merge'),
     ExtractTextPlugin = require('extract-text-webpack-plugin'),
-    commonConfig = require('./webpack.common.js');
+    commonConfig = require('./webpack.common.js'),
+    helpers = require('./helpers.js');
 
 const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
 
@@ -9,7 +10,7 @@ module.exports = webpackMerge(commonConfig, {
     devtool: 'source-map',
 
     output: {
-        path: '../wwwroot/dist/',
+        path: helpers.root('dist'),//'./wwwroot/dist/',
         publicPath: '/',
         filename: '[name].[hash].js',
         chunkFilename: '[id].[hash].chunk.js'

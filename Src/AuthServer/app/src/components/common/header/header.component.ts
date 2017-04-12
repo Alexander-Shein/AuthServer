@@ -44,6 +44,6 @@ export class HeaderComponent implements OnInit {
 
         this.authenticationService
             .observeIsLoggedIn()
-            .subscribe((value:boolean) => this.isLoggedId = value);
+            .subscribe((value: boolean) => this.isLoggedId = value);
     }
 }

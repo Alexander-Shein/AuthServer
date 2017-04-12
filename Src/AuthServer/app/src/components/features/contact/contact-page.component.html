@@ -7,9 +7,23 @@
 
     <div class="row justify-content-center">
         <div class="col-12 text-center" *ngIf="isMessageSent">
-            <md-icon color="primary">done</md-icon>
-            <div>We've received your message. We will answer you soon.</div>
-            <div>Thank you!</div>
+            <div class="row">
+                <div class="col-12">
+                    <md-icon color="primary">done</md-icon>
+                    <div>We've received your message. We will answer you soon.</div>
+                    <div>Thank you!</div>
+                </div>
+                <div class="col-12">
+                    <button md-raised-button color="primary" [routerLink]="['/landing']" *ngIf="!isLoggedIn">
+                        <md-icon>home</md-icon>
+                        <span>home</span>
+                    </button>
+                    <button md-raised-button color="primary" [routerLink]="['/dashboard']" *ngIf="isLoggedIn">
+                        <md-icon>settings</md-icon>
+                        <span>dashboard</span>
+                    </button>
+                </div>
+            </div>
         </div>
         <form
                 class="col-12 col-md-6 col-lg-5 col-xl-4"

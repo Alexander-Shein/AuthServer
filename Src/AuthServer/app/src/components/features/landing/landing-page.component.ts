@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import {AuthenticationService} from "../auth/services/authentication.service";
 
 
 @Component({
@@ -6,4 +7,13 @@ import { Component } from "@angular/core";
     templateUrl: './landing-page.component.html',
     styleUrls: ['./landing-page.component.scss']
 })
-export class LandingPageComponent { }
+export class LandingPageComponent {
+
+    constructor(
+        private authenticationService: AuthenticationService
+    ) {
+        this.isLoggedIn = authenticationService.isLoggedIn();
+    }
+
+    public isLoggedIn: boolean;
+}
