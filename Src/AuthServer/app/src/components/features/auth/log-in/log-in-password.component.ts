@@ -10,6 +10,7 @@ import {LogInResult} from "../models/log-in-result";
 
 @Component({
     selector: 'au-log-in-password',
+    styleUrls: ['../auth.scss'],
     template: `
 
         <form class="row mt-1" #logInForm="ngForm" (submit)="onSubmit()">
@@ -18,9 +19,10 @@ import {LogInResult} from "../models/log-in-result";
                     <div class="col">
                         <md-input-container class="w-100">
                             <input
+                                    autofocus
                                     mdInput
                                     placeholder="Password"
-                                    type="password"
+                                    type="{{show ? 'text' : 'password'}}"
                                     name="password"
                                     maxlength="100"
                                     minlength="6"
@@ -36,6 +38,11 @@ import {LogInResult} from "../models/log-in-result";
                                     Min length is 6 characters for password.
                                 </span>
                             </md-hint>
+                            <span><md-icon
+                                    (click)="show = !show"
+                                    class="au-show-password"
+                                    mdTooltip="Show password"
+                                    [mdTooltipPosition]="'above'">remove_red_eye</md-icon></span>
                         </md-input-container>
                     </div>
                 </div>
@@ -85,6 +92,8 @@ export class LogInPasswordComponent extends AuthBaseComponent {
 
     @Input()
     public app: AppVm;
+
+    public show: boolean = false;
 
     public onSubmit() {
         this.authenticationService

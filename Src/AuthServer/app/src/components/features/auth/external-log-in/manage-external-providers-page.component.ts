@@ -44,12 +44,16 @@ export class ManageExternalProvidersPageComponent extends AuthBaseComponent {
     }
 
     public deleteExternalLogIn(userExternalProvider: UserExternalProvider): void {
+        debugger;
         this.spinnerService.show();
 
         this.externalProvidersService
             .deleteExternalLogIn(userExternalProvider)
             .then(() => {
-                this.externalProviders = this.externalProviders.filter((x: ExternalProvider) => x.authenticationScheme !== userExternalProvider.authenticationScheme);
+                let userProviders = this.user.externalProviders;
+                this.externalProviders.push(userExternalProvider);
+
+                this.user.externalProviders = userProviders.filter((x: ExternalProvider) => x.authenticationScheme !== userExternalProvider.authenticationScheme);
                 this.canDeleteExternalLogIn = this.user.hasPassword || this.user.externalProviders.length > 1;
 
                 this.spinnerService.hide();

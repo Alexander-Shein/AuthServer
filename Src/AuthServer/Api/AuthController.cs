@@ -13,6 +13,7 @@ using System;
 using System.Security.Claims;
 using System.Net;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -201,6 +202,62 @@ namespace AuthServer.Api
                     returnUrl += "&phone=" + mobilePhone;
                 }
 
+                return Redirect(returnUrl);
+            }
+        }
+
+        [Authorize]
+        [HttpDelete]
+        [Route("external-provider")]
+        public async Task<IActionResult> DeleteExternalLogIn(string authenticationScheme, string key)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var result = await _userManager.RemoveLoginAsync(user, authenticationScheme, key);
+            if (result.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return Ok();
+            }
+
+            return BadRequest(new BadRequestResult(result.Errors.First().Description));
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("external-provider")]
+        public IActionResult LinkExternalLogIn(string provider, string returnUrl)
+        {
+            // Request a redirect to the external login provider to link a login for the current user
+            var redirectUrl = $"http://localhost:5000/api/auth/external-provider-callback?returnUrl={WebUtility.UrlEncode(returnUrl)}";
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, _userManager.GetUserId(User));
+            return Challenge(properties, provider);
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("external-provider-callback")]
+        public async Task<ActionResult> LinkExternalLogInCallback(string returnUrl)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var info = await _signInManager.GetExternalLoginInfoAsync(await _userManager.GetUserIdAsync(user));
+
+            if (info == null)
+            {
+                returnUrl += returnUrl.Contains("?") ? "&" : "?";
+                returnUrl += "errorMessage=Failed";
+                return Redirect(returnUrl);
+            }
+            var result = await _userManager.AddLoginAsync(user, info);
+
+            if (result.Succeeded)
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                returnUrl += returnUrl.Contains("?") ? "&" : "?";
+                returnUrl += "errorMessage=" + result.Errors.First().Description;
                 return Redirect(returnUrl);
             }
         }
