@@ -6,7 +6,8 @@
                     [app]="app"
                     [im]="logIn"
                     [searchableProviders]="searchableProviders"
-                    (next)="validateUserName()"
+                    (next)="next()"
+                    [unique]="false"
             ></au-user-name>
 
             <div class="row" *ngIf="app.externalProviders?.length">
@@ -32,12 +33,20 @@
     </div>
 
     <div class="row" *ngIf="isValidUserName && isEmail">
+        <div class="col-12 text-center mt-1">
+            <md-icon>email</md-icon>
+            <span>{{logIn.userName}}</span>
+        </div>
         <div class="col-12">
             <au-email-log-in [app]="app" [logIn]="logIn"></au-email-log-in>
         </div>
     </div>
 
     <div class="row" *ngIf="isValidUserName && !isEmail">
+        <div class="col-12 text-center mt-1">
+            <md-icon>phone</md-icon>
+            <span>{{logIn.userName}}</span>
+        </div>
         <div class="col-12">
             <au-phone-log-in [app]="app" [logIn]="logIn"></au-phone-log-in>
         </div>

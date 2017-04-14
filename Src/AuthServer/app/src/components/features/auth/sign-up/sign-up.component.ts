@@ -7,8 +7,6 @@ import {AuthBaseComponent} from "../auth-base.component";
 import {AppVm} from "../../business/apps/models/app-vm";
 import {ExternalProvider} from "../external-log-in/models/external-provider";
 import {SearchableExternalProvider} from "../external-log-in/models/searchable-external-provider";
-import {UsersService} from "../services/users.service";
-import {NotificationsService} from "angular2-notifications";
 
 
 @Component({
@@ -20,8 +18,6 @@ export class SignUpComponent extends AuthBaseComponent {
 
     constructor(
         private authenticationService: AuthenticationService,
-        private usersService: UsersService,
-        private notificationsService: NotificationsService,
         route: ActivatedRoute,
         router: Router,
         spinnerService: SpinnerService
@@ -47,23 +43,9 @@ export class SignUpComponent extends AuthBaseComponent {
     public isValidUserName: boolean = false;
     public isEmail: boolean = false;
 
-    public validateUserName(): void {
-        this.spinnerService.show();
-
-        this.usersService
-            .isUserNameExists(this.signUp.userName)
-            .subscribe(
-                () => {
-                    this.notificationsService
-                        .error('Failed.', 'UserName already exists. Please try again.');
-                    this.isValidUserName = false;
-                    this.spinnerService.hide();
-                },
-                () => {
-                    this.isValidUserName = true;
-                    this.isEmail = this.signUp.userName.indexOf('@') != -1;
-                    this.spinnerService.hide();
-                });
+    public next(): void {
+        this.isValidUserName = true;
+        this.isEmail = this.signUp.userName.indexOf('@') != -1;
     }
 
     public externalLogIn(externalProvider: ExternalProvider): void {

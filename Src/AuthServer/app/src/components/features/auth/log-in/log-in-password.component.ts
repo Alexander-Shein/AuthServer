@@ -54,23 +54,24 @@ import {LogInResult} from "../models/log-in-result";
                                 md-raised-button color="primary">log in</button>
                     </div>
                 </div>
-                <div class="row mt-1" *ngIf="app.isRememberLogInEnabled">
+                <div class="row mt-1" *ngIf="app.isRememberLogInEnabled" style="font-size: 13px;">
                     <div class="col text-left">
                         <div>
                             <md-checkbox
+                                    
                                     color="primary"
                                     name="remember"
                                     [(ngModel)]="logIn.rememberLogIn">
-                                <span>remember me </span>
+                                <span>stay logged in</span>
                             </md-checkbox>
                             <md-icon style="position: absolute; margin-left: 3px;"
                                      mdTooltip="Protect your account. Uncheck if using public/shared device."
                                      [mdTooltipPosition]="'above'">info_outline</md-icon>
                         </div>
                     </div>
-                </div>
-                <div class="row text-left">
-                    <a [routerLink]="['/forgot-password']" [queryParams]="{redirectUrl: redirectUrl}" class="col-12">Forgot your password?</a>
+                    <div class="col text-right mt-1">
+                        <a [routerLink]="['/forgot-password']" [queryParams]="{redirectUrl: redirectUrl}">Forgot password?</a>
+                    </div>
                 </div>
             </div>
         </form>

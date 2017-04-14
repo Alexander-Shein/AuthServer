@@ -61,16 +61,17 @@ namespace AuthServer.Api
                 Key = vm.Client?.ClientId ?? "auth-guardian",
                 IsLocalAccountEnabled = vm.EnableLocalLogin,
                 IsRememberLogInEnabled = true,
-                ExternalProviders = vm.ExternalProviders,
+                ExternalProviders = new List<ExternalProvider>(),//vm.ExternalProviders,
                 EmailSettings = new LocalAccountSettings
                 {
                     IsEnabled = true,
-                    IsPasswordlessEnabled = false,
-                    IsPasswordEnabled = true
+                    IsPasswordlessEnabled = true,
+                    IsPasswordEnabled = false,
+                    IsSearchRelatedProviderEnabled = false
                 },
                 PhoneSettings = new LocalAccountSettings
                 {
-                    IsEnabled = true,
+                    IsEnabled = false,
                     IsPasswordlessEnabled = true,
                     IsPasswordEnabled = true
                 }
