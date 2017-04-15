@@ -16,7 +16,9 @@ import {SignUp} from "../models/sign-up";
             <div class="col-12">
                 <button
                         class="w-100"
-                        md-raised-button color="primary" (click)="sendLinkToEmail()">send link to email</button>
+                        md-raised-button
+                        color="accent"
+                        (click)="sendLinkToEmail()">receive an email with sign up link</button>
             </div>
         </div>
 

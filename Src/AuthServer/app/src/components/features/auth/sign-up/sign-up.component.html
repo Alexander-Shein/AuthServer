@@ -33,109 +33,22 @@
         </div>
     </div>
 
-    <div class="row" *ngIf="isValidUserName && isEmail">
+    <div class="row" *ngIf="isValidUserName">
+        <div class="col-12 text-center mt-3 mb-2">
+            <button
+                    style="position: absolute; left: 20px; top: -10px;"
+                    (click)="back()"
+                    md-mini-fab>
+                <md-icon>arrow_back</md-icon>
+            </button>
+            <md-icon style="vertical-align: bottom;">{{isEmail ? 'email' : 'phone'}}</md-icon>
+            <span>{{signUp.userName}}</span>
+        </div>
         <div class="col-12">
-            <au-email-sign-up [app]="app" [signUp]="signUp"></au-email-sign-up>
+            <au-email-sign-up [app]="app" [signUp]="signUp" *ngIf="isEmail"></au-email-sign-up>
+            <au-phone-sign-up [app]="app" [signUp]="signUp" *ngIf="!isEmail"></au-phone-sign-up>
         </div>
     </div>
-
-    <div class="row" *ngIf="isValidUserName && !isEmail">
-        <div class="col-12">
-            <au-phone-sign-up [app]="app" [signUp]="signUp"></au-phone-sign-up>
-        </div>
-    </div>
-
-
-    <!--
-    <div class="row justify-content-center">
-        <form class="col-12 col-md-6 col-lg-5 col-xl-4 sign-up-form" (ngSubmit)="onSubmit()">
-
-            <div class="row">
-                <md-icon color="primary" class="col-auto mt-3 ml-3">mail_outline</md-icon>
-                <div class="col">
-                    <md-input-container class="w-100">
-                        <input
-                                mdInput
-                                #email
-                                placeholder="Email"
-                                type="email"
-                                name="email"
-                                maxlength="100"
-                                [(ngModel)]="signUp.email"
-                                required>
-                        <md-hint align="end">{{email.value.length}} / 100</md-hint>
-                    </md-input-container>
-                </div>
-            </div>
-
-            <div class="row">
-                <md-icon color="primary" class="col-auto mt-3 ml-3">lock_open</md-icon>
-                <div class="col">
-                    <md-input-container class="w-100">
-                        <input
-                                mdInput
-                                #password
-                                name="password"
-                                placeholder="Password"
-                                type="password"
-                                maxlength="100"
-                                [(ngModel)]="signUp.password"
-                                required>
-                        <md-hint align="end">{{password.value.length}} / 100</md-hint>
-                    </md-input-container>
-                </div>
-            </div>
-
-            <div class="row">
-                <md-icon color="primary" class="col-auto mt-3 ml-3">lock_outline</md-icon>
-                <div class="col">
-                    <md-input-container class="w-100">
-                        <input
-                                mdInput
-                                #confirmPassword
-                                name="confirmPassword"
-                                placeholder="Confirm password"
-                                type="password"
-                                maxlength="100"
-                                [(ngModel)]="signUp.confirmPassword"
-                                required>
-                        <md-hint align="end">{{confirmPassword.value.length}} / 100</md-hint>
-                    </md-input-container>
-                </div>
-            </div>
-
-            <div class="row mt-2">
-                <div class="col-12 text-right">
-                    <button md-raised-button color="primary">register</button>
-                </div>
-            </div>
-
-            <div class="row mt-2">
-                <a [routerLink]="['/log-in']" [queryParams]="{redirectUrl: redirectUrl}" class="col-12">Have an account?</a>
-            </div>
-        </form>
-    </div>
-
-    <div class="row justify-content-center" *ngIf="app.externalProviders.length">
-        <div class="col-12 col-md-6 col-lg-5 col-xl-4">
-            <div class="row text-center" *ngIf="app.isLocalAccountEnabled">
-                <div class="col-12 text-center">
-                    <span>Or</span>
-                </div>
-            </div>
-            <div class="row mt-1">
-                <div class="col-12 au-external-login text-center">
-                    <button
-                            *ngFor="let sn of app.externalProviders; let i = index"
-                            md-raised-button
-                            color="primary"
-                            (click)="externalLogIn(sn)">
-                        <span>{{sn.displayName}}</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>-->
 
     <div class="row">
         <div class="col-12 text-right">

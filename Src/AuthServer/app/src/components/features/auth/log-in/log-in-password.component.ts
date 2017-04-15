@@ -38,12 +38,12 @@ import {LogInResult} from "../models/log-in-result";
                                     Min length is 6 characters for password.
                                 </span>
                             </md-hint>
-                            <span><md-icon
+                            <md-icon
                                     (click)="show = !show"
                                     class="au-show-password"
                                     mdTooltip="Show password"
                                     color="primary"
-                                    [mdTooltipPosition]="'above'">remove_red_eye</md-icon></span>
+                                    [mdTooltipPosition]="'above'">remove_red_eye</md-icon>
                         </md-input-container>
                     </div>
                 </div>
@@ -120,7 +120,7 @@ export class LogInPasswordComponent extends AuthBaseComponent {
                 }
 
                 this.redirectAfterLogin();
-            });
+            }, () => this.spinnerService.hide());
     }
 
 }

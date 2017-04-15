@@ -1,9 +1,9 @@
 ﻿using IdentityServerWithAspNetIdentity.Models;
 using IdentityServerWithAspNetIdentity.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -34,28 +34,51 @@ namespace AuthServer.Api
         }
 
         [HttpPost]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordIm im)
+        [Route("forgot")]
+        public async Task<IActionResult> ForgotPasswordAsync(ForgotPasswordIm im)
         {
-            if (ModelState.IsValid)
+            if (String.IsNullOrWhiteSpace(im.UserName))
             {
-                var user = await userManager.FindByNameAsync(im.UserName);
-                if (user == null || !(await userManager.IsEmailConfirmedAsync(user)))
-                {
-                    // Don't reveal that the user does not exist or is not confirmed
-                    return View("ForgotPasswordConfirmation");
-                }
-
-                // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
-                // Send an email with this link
-                var code = await userManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                await _emailSender.SendEmailAsync(im.UserName, "Reset Password",
-                   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
-                return View("ForgotPasswordConfirmation");
+                return BadRequest(new BadRequestResult($"Invalid user name."));
             }
+
+            var user = await usersService.GetUserByEmailOrPhoneAsync(im.UserName);
+
+            if (user == null)
+            {
+                return BadRequest(new BadRequestResult($"User with '{im.UserName}' doesn't exist."));
+            }
+
+            var code = await userManager.GeneratePasswordResetTokenAsync(user);
+            var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+            await _emailSender.SendEmailAsync(im.UserName, "Reset Password",
+               $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
 
             // If we got this far, something failed, redisplay form
             return Ok();
+        }
+
+        [HttpPost]
+        [Route("reset")]
+        public async Task<IActionResult> ResetPasswordAsync(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = await _userManager.FindByNameAsync(model.Email);
+            if (user == null)
+            {
+                // Don't reveal that the user does not exist
+                return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
+            }
+            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+            if (result.Succeeded)
+            {
+                return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
+            }
+            AddErrors(result);
+            return View();
         }
 
         [HttpPut]

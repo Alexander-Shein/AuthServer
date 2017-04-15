@@ -16,7 +16,9 @@ import {AppVm} from "../../business/apps/models/app-vm";
             <div class="col-12">
                 <button
                         class="w-100"
-                        md-raised-button color="primary" (click)="sendCodeToPhone()">send sms with code</button>
+                        md-raised-button
+                        color="accent"
+                        (click)="sendCodeToPhone()">send sms with code</button>
             </div>
         </div>
 

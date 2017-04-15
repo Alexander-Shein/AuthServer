@@ -48,6 +48,11 @@ export class SignUpComponent extends AuthBaseComponent {
         this.isEmail = this.signUp.userName.indexOf('@') != -1;
     }
 
+    public back(): void {
+        this.isValidUserName = false;
+        this.isEmail = false;
+    }
+
     public externalLogIn(externalProvider: ExternalProvider): void {
         this.authenticationService
             .externalLogIn(

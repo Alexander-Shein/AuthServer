@@ -9,6 +9,7 @@ import {SignUp} from "../models/sign-up";
 
 @Component({
     selector: 'au-sign-up-password',
+    styleUrls: ['../auth.scss'],
     template: `
 
         <form class="row mt-1" #signUpForm="ngForm" (submit)="onSubmit()">
@@ -17,6 +18,8 @@ import {SignUp} from "../models/sign-up";
                     <div class="col">
                         <md-input-container class="w-100">
                             <input
+                                    autofocus
+                                    type="{{show ? 'text' : 'password'}}"
                                     mdInput
                                     placeholder="Password"
                                     type="password"
@@ -35,6 +38,12 @@ import {SignUp} from "../models/sign-up";
                                     Min length is 6 characters for password.
                                 </span>
                             </md-hint>
+                            <md-icon
+                                    (click)="show = !show"
+                                    class="au-show-password"
+                                    mdTooltip="Show password"
+                                    color="primary"
+                                    [mdTooltipPosition]="'above'">remove_red_eye</md-icon>
                         </md-input-container>
                     </div>
                 </div>
@@ -42,6 +51,7 @@ import {SignUp} from "../models/sign-up";
                     <div class="col">
                         <md-input-container class="w-100">
                             <input
+                                    type="{{showConfirmation ? 'text' : 'password'}}"
                                     mdInput
                                     placeholder="Confirm password"
                                     type="password"
@@ -60,6 +70,12 @@ import {SignUp} from "../models/sign-up";
                                     Min length is 6 characters for password.
                                 </span>
                             </md-hint>
+                            <md-icon
+                                    (click)="showConfirmation = !showConfirmation"
+                                    class="au-show-password"
+                                    mdTooltip="Show password"
+                                    color="primary"
+                                    [mdTooltipPosition]="'above'">remove_red_eye</md-icon>
                         </md-input-container>
                     </div>
                 </div>
@@ -92,10 +108,17 @@ export class SignUpPasswordComponent extends AuthBaseComponent {
     @Input()
     public app: AppVm;
 
+    public show: boolean = false;
+    public showConfirmation: boolean = false;
+
     public onSubmit() {
+        this.spinnerService.show();
+
         this.authenticationService
             .signUp(this.signUp)
-            .subscribe(() => this.redirectAfterLogin());
+            .subscribe(
+                () => this.redirectAfterLogin(),
+                () => this.spinnerService.hide());
     }
 
 }

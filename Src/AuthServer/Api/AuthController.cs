@@ -260,9 +260,13 @@ namespace AuthServer.Api
         }
     }
 
-    public class LogInIm
+    public class UserNameIm
     {
         public string UserName { get; set; }
+    }
+
+    public class LogInIm  : UserNameIm
+    {
         public string Password { get; set; }
         public bool RememberLogIn { get; set; }
     }
