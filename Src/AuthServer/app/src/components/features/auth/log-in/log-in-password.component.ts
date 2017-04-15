@@ -42,6 +42,7 @@ import {LogInResult} from "../models/log-in-result";
                                     (click)="show = !show"
                                     class="au-show-password"
                                     mdTooltip="Show password"
+                                    color="primary"
                                     [mdTooltipPosition]="'above'">remove_red_eye</md-icon></span>
                         </md-input-container>
                     </div>
@@ -54,7 +55,7 @@ import {LogInResult} from "../models/log-in-result";
                                 md-raised-button color="primary">log in</button>
                     </div>
                 </div>
-                <div class="row mt-1" *ngIf="app.isRememberLogInEnabled" style="font-size: 13px;">
+                <div class="row mt-1" *ngIf="app.isRememberLogInEnabled" style="font-size: 12px;">
                     <div class="col text-left">
                         <div>
                             <md-checkbox
@@ -64,13 +65,16 @@ import {LogInResult} from "../models/log-in-result";
                                     [(ngModel)]="logIn.rememberLogIn">
                                 <span>stay logged in</span>
                             </md-checkbox>
-                            <md-icon style="position: absolute; margin-left: 3px;"
+                            <!--<md-icon style="position: absolute; margin-left: 3px;"
                                      mdTooltip="Protect your account. Uncheck if using public/shared device."
-                                     [mdTooltipPosition]="'above'">info_outline</md-icon>
+                                     [mdTooltipPosition]="'above'">info_outline</md-icon>-->
                         </div>
                     </div>
-                    <div class="col text-right mt-1">
-                        <a [routerLink]="['/forgot-password']" [queryParams]="{redirectUrl: redirectUrl}">Forgot password?</a>
+                    <div class="col text-right">
+                        <a
+                                [routerLink]="['/forgot-password']"
+                                [queryParams]="{redirectUrl: redirectUrl}"
+                                style="vertical-align: middle;">Forgot password?</a>
                     </div>
                 </div>
             </div>
@@ -97,6 +101,8 @@ export class LogInPasswordComponent extends AuthBaseComponent {
     public show: boolean = false;
 
     public onSubmit() {
+        this.spinnerService.show();
+
         this.authenticationService
             .logIn(this.logIn)
             .subscribe((result: LogInResult) => {

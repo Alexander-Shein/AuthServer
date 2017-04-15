@@ -10,13 +10,15 @@ import {AppVm} from "../../business/apps/models/app-vm";
         <au-log-in-password [logIn]="logIn" [app]="app" *ngIf="!isLinkSent"></au-log-in-password>
 
         <div class="row" *ngIf="app.emailSettings.isPasswordlessEnabled && !isLinkSent">
-            <div class="col-12 mt-3 mb-3 text-center">
-                <span>Or log in without password</span>
+            <div class="col-12 mt-2 mb-3 text-center">
+                <span>Or</span>
             </div>
             <div class="col-12">
                 <button
                         class="w-100"
-                        md-raised-button color="primary" (click)="sendLinkToEmail()">send link to email</button>
+                        md-raised-button
+                        color="accent"
+                        (click)="sendLinkToEmail()">receive an email with log in link</button>
             </div>
         </div>
 

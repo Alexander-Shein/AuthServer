@@ -15,8 +15,6 @@ using System.Net;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace AuthServer.Api
 {
     [EnableCors("default")]
@@ -140,7 +138,7 @@ namespace AuthServer.Api
         [Route("external-log-in")]
         public IActionResult ExternalLogIn(string authenticationScheme, string returnUrl)
         {
-            var redirectUrl = $"http://localhost:5000/api/auth/external-log-in-callback?returnUrl={WebUtility.UrlEncode(returnUrl)}";
+            var redirectUrl = $"{Request.PathBase}/api/auth/external-log-in-callback?returnUrl={WebUtility.UrlEncode(returnUrl)}";
 
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(authenticationScheme, redirectUrl);
             return Challenge(properties, authenticationScheme);
@@ -228,8 +226,7 @@ namespace AuthServer.Api
         [Route("external-provider")]
         public IActionResult LinkExternalLogIn(string provider, string returnUrl)
         {
-            // Request a redirect to the external login provider to link a login for the current user
-            var redirectUrl = $"http://localhost:5000/api/auth/external-provider-callback?returnUrl={WebUtility.UrlEncode(returnUrl)}";
+            var redirectUrl = $"{Request.PathBase}/api/auth/external-provider-callback?returnUrl={WebUtility.UrlEncode(returnUrl)}";
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, _userManager.GetUserId(User));
             return Challenge(properties, provider);
         }
