@@ -17,13 +17,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\app.4a08c5faeb5f1299ca08.js" />
     <Content Include="wwwroot\assets\facebook.svg" />
     <Content Include="wwwroot\assets\google.svg" />
     <Content Include="wwwroot\assets\microsoft.svg" />
     <Content Include="wwwroot\assets\vk.svg" />
-    <Content Include="wwwroot\css\vendor.7e8b62a7b20fedb868cb.css" />
-    <Content Include="wwwroot\css\vendor.7e8b62a7b20fedb868cb.css.map" />
+    <Content Include="wwwroot\css\vendor.85d4851227ecd31e8c08.css" />
+    <Content Include="wwwroot\css\vendor.85d4851227ecd31e8c08.css.map" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="1.0.1" />

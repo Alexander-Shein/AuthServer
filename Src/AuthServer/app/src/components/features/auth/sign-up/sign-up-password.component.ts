@@ -19,10 +19,9 @@ import {SignUp} from "../models/sign-up";
                         <md-input-container class="w-100">
                             <input
                                     autofocus
-                                    type="{{show ? 'text' : 'password'}}"
+                                    type="{{password.show ? 'text' : 'password'}}"
                                     mdInput
                                     placeholder="Password"
-                                    type="password"
                                     name="password"
                                     maxlength="100"
                                     minlength="6"
@@ -39,7 +38,7 @@ import {SignUp} from "../models/sign-up";
                                 </span>
                             </md-hint>
                             <md-icon
-                                    (click)="show = !show"
+                                    (click)="password.show = !password.show"
                                     class="au-show-password"
                                     mdTooltip="Show password"
                                     color="primary"
@@ -51,10 +50,9 @@ import {SignUp} from "../models/sign-up";
                     <div class="col">
                         <md-input-container class="w-100">
                             <input
-                                    type="{{showConfirmation ? 'text' : 'password'}}"
+                                    type="{{confirmPassword.show ? 'text' : 'password'}}"
                                     mdInput
                                     placeholder="Confirm password"
-                                    type="password"
                                     name="confirmPassword"
                                     maxlength="100"
                                     minlength="6"
@@ -71,7 +69,7 @@ import {SignUp} from "../models/sign-up";
                                 </span>
                             </md-hint>
                             <md-icon
-                                    (click)="showConfirmation = !showConfirmation"
+                                    (click)="confirmPassword.show = !confirmPassword.show"
                                     class="au-show-password"
                                     mdTooltip="Show password"
                                     color="primary"
@@ -107,9 +105,6 @@ export class SignUpPasswordComponent extends AuthBaseComponent {
 
     @Input()
     public app: AppVm;
-
-    public show: boolean = false;
-    public showConfirmation: boolean = false;
 
     public onSubmit() {
         this.spinnerService.show();

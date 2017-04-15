@@ -1,6 +1,7 @@
 ﻿using IdentityServerWithAspNetIdentity.Models;
 using IdentityServerWithAspNetIdentity.Models.AccountViewModels;
 using IdentityServerWithAspNetIdentity.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -94,8 +95,9 @@ namespace AuthServer.Api
         }
 
         [HttpPut]
+        [Authorize]
         [Route("change")]
-        public async Task<IActionResult> ChangePassword(ChangePasswordIm im)
+        public async Task<IActionResult> ChangePasswordAsync([FromBody] ChangePasswordIm im)
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
 
@@ -112,7 +114,7 @@ namespace AuthServer.Api
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddPassword(PasswordIm im)
+        public async Task<IActionResult> AddPassword([FromBody] PasswordIm im)
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
 

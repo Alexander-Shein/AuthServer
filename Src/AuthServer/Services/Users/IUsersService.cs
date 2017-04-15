@@ -24,13 +24,16 @@ namespace IdentityServerWithAspNetIdentity.Services
     {
         private readonly ApplicationDbContext applicationDbContext;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
 
         public UsersService(
             ApplicationDbContext applicationDbContext,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager)
         {
             this.applicationDbContext = applicationDbContext;
             this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
         public string CleanPhoneNumber(string phone)
@@ -80,7 +83,16 @@ namespace IdentityServerWithAspNetIdentity.Services
 
             if (im.IsTwoFactorEnabled.HasValue && user.TwoFactorEnabled != im.IsTwoFactorEnabled)
             {
-                await userManager.SetTwoFactorEnabledAsync(user, im.IsTwoFactorEnabled.Value);
+                var result = await userManager.SetTwoFactorEnabledAsync(user, im.IsTwoFactorEnabled.Value);
+                await signInManager.SignInAsync(user, isPersistent: false);
+                if (result.Succeeded)
+                {
+                    user.TwoFactorEnabled = im.IsTwoFactorEnabled.Value;
+                }
+                else
+                {
+                    throw new ArgumentException(result.Errors.First().Description);
+                }
             }
 
             var vm = Map(user);

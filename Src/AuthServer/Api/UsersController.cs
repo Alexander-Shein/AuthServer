@@ -1,6 +1,7 @@
 ﻿using AuthServer.Services.Users.Models.Input;
 using IdentityServerWithAspNetIdentity.Services;
 using IdentityServerWithAspNetIdentity.Services.Users.Models.View;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -39,23 +40,6 @@ namespace AuthServer.Api
         [Route("me")]
         public async Task<IActionResult> GetCurrentUserAsync()
         {
-            return Ok(new UserVm
-            {
-                Email = "alex@live.com",
-                HasPassword = true,
-                IsTwoFactorEnabled = true,
-                PhoneNumber = "375259065234",
-                ExternalProviders = new List<UserExternalProviderVm>
-                {
-                    new UserExternalProviderVm
-                    {
-                        AuthenticationScheme = "Facebook",
-                        DisplayName = "Facebook",
-                        Key = "123"
-                    }
-                }
-            });
-
             var user = await usersService.GetCurrentUserAsync(HttpContext.User);
 
             if (user == null)
@@ -69,8 +53,9 @@ namespace AuthServer.Api
         }
 
         [HttpPatch]
+        [Authorize]
         [Route("me")]
-        public async Task<IActionResult> Update(UserIm im)
+        public async Task<IActionResult> Update([FromBody] UserIm im)
         {
             var user = await usersService.Update(HttpContext.User, im);
 

@@ -35,8 +35,6 @@ export class ResetPasswordPageComponent extends AuthBaseComponent {
     }
 
     public im: ResetPassword = new ResetPassword();
-    public show: boolean = false;
-    public showConfirmation: boolean = false;
 
     public onSubmit(): void {
         this.spinnerService.show();

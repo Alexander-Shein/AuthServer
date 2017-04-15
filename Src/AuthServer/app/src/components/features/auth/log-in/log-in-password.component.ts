@@ -22,7 +22,7 @@ import {LogInResult} from "../models/log-in-result";
                                     autofocus
                                     mdInput
                                     placeholder="Password"
-                                    type="{{show ? 'text' : 'password'}}"
+                                    type="{{password.show ? 'text' : 'password'}}"
                                     name="password"
                                     maxlength="100"
                                     minlength="6"
@@ -39,7 +39,7 @@ import {LogInResult} from "../models/log-in-result";
                                 </span>
                             </md-hint>
                             <md-icon
-                                    (click)="show = !show"
+                                    (click)="password.show = !password.show"
                                     class="au-show-password"
                                     mdTooltip="Show password"
                                     color="primary"
@@ -97,8 +97,6 @@ export class LogInPasswordComponent extends AuthBaseComponent {
 
     @Input()
     public app: AppVm;
-
-    public show: boolean = false;
 
     public onSubmit() {
         this.spinnerService.show();
