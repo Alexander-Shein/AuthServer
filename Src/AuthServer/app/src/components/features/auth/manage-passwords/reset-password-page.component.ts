@@ -44,21 +44,9 @@ export class ResetPasswordPageComponent extends AuthBaseComponent {
         this.passwordsService
             .resetPassword(this.im)
             .subscribe(
-                () => this.handle(),
+                () => this.redirectAfterLogin(),
                 () => this.spinnerService.hide()
             );
-    }
-
-    private handle(): void {
-        this.router
-            .navigate(['/log-in'],
-            {
-                queryParams: {
-                    redirectUrl: this.redirectUrl
-                }
-            });
-
-        this.spinnerService.hide();
     }
 
 }

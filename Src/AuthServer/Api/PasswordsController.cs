@@ -86,6 +86,7 @@ namespace AuthServer.Api
             var result = await userManager.ResetPasswordAsync(user, im.Code, im.Password);
             if (result.Succeeded)
             {
+                await _signInManager.SignInAsync(user, false);
                 return Ok();
             }
 
