@@ -1,6 +1,6 @@
 export class NewPassword {
 
-    public password: string = '';
-    public confirmPassword: string = '';
+    public password: string;
+    public confirmPassword: string;
 
 }

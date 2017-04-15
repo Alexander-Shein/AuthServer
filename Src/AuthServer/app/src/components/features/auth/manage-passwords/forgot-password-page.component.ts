@@ -8,6 +8,7 @@ import {SearchableExternalProvider} from "../external-log-in/models/searchable-e
 import {AppVm} from "../../business/apps/models/app-vm";
 import {UsersService} from "../services/users.service";
 import {NotificationsService} from "angular2-notifications";
+import {VerificationCode} from "./models/verification-code";
 
 
 @Component({
@@ -42,6 +43,7 @@ export class ForgotPasswordPageComponent extends AuthBaseComponent {
     public app: AppVm;
     public im: UserName = new UserName();
     public searchableProviders: SearchableExternalProvider[];
+    public verificationCode: VerificationCode = new VerificationCode();
 
     public isCodeSent: boolean = false;
     public isEmail: boolean = false;
@@ -61,8 +63,6 @@ export class ForgotPasswordPageComponent extends AuthBaseComponent {
                             this.spinnerService.hide();
                         },
                             () => {
-                                this.notificationsService
-                                    .error('Failed.', 'Cannot send code. Please try again.');
                                 this.spinnerService.hide();
                             });
                 },

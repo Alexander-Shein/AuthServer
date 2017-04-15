@@ -3,7 +3,7 @@ import {NewPassword} from "./new-password";
 
 export class ResetPassword extends NewPassword {
 
-    public email: string = '';
+    public userName: string = '';
     public code: string = '';
 
 }

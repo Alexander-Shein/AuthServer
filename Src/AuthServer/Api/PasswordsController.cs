@@ -1,10 +1,12 @@
 ﻿using IdentityServerWithAspNetIdentity.Models;
+using IdentityServerWithAspNetIdentity.Models.AccountViewModels;
 using IdentityServerWithAspNetIdentity.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace AuthServer.Api
@@ -35,7 +37,7 @@ namespace AuthServer.Api
 
         [HttpPost]
         [Route("forgot")]
-        public async Task<IActionResult> ForgotPasswordAsync(ForgotPasswordIm im)
+        public async Task<IActionResult> ForgotPasswordAsync([FromBody] ForgotPasswordIm im)
         {
             if (String.IsNullOrWhiteSpace(im.UserName))
             {
@@ -49,36 +51,45 @@ namespace AuthServer.Api
                 return BadRequest(new BadRequestResult($"User with '{im.UserName}' doesn't exist."));
             }
 
+            var isEmail = im.UserName.Contains("@");
             var code = await userManager.GeneratePasswordResetTokenAsync(user);
-            var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-            await _emailSender.SendEmailAsync(im.UserName, "Reset Password",
-               $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+            im.ResetPasswordUrl += $";code={code};userName={WebUtility.UrlEncode(user.UserName)}";
 
-            // If we got this far, something failed, redisplay form
+            if (isEmail)
+            {
+                await
+                    _emailSender
+                        .SendEmailAsync(
+                            user.Email,
+                            "Reset Password",
+                            $"Please reset your password by clicking here: <a href='{im.ResetPasswordUrl}'>link</a>");
+            }
+            else
+            {
+                await _smsSender.SendSmsAsync(user.PhoneNumber, $"Code: {code}. Please use this code to reset your password.");
+            }
+
             return Ok();
         }
 
         [HttpPost]
         [Route("reset")]
-        public async Task<IActionResult> ResetPasswordAsync(ResetPasswordViewModel model)
+        public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPasswordIm im)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-            var user = await _userManager.FindByNameAsync(model.Email);
+            ApplicationUser user = await usersService.GetUserByEmailOrPhoneAsync(im.UserName);
+
             if (user == null)
             {
-                // Don't reveal that the user does not exist
-                return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
+                return BadRequest(new BadRequestResult($"User with '{im.UserName}' doesn't exist."));
             }
-            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+
+            var result = await userManager.ResetPasswordAsync(user, im.Code, im.Password);
             if (result.Succeeded)
             {
-                return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
+                return Ok();
             }
-            AddErrors(result);
-            return View();
+
+            return BadRequest(new BadRequestResult(result.Errors.First().Description));
         }
 
         [HttpPut]
@@ -117,9 +128,9 @@ namespace AuthServer.Api
         }
     }
 
-    public class ForgotPasswordIm
+    public class ForgotPasswordIm : UserNameIm
     {
-        public string UserName { get; set; }
+        public string ResetPasswordUrl { get; set; }
     }
 
     public class PasswordIm
@@ -130,5 +141,11 @@ namespace AuthServer.Api
     public class ChangePasswordIm : PasswordIm
     {
         public string OldPassword { get; set; }
+    }
+
+    public class ResetPasswordIm : UserNameIm
+    {
+        public string Password { get; set; }
+        public string Code { get; set; }
     }
 }

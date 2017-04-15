@@ -25,23 +25,28 @@ export class ResetPasswordPageComponent extends AuthBaseComponent {
 
     public ngOnInit(): void {
         this.route
-            .queryParams
+            .params
             .subscribe((params: Params) => {
                 this.im.code = params[Consts.Code];
+                this.im.userName = params[Consts.UserName];
             });
 
         super.ngOnInit();
     }
 
     public im: ResetPassword = new ResetPassword();
+    public show: boolean = false;
+    public showConfirmation: boolean = false;
 
     public onSubmit(): void {
         this.spinnerService.show();
 
         this.passwordsService
             .resetPassword(this.im)
-            .then(() => this.handle())
-            .catch(() => this.spinnerService.hide());
+            .subscribe(
+                () => this.handle(),
+                () => this.spinnerService.hide()
+            );
     }
 
     private handle(): void {
