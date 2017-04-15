@@ -63,7 +63,7 @@ export class AuthenticationService extends ServiceBase implements IAuthenticatio
         form.setAttribute('method', 'post');
         form.setAttribute('action', this.apiUrl + 'external-log-in');
 
-        let returnUrl = 'http://localhost:8080/external-log-in-callback?redirectUrl=' + encodeURIComponent(externalLogIn.returnUrl);
+        let returnUrl = 'http://localhost:5000/external-log-in-callback?redirectUrl=' + encodeURIComponent(externalLogIn.returnUrl);
 
         this.addParameterToForm(form, 'authenticationScheme', externalLogIn.authenticationScheme);
         this.addParameterToForm(form, 'returnUrl', returnUrl);
