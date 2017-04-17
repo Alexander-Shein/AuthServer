@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace IdentityServerWithAspNetIdentity.Services.Users.Models.View
 {
     public class UserVm
     {
+        public Guid Id { get; set; }
         public string Email { get; set; }
         public bool IsEmailConfirmed { get; set; }
         public string PhoneNumber { get; set; }

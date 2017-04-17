@@ -185,6 +185,7 @@ namespace IdentityServerWithAspNetIdentity.Services
         {
             var vm = new UserVm
             {
+                Id = new Guid(user.Id),
                 Email = user.Email,
                 IsEmailConfirmed = user.EmailConfirmed,
                 PhoneNumber = user.PhoneNumber,

@@ -40,8 +40,7 @@
                     md-mini-fab>
                 <md-icon>arrow_back</md-icon>
             </button>
-            <md-icon style="vertical-align: bottom;">{{isEmail ? 'email' : 'phone'}}</md-icon>
-            <span>{{logIn.userName}}</span>
+            <au-icon-user-name [userName]="logIn.userName"></au-icon-user-name>
         </div>
         <div class="col-12">
             <au-email-log-in [app]="app" [logIn]="logIn" *ngIf="isEmail"></au-email-log-in>

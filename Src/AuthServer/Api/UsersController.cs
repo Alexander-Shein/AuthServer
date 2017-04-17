@@ -21,7 +21,6 @@ namespace AuthServer.Api
         }
 
         [HttpHead]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> IsUserNameExistsAsync(string userName)
         {
             var user = await usersService.GetUserByEmailOrPhoneAsync(userName);
@@ -34,6 +33,13 @@ namespace AuthServer.Api
             {
                 return Ok();
             }
+        }
+
+        [HttpPost]
+        [Route("")]
+        public async Task<IActionResult> CreateUserAsync()
+        {
+            return Ok();
         }
 
         [HttpGet]
@@ -87,6 +93,22 @@ namespace AuthServer.Api
             }
 
             return Redirect(redirectUrl);
+        }
+
+        [HttpPut]
+        [Route("me/providers/{provider}/confirmed")]
+        public async Task<IActionResult> ConfirmAccountAsync(string code, string provider)
+        {
+            var user = await usersService.GetCurrentUserAsync(HttpContext.User);
+
+            var result = await usersService.ConfirmAccountAsync(new ConfirmAccountIm
+            {
+                Code = code,
+                Provider = provider,
+                UserId = user.Id
+            });
+
+            return Ok();
         }
     }
 }

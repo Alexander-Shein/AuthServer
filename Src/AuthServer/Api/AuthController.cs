@@ -91,14 +91,14 @@ namespace AuthServer.Api
                 if (isEmail)
                 {
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var redirectUrl = $"{Request.PathBase}/api/users/{user.Id}/providers/email/confirmed?code={code}&redirectUrl={im.ConfirmedAccountUrl}";
+                    var redirectUrl = $"http://localhost:5000/api/users/{user.Id}/providers/email/confirmed?code={WebUtility.UrlEncode(code)}&redirectUrl={WebUtility.UrlEncode(im.ConfirmedAccountUrl)}";
                     await _emailSender.SendEmailAsync(user.Email, "Confirm your account",
                         $"Please confirm your account by clicking this link: <a href='{redirectUrl}'>link</a>");
                 }
                 else
                 {
                     var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, user.PhoneNumber);
-                    var redirectUrl = $"{Request.PathBase}/api/users/{user.Id}/providers/phone/confirmed?code={code}&redirectUrl={im.ConfirmedAccountUrl}";
+                    var redirectUrl = $"http://localhost:5000/api/users/{user.Id}/providers/phone/confirmed?code={WebUtility.UrlEncode(code)}&redirectUrl={WebUtility.UrlEncode(im.ConfirmedAccountUrl)}";
                     await _smsSender.SendSmsAsync(user.PhoneNumber, $"Please confirm your account by clicking this link: {redirectUrl}");
                 }
 

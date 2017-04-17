@@ -27,6 +27,7 @@ import {SignUpPasswordComponent} from "./sign-up/sign-up-password.component";
 import {EmailSignUpComponent} from "./sign-up/email-sign-up.component";
 import {PhoneSignUpComponent} from "./sign-up/phone-sign-up.component";
 import {AddEmailPageComponent} from "./manage-emails/add-email-page.component";
+import {IconUserNameComponent} from "./shared/icon-user-name.component";
 
 
 @NgModule({
@@ -60,7 +61,8 @@ import {AddEmailPageComponent} from "./manage-emails/add-email-page.component";
         SignInUpPageComponent,
         SignUpPasswordComponent,
         EmailSignUpComponent,
-        PhoneSignUpComponent
+        PhoneSignUpComponent,
+        IconUserNameComponent
     ],
     providers: []
 })

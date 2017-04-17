@@ -4,6 +4,7 @@ export class Consts {
     public static readonly Phone: string = 'phone';
     public static readonly ErrorMessage: string = 'errorMessage';
     public static readonly LoginProvider: string = 'loginProvider';
+    public static readonly Provider: string = 'provider';
     public static readonly Code: string = 'code';
     public static readonly UserName: string = 'userName';
     public static readonly RememberLogIn: string = 'rememberLogIn';

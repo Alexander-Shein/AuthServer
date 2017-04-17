@@ -110,7 +110,22 @@ export class SignUpPasswordComponent extends AuthBaseComponent {
         this.authenticationService
             .signUp(this.signUp)
             .subscribe(
-                () => this.redirectAfterLogin(),
+                () => {
+                    let isEmail = this.signUp.userName.indexOf('@') > -1;
+
+                    if (
+                        (isEmail && this.app.emailSettings.isConfirmationRequired) ||
+                        (!isEmail && this.app.phoneSettings.isConfirmationRequired)) {
+                        this.router
+                            .navigate(['account-confirmation', {
+                                provider: isEmail ? 'email' : 'phone'
+                            }])
+                            .then(() => this.spinnerService.hide());
+                        return;
+                    }
+
+                    this.redirectAfterLogin();
+                },
                 () => this.spinnerService.hide());
     }
 
