@@ -41,8 +41,7 @@ import {SignUp} from "../models/sign-up";
                                     (click)="password.show = !password.show"
                                     class="au-show-password"
                                     mdTooltip="Show password"
-                                    color="primary"
-                                    [mdTooltipPosition]="'above'">remove_red_eye</md-icon>
+                                    [mdTooltipPosition]="'above'">{{password.show ? 'visibility' : 'visibility_off'}}</md-icon>
                         </md-input-container>
                     </div>
                 </div>
@@ -72,8 +71,7 @@ import {SignUp} from "../models/sign-up";
                                     (click)="confirmPassword.show = !confirmPassword.show"
                                     class="au-show-password"
                                     mdTooltip="Show password"
-                                    color="primary"
-                                    [mdTooltipPosition]="'above'">remove_red_eye</md-icon>
+                                    [mdTooltipPosition]="'above'">{{confirmPassword.show ? 'visibility' : 'visibility_off'}}</md-icon>
                         </md-input-container>
                     </div>
                 </div>

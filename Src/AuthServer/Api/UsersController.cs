@@ -38,7 +38,6 @@ namespace AuthServer.Api
 
         [HttpGet]
         [Authorize]
-        [ValidateAntiForgeryToken]
         [Route("me")]
         public async Task<IActionResult> GetCurrentUserAsync()
         {
@@ -56,7 +55,6 @@ namespace AuthServer.Api
 
         [HttpPatch]
         [Authorize]
-        [ValidateAntiForgeryToken]
         [Route("me")]
         public async Task<IActionResult> UpdateAsync([FromBody] UserIm im)
         {
@@ -73,7 +71,7 @@ namespace AuthServer.Api
         }
 
         [HttpGet]
-        [Route("{userId:Guid}")]
+        [Route("{userId:Guid}/providers/{provider}/confirmed")]
         public async Task<IActionResult> ConfirmAccountAsync(Guid userId, string code, string provider, string redirectUrl)
         {
             var result = await usersService.ConfirmAccountAsync(new ConfirmAccountIm

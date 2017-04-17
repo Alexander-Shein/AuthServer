@@ -29,10 +29,8 @@ namespace IdentityServerWithAspNetIdentity.Services
 
             using (var client = new SmtpClient())
             {
-                client.Connect("smtp-pulse.com", 465, true);
-                client.Authenticate("alexa-montana@live.com", "F2qKJEpdj9");
-                client.AuthenticationMechanisms.Remove("XOAUTH2");
-                // Note: since we don't have an OAuth2 token, disable 	// the XOAUTH2 authentication mechanism.     client.Authenticate("anuraj.p@example.com", "password");
+                client.Connect("smtp.gmail.com", 465, true);
+                client.Authenticate("aliaksandr.shein@gmail.com", "shayne1montik2");
                 client.Send(mimeMessage);
                 client.Disconnect(true);
             }
