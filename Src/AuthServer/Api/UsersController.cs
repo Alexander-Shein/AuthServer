@@ -1,10 +1,9 @@
 ﻿using AuthServer.Services.Users.Models.Input;
 using IdentityServerWithAspNetIdentity.Services;
-using IdentityServerWithAspNetIdentity.Services.Users.Models.View;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,6 +21,7 @@ namespace AuthServer.Api
         }
 
         [HttpHead]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> IsUserNameExistsAsync(string userName)
         {
             var user = await usersService.GetUserByEmailOrPhoneAsync(userName);
@@ -37,6 +37,8 @@ namespace AuthServer.Api
         }
 
         [HttpGet]
+        [Authorize]
+        [ValidateAntiForgeryToken]
         [Route("me")]
         public async Task<IActionResult> GetCurrentUserAsync()
         {
@@ -54,10 +56,11 @@ namespace AuthServer.Api
 
         [HttpPatch]
         [Authorize]
+        [ValidateAntiForgeryToken]
         [Route("me")]
-        public async Task<IActionResult> Update([FromBody] UserIm im)
+        public async Task<IActionResult> UpdateAsync([FromBody] UserIm im)
         {
-            var user = await usersService.Update(HttpContext.User, im);
+            var user = await usersService.UpdateAsync(HttpContext.User, im);
 
             if (user == null)
             {
@@ -67,6 +70,25 @@ namespace AuthServer.Api
             {
                 return Ok(user);
             }
+        }
+
+        [HttpGet]
+        [Route("{userId:Guid}")]
+        public async Task<IActionResult> ConfirmAccountAsync(Guid userId, string code, string provider, string redirectUrl)
+        {
+            var result = await usersService.ConfirmAccountAsync(new ConfirmAccountIm
+            {
+                Code = code,
+                Provider = provider,
+                UserId = userId
+            });
+
+            if (!result.Succeeded)
+            {
+                redirectUrl += $";error={result.Errors.First().Description}";
+            }
+
+            return Redirect(redirectUrl);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using MailKit.Net.Smtp;
+using Microsoft.Extensions.Logging;
+using MimeKit;
 using System.Threading.Tasks;
 
 namespace IdentityServerWithAspNetIdentity.Services
@@ -16,7 +18,25 @@ namespace IdentityServerWithAspNetIdentity.Services
         }
         public Task SendEmailAsync(string email, string subject, string message)
         {
-            // Plug in your email service here to send an email.
+            var mimeMessage = new MimeMessage();
+            mimeMessage.From.Add(new MailboxAddress("AuthGuardian", "alexa-montana@live.com"));
+            mimeMessage.To.Add(new MailboxAddress("AuthGuardian", email));
+            mimeMessage.Subject = subject;
+            mimeMessage.Body = new TextPart("plain")
+            {
+                Text = message
+            };
+
+            using (var client = new SmtpClient())
+            {
+                client.Connect("smtp-pulse.com", 465, true);
+                client.Authenticate("alexa-montana@live.com", "F2qKJEpdj9");
+                client.AuthenticationMechanisms.Remove("XOAUTH2");
+                // Note: since we don't have an OAuth2 token, disable 	// the XOAUTH2 authentication mechanism.     client.Authenticate("anuraj.p@example.com", "password");
+                client.Send(mimeMessage);
+                client.Disconnect(true);
+            }
+
             _logger.LogInformation("Email: {email}, Subject: {subject}, Message: {message}", email, subject, message);
             return Task.FromResult(0);
         }

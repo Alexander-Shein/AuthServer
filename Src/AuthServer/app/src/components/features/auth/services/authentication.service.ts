@@ -73,14 +73,11 @@ export class AuthenticationService extends ServiceBase implements IAuthenticatio
     }
 
     public signUp(signUp: SignUp): Observable<void> {
-        let result = this.http
-            .post(this.apiUrl + 'sign-up', signUp);
-
-        result.subscribe(() => {
-            this.updateLoggedIn(true);
-        });
-
-        return result.catch((error) => this.handleError(error));
+        debugger;
+        return this.http
+            .post(this.apiUrl + 'sign-up', signUp)
+            .map(() => this.updateLoggedIn(true))
+            .catch((error) => this.handleError(error));
     }
 
     public externalSignUp(signUp: SignUp): Promise<void> {

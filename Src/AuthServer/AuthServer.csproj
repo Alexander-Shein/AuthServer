@@ -17,15 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\assets\facebook.svg" />
-    <Content Include="wwwroot\assets\google.svg" />
-    <Content Include="wwwroot\assets\microsoft.svg" />
-    <Content Include="wwwroot\assets\vk.svg" />
-    <Content Include="wwwroot\css\vendor.85d4851227ecd31e8c08.css" />
-    <Content Include="wwwroot\css\vendor.85d4851227ecd31e8c08.css.map" />
+    <Content Include="wwwroot\**\*.*" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="1.0.1" />
+    <PackageReference Include="MailKit" Version="1.14.2" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.1" />

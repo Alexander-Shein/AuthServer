@@ -17,14 +17,19 @@ namespace IdentityServerWithAspNetIdentity.Services
         Task<ApplicationUser> GetUserByEmailOrPhoneAsync(string userName);
         Task<UserVm> GetCurrentUserAsync(ClaimsPrincipal user);
         string CleanPhoneNumber(string phone);
-        Task<UserVm> Update(ClaimsPrincipal claims, UserIm im);
+        Task<UserVm> UpdateAsync(ClaimsPrincipal claims, UserIm im);
+        Task<IdentityResult> ConfirmAccountAsync(ConfirmAccountIm im);
     }
 
     public class UsersService : IUsersService
     {
+        #region Private Members
+
         private readonly ApplicationDbContext applicationDbContext;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
+
+        #endregion
 
         public UsersService(
             ApplicationDbContext applicationDbContext,
@@ -35,6 +40,8 @@ namespace IdentityServerWithAspNetIdentity.Services
             this.userManager = userManager;
             this.signInManager = signInManager;
         }
+
+        #region Public Methods
 
         public string CleanPhoneNumber(string phone)
         {
@@ -73,13 +80,13 @@ namespace IdentityServerWithAspNetIdentity.Services
             return user;
         }
 
-        public async Task<UserVm> Update(ClaimsPrincipal claims, UserIm im)
+        public async Task<UserVm> UpdateAsync(ClaimsPrincipal claims, UserIm im)
         {
             var user = await userManager.GetUserAsync(claims);
             if (user == null) throw new ArgumentException();
 
-            await UpdateEmail(user, im.Email, im.EmailCode);
-            await UpdatePhone(user, im.PhoneNumber, im.PhoneNumberCode);
+            await UpdateEmailAsync(user, im.Email, im.EmailCode);
+            await UpdatePhoneAsync(user, im.PhoneNumber, im.PhoneNumberCode);
 
             if (im.IsTwoFactorEnabled.HasValue && user.TwoFactorEnabled != im.IsTwoFactorEnabled)
             {
@@ -99,7 +106,42 @@ namespace IdentityServerWithAspNetIdentity.Services
             return vm;
         }
 
-        private async Task UpdatePhone(ApplicationUser user, string phone, string code)
+        public async Task<IdentityResult> ConfirmAccountAsync(ConfirmAccountIm im)
+        {
+            var user = await userManager.FindByIdAsync(im.UserId.ToString());
+
+            if (user == null)
+            {
+                return IdentityResult.Failed(new IdentityError
+                {
+                    Code = "1",
+                    Description = $"User with id '{im.UserId}' does not exist."
+                });
+            }
+
+            if (String.Equals(im.Provider, "Email", StringComparison.OrdinalIgnoreCase))
+            {
+                return await userManager.ConfirmEmailAsync(user, im.Code);
+            }
+            else if (String.Equals(im.Provider, "Phone", StringComparison.OrdinalIgnoreCase))
+            {
+                return await userManager.ChangePhoneNumberAsync(user, user.PhoneNumber, im.Code);
+            }
+            else
+            {
+                return IdentityResult.Failed(new IdentityError
+                {
+                    Code = "2",
+                    Description = $"Provider with name '{im.Provider}' provider is not valid."
+                });
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private async Task UpdatePhoneAsync(ApplicationUser user, string phone, string code)
         {
             if (phone == null) return;
 
@@ -119,7 +161,7 @@ namespace IdentityServerWithAspNetIdentity.Services
             }
         }
 
-        private async Task UpdateEmail(ApplicationUser user, string email, string code)
+        private async Task UpdateEmailAsync(ApplicationUser user, string email, string code)
         {
             if (email == null) return;
 
@@ -159,5 +201,7 @@ namespace IdentityServerWithAspNetIdentity.Services
 
             return vm;
         }
+
+        #endregion
     }
 }

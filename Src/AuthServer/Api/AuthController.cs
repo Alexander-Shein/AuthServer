@@ -56,7 +56,7 @@ namespace AuthServer.Api
 
         [HttpPost]
         [Route("sign-up")]
-        public async Task<IActionResult> SignUpAsunc([FromBody] SignUpIm im)
+        public async Task<IActionResult> SignUpAsync([FromBody] SignUpIm im)
         {
             if (String.IsNullOrWhiteSpace(im?.UserName) || String.IsNullOrWhiteSpace(im?.Password))
             {
@@ -71,7 +71,7 @@ namespace AuthServer.Api
                 user = new ApplicationUser
                 {
                     UserName = im.UserName,
-                    Email = im.UserName
+                    Email = im.UserName.ToLower()
                 };
             }
             else
@@ -88,12 +88,20 @@ namespace AuthServer.Api
             var result = await _userManager.CreateAsync(user, im.Password);
             if (result.Succeeded)
             {
-                // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=532713
-                // Send an email with this link
-                //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                //await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
-                //    $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
+                if (isEmail)
+                {
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var redirectUrl = $"{Request.PathBase}/api/users/{user.Id}?code={code}&provider=Email&redirectUrl={im.ConfirmedAccountUrl}";
+                    await _emailSender.SendEmailAsync(user.Email, "Confirm your account",
+                        $"Please confirm your account by clicking this link: <a href='{redirectUrl}'>link</a>");
+                }
+                else
+                {
+                    var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, user.PhoneNumber);
+                    var redirectUrl = $"{Request.PathBase}/api/users/{user.Id}?code={code}&provider=Phone&redirectUrl={im.ConfirmedAccountUrl}";
+                    await _smsSender.SendSmsAsync(user.PhoneNumber, $"Please confirm your account by clicking this link: {redirectUrl}");
+                }
+
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 _logger.LogInformation(3, "User created a new account with password.");
                 return Ok();
@@ -275,6 +283,7 @@ namespace AuthServer.Api
     {
         public string UserName { get; set; }
         public string Password { get; set; }
+        public string ConfirmedAccountUrl { get; set; }
     }
 
     public class SignUpResultVm
