@@ -18,6 +18,7 @@ import {SignInUpPageComponent} from "./sign-in-up/sign-in-up-page.component";
 import {AddEmailPageComponent} from "./manage-emails/add-email-page.component";
 import {CurrentUserResolver} from "./services/current-user-resolver.service";
 import {ExternalProvidersResolver} from "./external-log-in/services/external-providers-resolver.service";
+import {AccountConfirmationPageComponent} from "./sign-up/account-confirmation-page.component";
 
 
 let authResolve = {
@@ -36,6 +37,7 @@ export const AuthRoutes: Routes = [
     {path: 'add-phone', component: AddPhonePageComponent, canActivate: [LoggedInGuard]},
     {path: 'add-email', component: AddEmailPageComponent, canActivate: [LoggedInGuard]},
     {path: 'email-confirmation', component: EmailConfirmationPageComponent},
+    {path: 'account-confirmation', component: AccountConfirmationPageComponent, canActivate: [LoggedInGuard]},
     {
         path: 'two-factor',
         component: TwoFactorPageComponent,

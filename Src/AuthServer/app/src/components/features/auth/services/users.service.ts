@@ -6,6 +6,7 @@ import {ServiceBase} from "../../../common/base.service";
 import {NotificationsService} from "angular2-notifications";
 import {Http} from "@angular/http";
 import {UserIm} from "../models/user-im";
+import {VerificationCode} from "../manage-passwords/models/verification-code";
 
 
 @Injectable()
@@ -40,6 +41,12 @@ export class UsersService extends ServiceBase implements IUsersService {
         return this.http
             .patch(this.apiUrl + 'me', im)
             .map((res) => this.extractData(res))
+            .catch((error) => this.handleError(error));
+    }
+
+    public confirmAccount(im: VerificationCode, provider: string): Observable<void> {
+        return this.http
+            .put(this.apiUrl + 'me/providers/' + provider + '/confirmed', im)
             .catch((error) => this.handleError(error));
     }
 

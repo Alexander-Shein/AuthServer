@@ -97,13 +97,13 @@ namespace AuthServer.Api
 
         [HttpPut]
         [Route("me/providers/{provider}/confirmed")]
-        public async Task<IActionResult> ConfirmAccountAsync(string code, string provider)
+        public async Task<IActionResult> ConfirmAccountAsync([FromBody] ConfirmationCodeIm im, string provider)
         {
             var user = await usersService.GetCurrentUserAsync(HttpContext.User);
 
             var result = await usersService.ConfirmAccountAsync(new ConfirmAccountIm
             {
-                Code = code,
+                Code = im.Code,
                 Provider = provider,
                 UserId = user.Id
             });

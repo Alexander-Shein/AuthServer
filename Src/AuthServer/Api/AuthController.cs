@@ -93,6 +93,8 @@ namespace AuthServer.Api
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var redirectUrl = $"http://localhost:5000/api/users/{user.Id}/providers/email/confirmed?code={WebUtility.UrlEncode(code)}&redirectUrl={WebUtility.UrlEncode(im.ConfirmedAccountUrl)}";
                     await _emailSender.SendEmailAsync(user.Email, "Confirm your account",
+                        $"Confirmation code: {code}" +
+                        $"Or" +
                         $"Please confirm your account by clicking this link: <a href='{redirectUrl}'>link</a>");
                 }
                 else

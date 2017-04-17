@@ -67,7 +67,8 @@ namespace AuthServer.Api
                     IsEnabled = true,
                     IsPasswordlessEnabled = true,
                     IsPasswordEnabled = true,
-                    IsSearchRelatedProviderEnabled = true
+                    IsSearchRelatedProviderEnabled = true,
+                    IsConfirmationRequired = true
                 },
                 PhoneSettings = new LocalAccountSettings
                 {

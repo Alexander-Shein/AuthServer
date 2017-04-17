@@ -4,10 +4,11 @@ import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {Consts} from "../../../consts";
 import {VerificationCode} from "../manage-passwords/models/verification-code";
+import {UsersService} from "../services/users.service";
 
 
 @Component({
-    selector: 'au-account-confirmation',
+    selector: 'au-account-confirmation-page',
     template: `
         <div class="container-fluid mt-2">
 
@@ -34,7 +35,7 @@ import {VerificationCode} from "../manage-passwords/models/verification-code";
                             <div>
                                 <span *ngIf="isEmail">Please check your email. We've sent you an email with code.</span>
                                 <span *ngIf="!isEmail">Please check your phone. We've sent you a sms with code.</span>
-                                <span>Enter a code or use link.</span>
+                                <span>Use link in the message or enter a code.</span>
                             </div>
                         </div>
                         <div class="col-12">
@@ -71,12 +72,13 @@ import {VerificationCode} from "../manage-passwords/models/verification-code";
         </div>
     `
 })
-export class AccountConfirmationComponent extends AuthBaseComponent {
+export class AccountConfirmationPageComponent extends AuthBaseComponent {
 
     constructor(
         route: ActivatedRoute,
         router: Router,
-        spinnerService: SpinnerService
+        spinnerService: SpinnerService,
+        private usersService: UsersService
     ) {
         super(route, router, spinnerService);
     }
@@ -97,7 +99,14 @@ export class AccountConfirmationComponent extends AuthBaseComponent {
     public im: VerificationCode = new VerificationCode();
 
     public confirmAccount(): void {
+        this.spinnerService.show();
 
+        this.usersService
+            .confirmAccount(this.im, this.isEmail ? 'email' : 'phone')
+            .subscribe(
+                () => this.redirectAfterLogin(),
+                () => this.spinnerService.hide()
+            );
     }
 
 }

@@ -118,7 +118,7 @@ export class SignUpPasswordComponent extends AuthBaseComponent {
                         (!isEmail && this.app.phoneSettings.isConfirmationRequired)) {
                         this.router
                             .navigate(['account-confirmation', {
-                                provider: isEmail ? 'email' : 'phone'
+                                userName: this.signUp.userName
                             }])
                             .then(() => this.spinnerService.hide());
                         return;
