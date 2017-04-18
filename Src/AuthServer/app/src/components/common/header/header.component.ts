@@ -21,14 +21,14 @@ export class HeaderComponent implements OnInit {
     public isLoggedId: boolean;
 
     public ghostMenuItems: MenuItem[] = [
-        new MenuItem('AuthGuardian', 'verified_user', 'landing'),
+        new MenuItem('AuthGuard', 'verified_user', 'landing'),
         new MenuItem('contact', 'contact_phone', 'contact'),
         new MenuItem('log in', 'lock_outline', 'log-in'),
         new MenuItem('sign up', 'person_add', 'sign-up')
     ];
 
     public loggedInMenuItems: MenuItem[] = [
-        new MenuItem('AuthGuardian', 'verified_user', 'dashboard'),
+        new MenuItem('AuthGuard', 'verified_user', 'dashboard'),
         new MenuItem('contact', 'contact_phone', 'contact'),
         new MenuItem('log out', 'lock_open', 'log-out')
     ];

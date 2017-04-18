@@ -57,8 +57,8 @@ namespace AuthServer.Api
 
             return Ok(new AppVm
             {
-                Name = vm.Client?.ClientName ?? "AuthGuardian",
-                Key = vm.Client?.ClientId ?? "auth-guardian",
+                Name = vm.Client?.ClientName ?? "AuthGuard",
+                Key = vm.Client?.ClientId ?? "auth-guard",
                 IsLocalAccountEnabled = vm.EnableLocalLogin,
                 IsRememberLogInEnabled = true,
                 ExternalProviders = vm.ExternalProviders,

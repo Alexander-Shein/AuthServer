@@ -32,12 +32,12 @@
                                 #phone="ngModel">
                         <md-hint align="end">{{phone.value?.length || 0}} / 50</md-hint>
                         <md-hint *ngIf="phone.errors && (phone.dirty || phone.touched)" style="color: red;">
-                                    <span [hidden]="!phone.errors.required">
-                                        Phone is required.
-                                    </span>
+                            <span [hidden]="!phone.errors.required">
+                                Phone is required.
+                            </span>
                             <span [hidden]="!phone.errors.phone || phone.errors.required">
-                                        Phone is not valid.
-                                    </span>
+                                Phone is not valid.
+                            </span>
                         </md-hint>
                     </md-input-container>
                 </div>
