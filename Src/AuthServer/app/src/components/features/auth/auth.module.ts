@@ -29,6 +29,7 @@ import {PhoneSignUpComponent} from "./sign-up/phone-sign-up.component";
 import {AddEmailPageComponent} from "./manage-emails/add-email-page.component";
 import {IconUserNameComponent} from "./shared/icon-user-name.component";
 import {AccountConfirmationPageComponent} from "./sign-up/account-confirmation-page.component";
+import {ShowHidePasswordComponent} from "./shared/show-hide-password.component";
 
 
 @NgModule({
@@ -64,7 +65,8 @@ import {AccountConfirmationPageComponent} from "./sign-up/account-confirmation-p
         EmailSignUpComponent,
         PhoneSignUpComponent,
         IconUserNameComponent,
-        AccountConfirmationPageComponent
+        AccountConfirmationPageComponent,
+        ShowHidePasswordComponent
     ],
     providers: []
 })

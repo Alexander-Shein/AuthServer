@@ -38,11 +38,7 @@ import {LogInResult} from "../models/log-in-result";
                                     Min length is 6 characters for password.
                                 </span>
                             </md-hint>
-                            <md-icon
-                                    (click)="password.show = !password.show"
-                                    class="au-show-password"
-                                    mdTooltip="Show password"
-                                    [mdTooltipPosition]="'above'">{{password.show ? 'visibility' : 'visibility_off'}}</md-icon>
+                            <au-show-hide-password [password]="password"></au-show-hide-password>
                         </md-input-container>
                     </div>
                 </div>
@@ -71,7 +67,7 @@ import {LogInResult} from "../models/log-in-result";
                     </div>
                     <div class="col text-right">
                         <a
-                                [routerLink]="['/forgot-password']"
+                                [routerLink]="['/forgot-password', {userName: logIn.userName}]"
                                 [queryParams]="{redirectUrl: redirectUrl}"
                                 style="vertical-align: middle;">Forgot password?</a>
                     </div>

@@ -6,7 +6,6 @@ import {LogIn} from "../models/log-in";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {ExternalProvider} from "../external-log-in/models/external-provider";
 import {AppVm} from "../../business/apps/models/app-vm";
-import {SearchableExternalProvider} from "../external-log-in/models/searchable-external-provider";
 
 
 @Component({
@@ -28,9 +27,8 @@ export class LogInComponent extends AuthBaseComponent {
     public ngOnInit(): void {
         this.route
             .data
-            .subscribe((data: {app: AppVm, searchableProviders: SearchableExternalProvider[]}) => {
+            .subscribe((data: {app: AppVm}) => {
                 this.app = data.app;
-                this.searchableProviders = data.searchableProviders;
             });
 
         super.ngOnInit();
@@ -38,8 +36,6 @@ export class LogInComponent extends AuthBaseComponent {
 
     public app: AppVm;
     public logIn: LogIn = new LogIn();
-
-    public searchableProviders: SearchableExternalProvider[];
     public isValidUserName: boolean = false;
     public isEmail: boolean = false;
 
@@ -51,6 +47,7 @@ export class LogInComponent extends AuthBaseComponent {
     public back(): void {
         this.isValidUserName = false;
         this.isEmail = false;
+        this.logIn.password = '';
     }
 
     public externalLogIn(externalProvider: ExternalProvider): void {

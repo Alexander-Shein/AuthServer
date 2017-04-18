@@ -37,11 +37,7 @@ import {SignUp} from "../models/sign-up";
                                     Min length is 6 characters for password.
                                 </span>
                             </md-hint>
-                            <md-icon
-                                    (click)="password.show = !password.show"
-                                    class="au-show-password"
-                                    mdTooltip="Show password"
-                                    [mdTooltipPosition]="'above'">{{password.show ? 'visibility' : 'visibility_off'}}</md-icon>
+                            <au-show-hide-password [password]="password"></au-show-hide-password>
                         </md-input-container>
                     </div>
                 </div>
@@ -67,11 +63,7 @@ import {SignUp} from "../models/sign-up";
                                     Min length is 6 characters for password.
                                 </span>
                             </md-hint>
-                            <md-icon
-                                    (click)="confirmPassword.show = !confirmPassword.show"
-                                    class="au-show-password"
-                                    mdTooltip="Show password"
-                                    [mdTooltipPosition]="'above'">{{confirmPassword.show ? 'visibility' : 'visibility_off'}}</md-icon>
+                            <au-show-hide-password [password]="confirmPassword"></au-show-hide-password>
                         </md-input-container>
                     </div>
                 </div>
@@ -108,7 +100,7 @@ export class SignUpPasswordComponent extends AuthBaseComponent {
         this.spinnerService.show();
 
         this.authenticationService
-            .signUp(this.signUp)
+            .signUp(this.signUp, this.redirectUrl || 'http://localhost:5000/dashboard')
             .subscribe(
                 () => {
                     let isEmail = this.signUp.userName.indexOf('@') > -1;

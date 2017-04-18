@@ -1,14 +1,12 @@
 import {Component} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Params, Router} from "@angular/router";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {AuthBaseComponent} from "../auth-base.component";
 import {PasswordsService} from "./services/passwords.service";
 import {UserName} from "../models/user-name";
-import {SearchableExternalProvider} from "../external-log-in/models/searchable-external-provider";
 import {AppVm} from "../../business/apps/models/app-vm";
-import {UsersService} from "../services/users.service";
-import {NotificationsService} from "angular2-notifications";
 import {VerificationCode} from "./models/verification-code";
+import {Consts} from "../../../consts";
 
 
 @Component({
@@ -20,8 +18,6 @@ export class ForgotPasswordPageComponent extends AuthBaseComponent {
 
     constructor(
         private passwordsService: PasswordsService,
-        private usersService: UsersService,
-        private notificationsService: NotificationsService,
         route: ActivatedRoute,
         router: Router,
         spinnerService: SpinnerService
@@ -32,9 +28,18 @@ export class ForgotPasswordPageComponent extends AuthBaseComponent {
     public ngOnInit(): void {
         this.route
             .data
-            .subscribe((data: {app: AppVm, searchableProviders: SearchableExternalProvider[]}) => {
+            .subscribe((data: {app: AppVm}) => {
                 this.app = data.app;
-                this.searchableProviders = data.searchableProviders;
+            });
+
+        this.route
+            .params
+            .subscribe((params: Params) => {
+                let userName = params[Consts.UserName];
+
+                if (userName) {
+                    this.im.userName = userName;
+                }
             });
 
         super.ngOnInit();
@@ -42,35 +47,22 @@ export class ForgotPasswordPageComponent extends AuthBaseComponent {
 
     public app: AppVm;
     public im: UserName = new UserName();
-    public searchableProviders: SearchableExternalProvider[];
     public verificationCode: VerificationCode = new VerificationCode();
 
     public isCodeSent: boolean = false;
     public isEmail: boolean = false;
 
-    public sendResetPasswordCode(): void {
+    public next(): void {
         this.spinnerService.show();
 
-        this.usersService
-            .isUserNameExists(this.im.userName)
-            .subscribe(
-                () => {
-                    this.passwordsService
-                        .sendResetPasswordCode(this.im)
-                        .subscribe(() => {
-                            this.isEmail = this.im.userName.indexOf('@') != -1;
-                            this.isCodeSent = true;
-                            this.spinnerService.hide();
-                        },
-                            () => {
-                                this.spinnerService.hide();
-                            });
-                },
-                () => {
-                    this.notificationsService
-                        .error('Failed.', 'AuthGuardian can\'t find user. Please try again.');
+        this.passwordsService
+            .sendResetPasswordCode(this.im)
+            .subscribe(() => {
+                    this.isEmail = this.im.userName.indexOf('@') != -1;
+                    this.isCodeSent = true;
                     this.spinnerService.hide();
-                });
+                },
+                () => this.spinnerService.hide());
     }
 
 }

@@ -12,7 +12,7 @@ export interface IAuthenticationService {
     observeIsLoggedIn(): EventEmitter<boolean>;
 
     logIn(logIn: LogIn): Observable<LogInResult>;
-    signUp(signUp: SignUp): Observable<void>;
+    signUp(signUp: SignUp, redirectUrl: string): Observable<void>;
 
     externalLogIn(externalLogIn: ExternalLogIn): void;
     externalSignUp(signUp: SignUp): Promise<void>;

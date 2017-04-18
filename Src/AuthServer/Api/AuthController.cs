@@ -56,7 +56,7 @@ namespace AuthServer.Api
 
         [HttpPost]
         [Route("sign-up")]
-        public async Task<IActionResult> SignUpAsync([FromBody] SignUpIm im)
+        public async Task<IActionResult> SignUpAsync([FromBody] SignUpIm im, string redirectUrl)
         {
             if (String.IsNullOrWhiteSpace(im?.UserName) || String.IsNullOrWhiteSpace(im?.Password))
             {
@@ -91,17 +91,17 @@ namespace AuthServer.Api
                 if (isEmail)
                 {
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var redirectUrl = $"http://localhost:5000/api/users/{user.Id}/providers/email/confirmed?code={WebUtility.UrlEncode(code)}&redirectUrl={WebUtility.UrlEncode(im.ConfirmedAccountUrl)}";
+                    var callbackUrl = $"http://localhost:5000/api/users/{user.Id}/providers/email/confirmed?code={WebUtility.UrlEncode(code)}&redirectUrl={WebUtility.UrlEncode(redirectUrl)}";
                     await _emailSender.SendEmailAsync(user.Email, "Confirm your account",
                         $"Confirmation code: {code}" +
                         $"Or" +
-                        $"Please confirm your account by clicking this link: <a href='{redirectUrl}'>link</a>");
+                        $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
                 }
                 else
                 {
                     var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, user.PhoneNumber);
-                    var redirectUrl = $"http://localhost:5000/api/users/{user.Id}/providers/phone/confirmed?code={WebUtility.UrlEncode(code)}&redirectUrl={WebUtility.UrlEncode(im.ConfirmedAccountUrl)}";
-                    await _smsSender.SendSmsAsync(user.PhoneNumber, $"Please confirm your account by clicking this link: {redirectUrl}");
+                    var callbackUrl = $"http://localhost:5000/api/users/{user.Id}/providers/phone/confirmed?code={WebUtility.UrlEncode(code)}&redirectUrl={WebUtility.UrlEncode(redirectUrl)}";
+                    await _smsSender.SendSmsAsync(user.PhoneNumber, $"Please confirm your account by clicking this link: {callbackUrl}");
                 }
 
                 await _signInManager.SignInAsync(user, isPersistent: false);
@@ -285,7 +285,6 @@ namespace AuthServer.Api
     {
         public string UserName { get; set; }
         public string Password { get; set; }
-        public string ConfirmedAccountUrl { get; set; }
     }
 
     public class SignUpResultVm

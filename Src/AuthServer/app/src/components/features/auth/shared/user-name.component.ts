@@ -27,21 +27,28 @@ export class UserNameComponent extends AuthBaseComponent {
         super(route, router, spinnerService);
     }
 
+    public ngOnInit(): void {
+        this.route
+            .data
+            .subscribe((data: {app: AppVm, searchableProviders: SearchableExternalProvider[]}) => {
+                this.app = data.app;
+                this.searchableProviders = data.searchableProviders;
+            });
+
+        super.ngOnInit();
+    }
+
     @Input()
     public im: UserName;
 
     @Input()
-    public app: AppVm;
-
-    @Input()
-    public searchableProviders: SearchableExternalProvider[];
+    public unique: boolean = false;
 
     @Output()
     public next: EventEmitter<any> = new EventEmitter();
 
-    @Input()
-    public unique: boolean = false;
-
+    public app: AppVm;
+    public searchableProviders: SearchableExternalProvider[];
     public userNameMessage: string = '';
     public inProgress: boolean = false;
     public searchResult: ExternalProvider;

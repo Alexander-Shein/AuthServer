@@ -89,7 +89,7 @@ namespace AuthServer.Api
 
             if (!result.Succeeded)
             {
-                redirectUrl += $";error={result.Errors.First().Description}";
+                return BadRequest(new BadRequestResult(result.Errors.First().Description));
             }
 
             return Redirect(redirectUrl);

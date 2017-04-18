@@ -3,9 +3,7 @@
 
             <au-user-name
                     *ngIf="app.isLocalAccountEnabled"
-                    [app]="app"
                     [im]="logIn"
-                    [searchableProviders]="searchableProviders"
                     (next)="next()"
                     [unique]="false"
             ></au-user-name>

@@ -35,7 +35,7 @@ import {UsersService} from "../services/users.service";
                             <div>
                                 <span *ngIf="isEmail">Please check your email. We've sent you an email with code.</span>
                                 <span *ngIf="!isEmail">Please check your phone. We've sent you a sms with code.</span>
-                                <span>Use link in the message or enter a code.</span>
+                                <div><span>Use link in the message or enter a code.</span></div>
                             </div>
                         </div>
                         <div class="col-12">

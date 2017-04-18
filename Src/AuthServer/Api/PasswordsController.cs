@@ -54,7 +54,7 @@ namespace AuthServer.Api
 
             var isEmail = im.UserName.Contains("@");
             var code = await userManager.GeneratePasswordResetTokenAsync(user);
-            im.ResetPasswordUrl += $";code={code};userName={WebUtility.UrlEncode(user.UserName)}";
+            im.ResetPasswordUrl += $";code={WebUtility.UrlEncode(code)};userName={WebUtility.UrlEncode(user.UserName)}";
 
             if (isEmail)
             {
