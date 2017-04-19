@@ -3,6 +3,7 @@ using IdentityServerWithAspNetIdentity.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -67,13 +68,18 @@ namespace AuthServer.Api
                 return BadRequest("An error is occured. Please try again.");
             }
 
-            var message = "Your security code is: " + code;
             if (provider == "Email")
             {
-                await _emailSender.SendEmailAsync(await _userManager.GetEmailAsync(user), "Security Code", message);
+                var parameters = new Dictionary<string, string>
+                {
+                    {"Code", code}
+                };
+
+                await _emailSender.SendEmailAsync(await _userManager.GetEmailAsync(user), "SecurityCode", parameters);
             }
             else if (provider == "Phone")
             {
+                var message = "Your security code is: " + code;
                 await _smsSender.SendSmsAsync(await _userManager.GetPhoneNumberAsync(user), message);
             }
             else

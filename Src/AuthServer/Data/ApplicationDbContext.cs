@@ -31,6 +31,26 @@ namespace IdentityServerWithAspNetIdentity.Data
 
                 b.ToTable("Email");
             });
+
+            builder.Entity<EmailTemplate>(b =>
+            {
+                b.HasKey(x => x.Id);
+                b.Property(x => x.Name);
+                b.Property(x => x.SubjectTemplate);
+                b.Property(x => x.BodyTemplate);
+                b.Property(x => x.EmailBodyFormat).HasColumnName("EmailBodyFormatId");
+                b.HasMany(x => x.EmailTemplateAttachments).WithOne().HasForeignKey(c => c.EmailTemplateId);
+
+                b.ToTable("EmailTemplate");
+            });
+
+            builder.Entity<EmailTemplateAttachment>(b =>
+            {
+                b.HasKey(x => x.Id);
+                b.Property(x => x.FileName);
+
+                b.ToTable("EmailTemplateAttachment");
+            });
         }
     }
 }

@@ -14,6 +14,7 @@ using System.Security.Claims;
 using System.Net;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
 
 namespace AuthServer.Api
 {
@@ -92,10 +93,15 @@ namespace AuthServer.Api
                 {
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = $"http://localhost:5000/api/users/{user.Id}/providers/email/confirmed?code={WebUtility.UrlEncode(code)}&redirectUrl={WebUtility.UrlEncode(redirectUrl)}";
-                    await _emailSender.SendEmailAsync(user.Email, "Confirm your account",
-                        $"Confirmation code: {code}" +
-                        $"Or" +
-                        $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
+
+                    var parameters = new Dictionary<string, string>
+                    {
+                        {"Code", code},
+                        {"CallbackUrl", callbackUrl}
+                    };
+
+                    await _emailSender.SendEmailAsync(user.Email, "AccountConfirmation", parameters);
+                        //$"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
                 }
                 else
                 {

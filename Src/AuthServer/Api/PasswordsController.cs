@@ -1,11 +1,11 @@
 ﻿using IdentityServerWithAspNetIdentity.Models;
-using IdentityServerWithAspNetIdentity.Models.AccountViewModels;
 using IdentityServerWithAspNetIdentity.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -58,12 +58,12 @@ namespace AuthServer.Api
 
             if (isEmail)
             {
-                await
-                    _emailSender
-                        .SendEmailAsync(
-                            user.Email,
-                            "Reset Password",
-                            $"Please reset your password by clicking here: <a href='{im.ResetPasswordUrl}'>link</a>");
+                var parameters = new Dictionary<string, string>
+                {
+                    {"CallbackUrl", im.ResetPasswordUrl}
+                };
+
+                await _emailSender.SendEmailAsync(user.Email, "ResetPassword", parameters);
             }
             else
             {
