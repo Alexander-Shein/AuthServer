@@ -56,18 +56,19 @@ namespace AuthServer.Api
             var code = await userManager.GeneratePasswordResetTokenAsync(user);
             im.ResetPasswordUrl += $";code={WebUtility.UrlEncode(code)};userName={WebUtility.UrlEncode(user.UserName)}";
 
+            var parameters = new Dictionary<string, string>
+            {
+                {"Code", code},
+                {"CallbackUrl", im.ResetPasswordUrl}
+            };
+
             if (isEmail)
             {
-                var parameters = new Dictionary<string, string>
-                {
-                    {"CallbackUrl", im.ResetPasswordUrl}
-                };
-
                 await _emailSender.SendEmailAsync(user.Email, "ResetPassword", parameters);
             }
             else
             {
-                await _smsSender.SendSmsAsync(user.PhoneNumber, $"Code: {code}. Please use this code to reset your password.");
+                await _smsSender.SendSmsAsync(user.PhoneNumber, "ResetPassword", parameters);
             }
 
             return Ok();

@@ -2,7 +2,7 @@
 {
     public enum EmailBodyFormat
     {
-        Html = 0,
-        PlainText = 1
+        Html = 1,
+        PlainText = 2
     }
 }

@@ -22,12 +22,13 @@ namespace IdentityServerWithAspNetIdentity.Data
             builder.Entity<Email>(b =>
             {
                 b.HasKey(x => x.Id);
-                b.Property(x => x.FirstName);
-                b.Property(x => x.LastName);
-                b.Property(x => x.CompanyName);
+                b.Property(x => x.Body);
+                b.Property(x => x.Subject);
+                b.Property(x => x.FromName);
                 b.Property(x => x.FromEmail);
                 b.Property(x => x.Subject);
-                b.Property(x => x.Message);
+                b.Property(x => x.ToEmail);
+                b.Property(x => x.CreatedAt);
 
                 b.ToTable("Email");
             });
@@ -35,7 +36,6 @@ namespace IdentityServerWithAspNetIdentity.Data
             builder.Entity<EmailTemplate>(b =>
             {
                 b.HasKey(x => x.Id);
-                b.Property(x => x.Name);
                 b.Property(x => x.SubjectTemplate);
                 b.Property(x => x.BodyTemplate);
                 b.Property(x => x.EmailBodyFormat).HasColumnName("EmailBodyFormatId");

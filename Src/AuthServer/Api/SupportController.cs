@@ -23,17 +23,15 @@ namespace AuthServer.Api
             var domain = new Email
             {
                 Id = Guid.NewGuid(),
-                FirstName = im.FirstName,
-                LastName = im.LastName,
-                CompanyName = im.CompanyName,
+                FromName = $"{im.FirstName} {im.LastName} ({im.CompanyName})",
                 FromEmail = im.FromEmail,
+                ToEmail = "",
                 Subject = im.Subject,
-                Message = im.Message,
+                Body = im.Message,
                 CreatedAt = DateTime.Now
             };
 
             context.Add(domain);
-
             context.SaveChanges();
 
             return new MessageVm

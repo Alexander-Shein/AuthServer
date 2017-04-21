@@ -38,5 +38,8 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="1.1.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Entities\Data\" />
+  </ItemGroup>
 
 </Project>

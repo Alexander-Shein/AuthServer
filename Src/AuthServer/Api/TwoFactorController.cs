@@ -68,19 +68,18 @@ namespace AuthServer.Api
                 return BadRequest("An error is occured. Please try again.");
             }
 
+            var parameters = new Dictionary<string, string>
+            {
+                {"Code", code}
+            };
+
             if (provider == "Email")
             {
-                var parameters = new Dictionary<string, string>
-                {
-                    {"Code", code}
-                };
-
                 await _emailSender.SendEmailAsync(await _userManager.GetEmailAsync(user), "SecurityCode", parameters);
             }
             else if (provider == "Phone")
             {
-                var message = "Your security code is: " + code;
-                await _smsSender.SendSmsAsync(await _userManager.GetPhoneNumberAsync(user), message);
+                await _smsSender.SendSmsAsync(await _userManager.GetPhoneNumberAsync(user), "SecurityCode", parameters);
             }
             else
             {

@@ -101,13 +101,19 @@ namespace AuthServer.Api
                     };
 
                     await _emailSender.SendEmailAsync(user.Email, "AccountConfirmation", parameters);
-                        //$"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
                 }
                 else
                 {
                     var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, user.PhoneNumber);
                     var callbackUrl = $"http://localhost:5000/api/users/{user.Id}/providers/phone/confirmed?code={WebUtility.UrlEncode(code)}&redirectUrl={WebUtility.UrlEncode(redirectUrl)}";
-                    await _smsSender.SendSmsAsync(user.PhoneNumber, $"Please confirm your account by clicking this link: {callbackUrl}");
+
+                    var parameters = new Dictionary<string, string>
+                    {
+                        {"Code", code},
+                        {"CallbackUrl", callbackUrl}
+                    };
+
+                    await _smsSender.SendSmsAsync(user.PhoneNumber, "AccountConfirmation", parameters);
                 }
 
                 await _signInManager.SignInAsync(user, isPersistent: false);

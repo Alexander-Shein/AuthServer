@@ -34,7 +34,7 @@ namespace IdentityServerWithAspNetIdentity.Services
             var emailTemplate =
                 await context
                     .Set<EmailTemplate>()
-                    .FirstOrDefaultAsync(x => x.Name == emailTemplateName);
+                    .FirstOrDefaultAsync(x => x.Template.Name == emailTemplateName);
 
             if (emailTemplate == null)
             {
@@ -42,27 +42,26 @@ namespace IdentityServerWithAspNetIdentity.Services
             }
 
             var email = emailTemplate.Render(parameters);
-            await SendEmailAsync(toEmail, email.Subject, email.Message);
+            email.ToEmail = toEmail;
+            await SendEmailAsync(email);
         }
 
-        public Task SendSmsAsync(string number, string message)
+        public Task SendSmsAsync(string phoneNumber, string templateName, IDictionary<string, string> parameters)
         {
-            // Plug in your SMS service here to send a text message.
-            _logger.LogInformation("SMS: {number}, Message: {message}", number, message);
             return Task.FromResult(0);
         }
 
         #region Private Methods
 
-        public Task SendEmailAsync(string email, string subject, string message)
+        private Task SendEmailAsync(Email email)
         {
             var mimeMessage = new MimeMessage();
-            mimeMessage.From.Add(new MailboxAddress("AuthGuardian", "aliaksandr.shein@gmail.com"));
-            mimeMessage.To.Add(new MailboxAddress("AuthGuardian", email));
-            mimeMessage.Subject = subject;
+            mimeMessage.From.Add(new MailboxAddress(email.FromName, email.FromEmail));
+            mimeMessage.To.Add(new MailboxAddress(String.Empty, email.ToEmail));
+            mimeMessage.Subject = email.Subject;
             mimeMessage.Body = new TextPart("plain")
             {
-                Text = message
+                Text = email.Body
             };
 
             using (var client = new SmtpClient())
@@ -73,7 +72,6 @@ namespace IdentityServerWithAspNetIdentity.Services
                 client.Disconnect(true);
             }
 
-            _logger.LogInformation("Email: {email}, Subject: {subject}, Message: {message}", email, subject, message);
             return Task.FromResult(0);
         }
 
