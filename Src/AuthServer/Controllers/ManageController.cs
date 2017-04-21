@@ -1,15 +1,15 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using AuthGuard.Models;
+using AuthGuard.Models.ManageViewModels;
+using AuthGuard.Quickstart;
+using AuthGuard.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using IdentityServerWithAspNetIdentity.Models;
-using IdentityServerWithAspNetIdentity.Models.ManageViewModels;
-using IdentityServerWithAspNetIdentity.Services;
-using IdentityServer4.Quickstart.UI;
 
-namespace IdentityServerWithAspNetIdentity.Controllers
+namespace AuthGuard.Controllers
 {
     [Authorize]
     [SecurityHeaders]

@@ -4,6 +4,7 @@
 
 using System.Linq;
 using System.Threading.Tasks;
+using AuthGuard.Data.Entities;
 using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Extensions;
@@ -12,7 +13,7 @@ using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Http;
 
-namespace AuthGuard.Quickstart.Account
+namespace AuthGuard.Services.Account
 {
     public class AccountService
     {

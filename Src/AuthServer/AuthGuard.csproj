@@ -7,12 +7,28 @@
 
   <ItemGroup>
     <Compile Remove="app\**" />
+    <Compile Remove="Controllers\**" />
+    <Compile Remove="Models\**" />
+    <Compile Remove="Quickstart\**" />
+    <Compile Remove="Views\**" />
     <Compile Remove="wwwroot\dist\**" />
     <Content Remove="app\**" />
+    <Content Remove="Controllers\**" />
+    <Content Remove="Models\**" />
+    <Content Remove="Quickstart\**" />
+    <Content Remove="Views\**" />
     <Content Remove="wwwroot\dist\**" />
     <EmbeddedResource Remove="app\**" />
+    <EmbeddedResource Remove="Controllers\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <EmbeddedResource Remove="Quickstart\**" />
+    <EmbeddedResource Remove="Views\**" />
     <EmbeddedResource Remove="wwwroot\dist\**" />
     <None Remove="app\**" />
+    <None Remove="Controllers\**" />
+    <None Remove="Models\**" />
+    <None Remove="Quickstart\**" />
+    <None Remove="Views\**" />
     <None Remove="wwwroot\dist\**" />
   </ItemGroup>
 
@@ -37,9 +53,6 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="1.1.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Entities\Data\" />
   </ItemGroup>
 
 </Project>

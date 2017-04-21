@@ -1,4 +1,4 @@
-﻿namespace IdentityServerWithAspNetIdentity.Services.Users.Models.View
+﻿namespace AuthGuard.Services.Users.Models.View
 {
     public class UserExternalProviderVm
     {

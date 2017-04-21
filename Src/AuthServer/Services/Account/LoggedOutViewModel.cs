@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-namespace AuthGuard.Quickstart.Account
+namespace AuthGuard.Services.Account
 {
     public class LoggedOutViewModel
     {

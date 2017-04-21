@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using AuthGuard.Data.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using IdentityServerWithAspNetIdentity.Models;
-using AuthServer.Data.Entities;
 
-namespace IdentityServerWithAspNetIdentity.Data
+namespace AuthGuard.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {

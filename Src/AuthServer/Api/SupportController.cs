@@ -1,10 +1,10 @@
-﻿using AuthServer.Data.Entities;
-using IdentityServerWithAspNetIdentity.Data;
+﻿using System;
+using AuthGuard.Data;
+using AuthGuard.Data.Entities;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
-namespace AuthServer.Api
+namespace AuthGuard.Api
 {
     [EnableCors("default")]
     [Route("api/[controller]")]

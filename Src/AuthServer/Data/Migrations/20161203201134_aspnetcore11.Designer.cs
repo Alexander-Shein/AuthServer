@@ -3,9 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using IdentityServerWithAspNetIdentity.Data;
 
-namespace IdentityServerWithAspNetIdentity.Data.Migrations
+namespace AuthGuard.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20161203201134_aspnetcore11")]

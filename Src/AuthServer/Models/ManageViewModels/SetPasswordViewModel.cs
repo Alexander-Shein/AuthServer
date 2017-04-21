@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace IdentityServerWithAspNetIdentity.Models.ManageViewModels
+namespace AuthGuard.Models.ManageViewModels
 {
     public class SetPasswordViewModel
     {

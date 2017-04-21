@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AuthServer.Data.Entities
+namespace AuthGuard.Data.Entities
 {
     public class EmailTemplate
     {
@@ -39,7 +39,7 @@ namespace AuthServer.Data.Entities
 
             foreach (var parameter in parameters)
             {
-                template.Replace($"{parameter.Key}", parameter.Value);
+                template.Replace($"{{{parameter.Key}}}", parameter.Value);
             }
 
             return template;

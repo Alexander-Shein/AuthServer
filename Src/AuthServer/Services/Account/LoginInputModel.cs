@@ -4,7 +4,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace AuthGuard.Quickstart.Account
+namespace AuthGuard.Services.Account
 {
     public class LoginInputModel
     {

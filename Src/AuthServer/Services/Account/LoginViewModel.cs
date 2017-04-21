@@ -4,9 +4,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using AuthGuard.Data.Entities;
 using IdentityServer4.Models;
 
-namespace AuthGuard.Quickstart.Account
+namespace AuthGuard.Services.Account
 {
     public class LoginViewModel : LoginInputModel
     {

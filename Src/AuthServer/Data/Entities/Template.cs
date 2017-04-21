@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AuthServer.Data.Entities
+namespace AuthGuard.Data.Entities
 {
     public class Template
     {

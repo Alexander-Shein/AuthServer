@@ -2,22 +2,22 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AuthGuard.Models;
+using AuthGuard.Models.AccountViewModels;
+using AuthGuard.Quickstart;
+using AuthGuard.Quickstart.Account;
+using AuthGuard.Services;
+using IdentityServer4.Services;
+using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using IdentityServerWithAspNetIdentity.Models;
-using IdentityServerWithAspNetIdentity.Models.AccountViewModels;
-using IdentityServerWithAspNetIdentity.Services;
-using IdentityServer4.Services;
-using IdentityServer4.Stores;
-using Microsoft.AspNetCore.Http.Authentication;
-using IdentityServer4.Quickstart.UI;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authentication;
 
-namespace IdentityServerWithAspNetIdentity.Controllers
+namespace AuthGuard.Controllers
 {
     [Authorize]
     [SecurityHeaders]

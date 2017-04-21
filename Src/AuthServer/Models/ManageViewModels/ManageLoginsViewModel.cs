@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServerWithAspNetIdentity.Models.ManageViewModels
+namespace AuthGuard.Models.ManageViewModels
 {
     public class ManageLoginsViewModel
     {

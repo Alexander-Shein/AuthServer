@@ -1,19 +1,20 @@
 ﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using IdentityServerWithAspNetIdentity.Models;
-using IdentityServerWithAspNetIdentity.Services;
-using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
+using AuthGuard.Data.Entities;
+using AuthGuard.Services;
+using AuthGuard.Services.Account;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
-using IdentityServer4.Quickstart.UI;
-using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using ExternalProvider = AuthGuard.Data.Entities.ExternalProvider;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace AuthServer.Api
+namespace AuthGuard.Api
 {
     [EnableCors("default")]
     [Route("api/[controller]")]

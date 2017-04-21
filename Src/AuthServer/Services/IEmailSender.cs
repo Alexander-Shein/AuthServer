@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace IdentityServerWithAspNetIdentity.Services
+namespace AuthGuard.Services
 {
     public interface IEmailSender
     {

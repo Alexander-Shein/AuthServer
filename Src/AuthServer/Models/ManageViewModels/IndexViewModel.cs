@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 
-namespace IdentityServerWithAspNetIdentity.Models.ManageViewModels
+namespace AuthGuard.Models.ManageViewModels
 {
     public class IndexViewModel
     {

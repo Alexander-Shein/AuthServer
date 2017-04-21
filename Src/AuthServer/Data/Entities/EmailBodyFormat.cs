@@ -1,4 +1,4 @@
-﻿namespace AuthServer.Data.Entities
+﻿namespace AuthGuard.Data.Entities
 {
     public enum EmailBodyFormat
     {

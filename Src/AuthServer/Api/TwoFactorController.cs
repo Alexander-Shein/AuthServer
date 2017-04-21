@@ -1,13 +1,13 @@
-﻿using IdentityServerWithAspNetIdentity.Models;
-using IdentityServerWithAspNetIdentity.Services;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AuthGuard.Data.Entities;
+using AuthGuard.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace AuthServer.Api
+namespace AuthGuard.Api
 {
     [EnableCors("default")]
     [Route("api/two-factor")]

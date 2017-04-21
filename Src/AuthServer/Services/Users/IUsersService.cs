@@ -1,16 +1,16 @@
-﻿using IdentityServerWithAspNetIdentity.Models;
-using System.Threading.Tasks;
-using System;
-using IdentityServerWithAspNetIdentity.Data;
-using System.Linq.Expressions;
+﻿using System;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using System.Security.Claims;
+using System.Threading.Tasks;
+using AuthGuard.Data;
+using AuthGuard.Data.Entities;
+using AuthGuard.Services.Users.Models.Input;
+using AuthGuard.Services.Users.Models.View;
 using Microsoft.AspNetCore.Identity;
-using IdentityServerWithAspNetIdentity.Services.Users.Models.View;
-using AuthServer.Services.Users.Models.Input;
+using Microsoft.EntityFrameworkCore;
 
-namespace IdentityServerWithAspNetIdentity.Services
+namespace AuthGuard.Services.Users
 {
     public interface IUsersService
     {

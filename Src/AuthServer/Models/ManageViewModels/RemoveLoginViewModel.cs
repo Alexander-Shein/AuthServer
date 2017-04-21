@@ -1,4 +1,4 @@
-﻿namespace IdentityServerWithAspNetIdentity.Models.ManageViewModels
+﻿namespace AuthGuard.Models.ManageViewModels
 {
     public class RemoveLoginViewModel
     {

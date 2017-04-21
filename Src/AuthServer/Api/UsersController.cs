@@ -1,13 +1,13 @@
-﻿using AuthServer.Services.Users.Models.Input;
-using IdentityServerWithAspNetIdentity.Services;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using AuthGuard.Services.Users;
+using AuthGuard.Services.Users.Models.Input;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace AuthServer.Api
+namespace AuthGuard.Api
 {
     [EnableCors("default")]
     [Route("api/[controller]")]

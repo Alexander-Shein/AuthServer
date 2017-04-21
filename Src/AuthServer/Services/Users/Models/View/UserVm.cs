@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace IdentityServerWithAspNetIdentity.Services.Users.Models.View
+namespace AuthGuard.Services.Users.Models.View
 {
     public class UserVm
     {

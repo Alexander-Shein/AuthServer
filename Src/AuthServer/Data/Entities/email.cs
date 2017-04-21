@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AuthServer.Data.Entities
+namespace AuthGuard.Data.Entities
 {
     public class Email
     {
@@ -10,6 +10,7 @@ namespace AuthServer.Data.Entities
         public string FromName { get; set; }
         public string Subject { get; set; }
         public string Body { get; set; }
+        public bool IsSent { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

@@ -1,22 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using IdentityServerWithAspNetIdentity.Models;
-using IdentityServerWithAspNetIdentity.Services;
-using Microsoft.Extensions.Logging;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using AuthGuard.Data.Entities;
+using AuthGuard.Services;
+using AuthGuard.Services.Account;
+using AuthGuard.Services.Users;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
-using IdentityServer4.Quickstart.UI;
-using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Cors;
-using System;
-using System.Security.Claims;
-using System.Net;
-using System.Linq;
 using Microsoft.AspNetCore.Authorization;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
-namespace AuthServer.Api
+namespace AuthGuard.Api
 {
     [EnableCors("default")]
     [Route("api/[controller]")]

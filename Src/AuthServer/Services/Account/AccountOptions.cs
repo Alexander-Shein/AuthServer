@@ -4,7 +4,7 @@
 
 using System;
 
-namespace AuthGuard.Quickstart.Account
+namespace AuthGuard.Services.Account
 {
     public class AccountOptions
     {

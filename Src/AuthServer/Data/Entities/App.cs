@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AuthServer.Data.Entities
+namespace AuthGuard.Data.Entities
 {
     public class App
     {

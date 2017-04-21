@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AuthServer.Services.Users.Models.Input
+namespace AuthGuard.Services.Users.Models.Input
 {
     public class ConfirmAccountIm : ConfirmationCodeIm
     {

@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using AuthGuard.Quickstart;
+using AuthGuard.Quickstart.Home;
 using IdentityServer4.Services;
-using IdentityServer4.Quickstart.UI;
+using Microsoft.AspNetCore.Mvc;
 
-namespace IdentityServerWithAspNetIdentity.Controllers
+namespace AuthGuard.Controllers
 {
     [SecurityHeaders]
     public class HomeController : Controller

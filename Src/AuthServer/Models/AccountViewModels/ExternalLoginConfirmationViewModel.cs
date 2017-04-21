@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace IdentityServerWithAspNetIdentity.Models.AccountViewModels
+namespace AuthGuard.Models.AccountViewModels
 {
     public class ExternalLoginConfirmationViewModel
     {
