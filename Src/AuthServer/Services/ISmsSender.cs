@@ -5,6 +5,6 @@ namespace AuthGuard.Services
 {
     public interface ISmsSender
     {
-        Task SendSmsAsync(string phoneNumber, string templateName, IDictionary<string, string> parameters);
+        Task SendSmsAsync(string toPhoneNumber, string templateName, IDictionary<string, string> parameters);
     }
 }

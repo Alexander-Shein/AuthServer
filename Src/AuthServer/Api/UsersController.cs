@@ -29,16 +29,6 @@ namespace AuthGuard.Api
             {
                 return NotFound();
             }
-            else
-            {
-                return Ok();
-            }
-        }
-
-        [HttpPost]
-        [Route("")]
-        public async Task<IActionResult> CreateUserAsync()
-        {
             return Ok();
         }
 
@@ -48,15 +38,7 @@ namespace AuthGuard.Api
         public async Task<IActionResult> GetCurrentUserAsync()
         {
             var user = await usersService.GetCurrentUserAsync(HttpContext.User);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(user);
-            }
+            return Ok(user);
         }
 
         [HttpPatch]
@@ -65,15 +47,7 @@ namespace AuthGuard.Api
         public async Task<IActionResult> UpdateAsync([FromBody] UserIm im)
         {
             var user = await usersService.UpdateAsync(HttpContext.User, im);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(user);
-            }
+            return Ok(user);
         }
 
         [HttpGet]
@@ -96,6 +70,7 @@ namespace AuthGuard.Api
         }
 
         [HttpPut]
+        [Authorize]
         [Route("me/providers/{provider}/confirmed")]
         public async Task<IActionResult> ConfirmAccountAsync([FromBody] ConfirmationCodeIm im, string provider)
         {
@@ -107,6 +82,11 @@ namespace AuthGuard.Api
                 Provider = provider,
                 UserId = user.Id
             });
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(new BadRequestResult(result.Errors.First().Description));
+            }
 
             return Ok();
         }

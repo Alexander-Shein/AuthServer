@@ -13,10 +13,10 @@ namespace AuthGuard.Api
     [Route("api/two-factor")]
     public class TwoFactorController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IEmailSender _emailSender;
-        private readonly ISmsSender _smsSender;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly IEmailSender emailSender;
+        private readonly ISmsSender smsSender;
 
         public TwoFactorController(
             UserManager<ApplicationUser> userManager,
@@ -24,22 +24,22 @@ namespace AuthGuard.Api
             IEmailSender emailSender,
             ISmsSender smsSender)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _emailSender = emailSender;
-            _smsSender = smsSender;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
+            this.emailSender = emailSender;
+            this.smsSender = smsSender;
         }
 
         [HttpGet]
         [Route("providers")]
         public async Task<IActionResult> GetTwoFactorProviders()
         {
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            var user = await signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
                 return BadRequest("Have no user for 2 factor verification.");
             }
-            var userFactors = await _userManager.GetValidTwoFactorProvidersAsync(user);
+            var userFactors = await userManager.GetValidTwoFactorProvidersAsync(user);
             var providers = userFactors.Select(x => new Provider
             {
                 Name = x,
@@ -55,14 +55,14 @@ namespace AuthGuard.Api
         {
             var provider = im.Value;
 
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            var user = await signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
                 return BadRequest("Have no user for 2 factor verification.");
             }
 
             // Generate the token and send it
-            var code = await _userManager.GenerateTwoFactorTokenAsync(user, provider);
+            var code = await userManager.GenerateTwoFactorTokenAsync(user, provider);
             if (string.IsNullOrWhiteSpace(code))
             {
                 return BadRequest("An error is occured. Please try again.");
@@ -75,11 +75,11 @@ namespace AuthGuard.Api
 
             if (provider == "Email")
             {
-                await _emailSender.SendEmailAsync(await _userManager.GetEmailAsync(user), "SecurityCode", parameters);
+                await emailSender.SendEmailAsync(await userManager.GetEmailAsync(user), "SecurityCode", parameters);
             }
             else if (provider == "Phone")
             {
-                await _smsSender.SendSmsAsync(await _userManager.GetPhoneNumberAsync(user), "SecurityCode", parameters);
+                await smsSender.SendSmsAsync(await userManager.GetPhoneNumberAsync(user), "SecurityCode", parameters);
             }
             else
             {
@@ -92,7 +92,7 @@ namespace AuthGuard.Api
         [HttpPost]
         public async Task<IActionResult> VerifyCode([FromBody] TwoFactorVerificationIm model)
         {
-            var result = await _signInManager.TwoFactorSignInAsync(model.Provider, model.Code, model.RememberLogIn, model.RememberBrowser);
+            var result = await signInManager.TwoFactorSignInAsync(model.Provider, model.Code, model.RememberLogIn, model.RememberBrowser);
             if (result.Succeeded)
             {
                 return Ok();
@@ -105,19 +105,6 @@ namespace AuthGuard.Api
             {
                 return BadRequest("An error is occured. Please try again.");
             }
-        }
-
-        [HttpPut]
-        [Route("settings")]
-        public async Task<IActionResult> UpdateTwoFactorSettings([FromBody] TwoFactorSettings im)
-        {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-            if (user != null)
-            {
-                await _userManager.SetTwoFactorEnabledAsync(user, im.Enabled);
-                await _signInManager.SignInAsync(user, isPersistent: false);
-            }
-            return Ok(im);
         }
     }
 
@@ -133,10 +120,5 @@ namespace AuthGuard.Api
     {
         public string Name { get; set; }
         public string Value { get; set; }
-    }
-
-    public class TwoFactorSettings
-    {
-        public bool Enabled { get; set; }
     }
 }

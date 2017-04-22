@@ -32,7 +32,7 @@ namespace AuthGuard.Data.Entities
 
             foreach (var parameter in parameters)
             {
-                template.Replace($"{{{parameter.Key}}}", parameter.Value);
+                template = template.Replace($"{{{parameter.Key}}}", parameter.Value);
             }
 
             return template;
