@@ -59,6 +59,7 @@
   <ItemGroup>
     <Folder Include="DAL\" />
     <Folder Include="PL\" />
+    <Folder Include="Services\Passwords\" />
     <Folder Include="SL\Infrastructure\" />
     <Folder Include="SL\Workflow\" />
     <Folder Include="Services\TwoFactor\Contracts\" />

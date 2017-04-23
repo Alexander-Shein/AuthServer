@@ -1,9 +1,10 @@
 ﻿using System;
 using DddCore.BLL.Domain.Entities.GuidEntities;
+using DddCore.Contracts.BLL.Domain.Entities.Audit.At;
 
 namespace AuthGuard.BLL.Domain.Entities
 {
-    public class Email : GuidAggregateRootEntityBase
+    public class Email : GuidAggregateRootEntityBase, ICreatedAt
     {
         public Guid EmailTemplateId { get; set; }
         public string ToEmail { get; set; }

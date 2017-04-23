@@ -13,9 +13,7 @@ namespace AuthGuard.BLL.Domain.Entities
         public string FromEmail { get; set; }
         public EmailBodyFormat EmailBodyFormat { get; set; }
         public bool IsActive { get; set; }
-
         public Template Template { get; set; }
-        public ICollection<EmailTemplateAttachment> EmailTemplateAttachments { get; set; }
 
         public Email Render(IDictionary<string, string> parameters)
         {

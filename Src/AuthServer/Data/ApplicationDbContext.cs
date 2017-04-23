@@ -52,6 +52,36 @@ namespace AuthGuard.Data
 
                 b.ToTable("EmailTemplate");
             });
+
+            builder.Entity<Sms>(b =>
+            {
+                b.HasKey(x => x.Id);
+                b.Property(x => x.FromPhoneNumber);
+                b.Property(x => x.Message);
+                b.Property(x => x.IsSent);
+                b.Property(x => x.ToPhoneNumber);
+                b.Property(x => x.CreatedAt);
+                b.HasOne(x => x.SmsTemplate).WithMany().HasForeignKey(c => c.SmsTemplateId);
+
+                b.Ignore(x => x.CrudState);
+                b.Ignore(x => x.Events);
+
+                b.ToTable("Sms");
+            });
+
+            builder.Entity<SmsTemplate>(b =>
+            {
+                b.HasKey(x => x.Id);
+                b.Property(x => x.FromPhoneNumber);
+                b.Property(x => x.MessageTemplate);
+                b.Property(x => x.IsActive);
+                b.Property(x => x.Template).HasColumnName("TemplateId");
+
+                b.Ignore(x => x.CrudState);
+                b.Ignore(x => x.Events);
+
+                b.ToTable("SmsTemplate");
+            });
         }
     }
 }

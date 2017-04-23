@@ -64,5 +64,9 @@
     <Build Include="Tables\Template.sql" />
     <Build Include="Tables\EmailTemplate.sql" />
     <Build Include="Tables\EmailBodyFormat.sql" />
+    <Build Include="Tables\SmsTemplate.sql" />
+    <Build Include="Tables\Sms.sql" />
+    <Build Include="Tables\App.sql" />
+    <Build Include="Tables\ExternalProvider.sql" />
   </ItemGroup>
 </Project>
