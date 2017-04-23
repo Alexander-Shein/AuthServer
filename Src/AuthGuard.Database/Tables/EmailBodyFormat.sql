@@ -1,0 +1,7 @@
+﻿CREATE TABLE [dbo].[EmailBodyFormat]
+(
+	[Id]	[INT]			NOT NULL IDENTITY(1,1),
+	[Name]	[NVARCHAR](100)	NOT NULL DEFAULT('Html'),
+	CONSTRAINT [PK_EmailBodyFormat_Id] PRIMARY KEY CLUSTERED([Id] ASC),
+	CONSTRAINT [IDX_EmailBodyFormat_Name_U_N] UNIQUE NONCLUSTERED ([Name] ASC)
+)

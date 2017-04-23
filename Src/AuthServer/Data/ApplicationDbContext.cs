@@ -1,4 +1,4 @@
-﻿using AuthGuard.Data.Entities;
+﻿using AuthGuard.BLL.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,9 +25,13 @@ namespace AuthGuard.Data
                 b.Property(x => x.Subject);
                 b.Property(x => x.FromName);
                 b.Property(x => x.FromEmail);
-                b.Property(x => x.Subject);
+                b.Property(x => x.IsSent);
                 b.Property(x => x.ToEmail);
                 b.Property(x => x.CreatedAt);
+                b.HasOne(x => x.EmailTemplate).WithMany().HasForeignKey(c => c.EmailTemplateId);
+
+                b.Ignore(x => x.CrudState);
+                b.Ignore(x => x.Events);
 
                 b.ToTable("Email");
             });
@@ -35,20 +39,18 @@ namespace AuthGuard.Data
             builder.Entity<EmailTemplate>(b =>
             {
                 b.HasKey(x => x.Id);
+                b.Property(x => x.FromNameTemplate);
                 b.Property(x => x.SubjectTemplate);
                 b.Property(x => x.BodyTemplate);
+                b.Property(x => x.FromEmail);
+                b.Property(x => x.IsActive);
                 b.Property(x => x.EmailBodyFormat).HasColumnName("EmailBodyFormatId");
-                b.HasMany(x => x.EmailTemplateAttachments).WithOne().HasForeignKey(c => c.EmailTemplateId);
+                b.Property(x => x.Template).HasColumnName("TemplateId");
+
+                b.Ignore(x => x.CrudState);
+                b.Ignore(x => x.Events);
 
                 b.ToTable("EmailTemplate");
-            });
-
-            builder.Entity<EmailTemplateAttachment>(b =>
-            {
-                b.HasKey(x => x.Id);
-                b.Property(x => x.FileName);
-
-                b.ToTable("EmailTemplateAttachment");
             });
         }
     }

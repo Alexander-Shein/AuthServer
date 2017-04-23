@@ -1,10 +1,11 @@
 ﻿using System;
+using DddCore.BLL.Domain.Entities.GuidEntities;
 
-namespace AuthGuard.Data.Entities
+namespace AuthGuard.BLL.Domain.Entities
 {
-    public class Email
+    public class Email : GuidAggregateRootEntityBase
     {
-        public Guid Id { get; set; }
+        public Guid EmailTemplateId { get; set; }
         public string ToEmail { get; set; }
         public string FromEmail { get; set; }
         public string FromName { get; set; }
@@ -12,5 +13,7 @@ namespace AuthGuard.Data.Entities
         public string Body { get; set; }
         public bool IsSent { get; set; }
         public DateTime CreatedAt { get; set; }
+
+        public EmailTemplate EmailTemplate { get; set; }
     }
 }

@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AuthGuard.Data.Entities;
-using AuthGuard.Services;
+﻿using System.Threading.Tasks;
+using AuthGuard.Services.TwoFactor;
+using AuthGuard.Services.TwoFactor.Models.Input;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthGuard.Api
@@ -13,112 +10,49 @@ namespace AuthGuard.Api
     [Route("api/two-factor")]
     public class TwoFactorController : Controller
     {
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly SignInManager<ApplicationUser> signInManager;
-        private readonly IEmailSender emailSender;
-        private readonly ISmsSender smsSender;
+        readonly ITwoFactorsService twoFactorsService;
 
-        public TwoFactorController(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            IEmailSender emailSender,
-            ISmsSender smsSender)
+        public TwoFactorController(ITwoFactorsService twoFactorsService)
         {
-            this.userManager = userManager;
-            this.signInManager = signInManager;
-            this.emailSender = emailSender;
-            this.smsSender = smsSender;
+            this.twoFactorsService = twoFactorsService;
         }
 
-        [HttpGet]
-        [Route("providers")]
+        [HttpGet("providers")]
         public async Task<IActionResult> GetTwoFactorProviders()
         {
-            var user = await signInManager.GetTwoFactorAuthenticationUserAsync();
-            if (user == null)
+            var result = await twoFactorsService.GetTwoFactorProvidersAsync();
+            if (result.OperationResult.IsNotSucceed)
             {
-                return BadRequest("Have no user for 2 factor verification.");
+                return BadRequest(result.OperationResult.Errors);
             }
-            var userFactors = await userManager.GetValidTwoFactorProvidersAsync(user);
-            var providers = userFactors.Select(x => new Provider
-            {
-                Name = x,
-                Value = x
-            });
 
-            return Ok(providers);
+            return Ok(result.Providers);
         }
 
-        [HttpPost]
-        [Route("codes")]
-        public async Task<IActionResult> SendCode([FromBody] Provider im)
+        [HttpPost("codes")]
+        public async Task<IActionResult> SendCode([FromBody] TwoFactorProviderIm im)
         {
-            var provider = im.Value;
+            var result = await twoFactorsService.SendCodeAsync(im);
 
-            var user = await signInManager.GetTwoFactorAuthenticationUserAsync();
-            if (user == null)
+            if (result.IsNotSucceed)
             {
-                return BadRequest("Have no user for 2 factor verification.");
-            }
-
-            // Generate the token and send it
-            var code = await userManager.GenerateTwoFactorTokenAsync(user, provider);
-            if (string.IsNullOrWhiteSpace(code))
-            {
-                return BadRequest("An error is occured. Please try again.");
-            }
-
-            var parameters = new Dictionary<string, string>
-            {
-                {"Code", code}
-            };
-
-            if (provider == "Email")
-            {
-                await emailSender.SendEmailAsync(await userManager.GetEmailAsync(user), "SecurityCode", parameters);
-            }
-            else if (provider == "Phone")
-            {
-                await smsSender.SendSmsAsync(await userManager.GetPhoneNumberAsync(user), "SecurityCode", parameters);
-            }
-            else
-            {
-                return BadRequest("An error is occured. Please try again.");
+                return BadRequest(result.Errors);
             }
 
             return Ok();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> VerifyCode([FromBody] TwoFactorVerificationIm model)
+        [HttpPost("verified")]
+        public async Task<IActionResult> VerifyCode([FromBody] TwoFactorVerificationIm im)
         {
-            var result = await signInManager.TwoFactorSignInAsync(model.Provider, model.Code, model.RememberLogIn, model.RememberBrowser);
-            if (result.Succeeded)
+            var result = await twoFactorsService.VerifyCode(im);
+
+            if (result.IsNotSucceed)
             {
-                return Ok();
+                return BadRequest(result.Errors);
             }
-            if (result.IsLockedOut)
-            {
-                return BadRequest("User account locked out.");
-            }
-            else
-            {
-                return BadRequest("An error is occured. Please try again.");
-            }
+
+            return Ok();
         }
-    }
-
-    public class TwoFactorVerificationIm
-    {
-        public string Provider { get; set; }
-        public string Code { get; set; }
-        public bool RememberBrowser { get; set; }
-        public bool RememberLogIn { get; set; }
-    }
-
-    public class Provider
-    {
-        public string Name { get; set; }
-        public string Value { get; set; }
     }
 }

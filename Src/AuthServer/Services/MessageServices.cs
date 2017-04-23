@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
-using AuthGuard.Data.Entities;
 using MailKit.Net.Smtp;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using MimeKit;
 
 namespace AuthGuard.Services
@@ -15,59 +14,55 @@ namespace AuthGuard.Services
     // For more details see this link http://go.microsoft.com/fwlink/?LinkID=532713
     public class AuthMessageSender : IEmailSender, ISmsSender
     {
-        private readonly ILogger<AuthMessageSender> _logger;
         private readonly ApplicationDbContext context;
 
-        public AuthMessageSender(ILogger<AuthMessageSender> logger, ApplicationDbContext context)
+        public AuthMessageSender(ApplicationDbContext context)
         {
-            _logger = logger;
             this.context = context;
         }
 
-        public async Task SendEmailAsync(string toEmail, string templateName, IDictionary<string, string> parameters)
+        public async Task<Email> SendEmailAsync(string toEmail, Template template, IDictionary<string, string> parameters)
         {
-            if (String.IsNullOrWhiteSpace(templateName))
-            {
-                throw new ArgumentNullException(nameof(templateName));
-            }
-
             var emailTemplate =
                 await context
                     .Set<EmailTemplate>()
-                    .FirstOrDefaultAsync(x => x.Template.Name == templateName);
+                    .FirstOrDefaultAsync(x => x.Template == template && x.IsActive);
 
             if (emailTemplate == null)
             {
-                throw new ArgumentException($"Email template '{emailTemplate}' does not exists.");
+                throw new ArgumentException($"Email template '{template}' does not exist or is not active.");
             }
 
             var email = emailTemplate.Render(parameters);
             email.ToEmail = toEmail;
+            email.FromEmail = email.FromEmail;
             await SendEmailAsync(email);
 
             email.IsSent = true;
-
             context.Add(email);
-            await context.SaveChangesAsync();
+
+            return email;
         }
 
-        public async Task SendSmsAsync(string toPhoneNumber, string templateName, IDictionary<string, string> parameters)
+        public async Task<Sms> SendSmsAsync(string toPhoneNumber, Template template, IDictionary<string, string> parameters)
         {
-            if (String.IsNullOrWhiteSpace(templateName))
-            {
-                throw new ArgumentNullException(nameof(templateName));
-            }
-
             var smsTemplate =
                 await context
                     .Set<SmsTemplate>()
-                    .FirstOrDefaultAsync(x => x.Template.Name == templateName);
+                    .FirstOrDefaultAsync(x => x.Template == template && x.IsActive);
+
+            if (smsTemplate == null)
+            {
+                throw new ArgumentException($"Sms template '{template}' does not exist or is not active.");
+            }
 
             var sms = smsTemplate.Render(parameters);
             sms.ToPhoneNumber = toPhoneNumber;
 
             context.Add(sms);
             await context.SaveChangesAsync();
+
+            return sms;
         }
 
         #region Private Methods

@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using AuthGuard.Data.Entities;
+using AuthGuard.BLL.Domain.Entities;
 using IdentityServer4.Models;
 
 namespace AuthGuard.Services.Account

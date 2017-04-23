@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AuthGuard.Data.Entities;
+using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Services;
 using AuthGuard.Services.Account;
 using AuthGuard.Services.Users;
@@ -101,7 +101,7 @@ namespace AuthGuard.Api
                         {"CallbackUrl", callbackUrl}
                     };
 
-                    await _emailSender.SendEmailAsync(user.Email, "AccountConfirmation", parameters);
+                    await _emailSender.SendEmailAsync(user.Email, Template.AccountConfirmation, parameters);
                 }
                 else
                 {
@@ -114,7 +114,7 @@ namespace AuthGuard.Api
                         {"CallbackUrl", callbackUrl}
                     };
 
-                    await _smsSender.SendSmsAsync(user.PhoneNumber, "AccountConfirmation", parameters);
+                    await _smsSender.SendSmsAsync(user.PhoneNumber, Template.AccountConfirmation, parameters);
                 }
 
                 await _signInManager.SignInAsync(user, isPersistent: false);

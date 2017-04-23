@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using AuthGuard.Data.Entities;
+using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Services;
 using AuthGuard.Services.Users;
 using Microsoft.AspNetCore.Authorization;
@@ -65,11 +65,11 @@ namespace AuthGuard.Api
 
             if (isEmail)
             {
-                await _emailSender.SendEmailAsync(user.Email, "ResetPassword", parameters);
+                await _emailSender.SendEmailAsync(user.Email, Template.ResetPassword, parameters);
             }
             else
             {
-                await _smsSender.SendSmsAsync(user.PhoneNumber, "ResetPassword", parameters);
+                await _smsSender.SendSmsAsync(user.PhoneNumber, Template.ResetPassword, parameters);
             }
 
             return Ok();

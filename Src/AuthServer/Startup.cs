@@ -1,6 +1,8 @@
-﻿using AuthGuard.Data;
-using AuthGuard.Data.Entities;
+﻿using AuthGuard.BLL.Domain.Entities;
+using AuthGuard.Data;
 using AuthGuard.Services;
+using AuthGuard.Services.Support;
+using AuthGuard.Services.TwoFactor;
 using AuthGuard.Services.Users;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -64,6 +66,8 @@ namespace AuthGuard
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
             services.AddScoped<IUsersService, UsersService>();
+            services.AddScoped<ISupportWorkflowService, SupportWorkflowService>();
+            services.AddScoped<ITwoFactorsService, TwoFactorsService>();
 
             services.AddIdentityServer()
                 .AddTemporarySigningCredential()

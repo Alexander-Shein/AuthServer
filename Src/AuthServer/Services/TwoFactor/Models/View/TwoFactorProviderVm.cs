@@ -1,4 +1,4 @@
-﻿namespace AuthGuard.TwoFactor.Models.View
+﻿namespace AuthGuard.Services.TwoFactor.Models.View
 {
     public class TwoFactorProviderVm
     {

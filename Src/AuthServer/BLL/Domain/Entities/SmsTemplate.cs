@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AuthGuard.Data.Entities
+namespace AuthGuard.BLL.Domain.Entities
 {
     public class SmsTemplate
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using AuthGuard.Data.Entities;
+using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Services;
 using AuthGuard.Services.Account;
 using IdentityServer4.Services;
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ExternalProvider = AuthGuard.Data.Entities.ExternalProvider;
+using ExternalProvider = AuthGuard.BLL.Domain.Entities.ExternalProvider;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 

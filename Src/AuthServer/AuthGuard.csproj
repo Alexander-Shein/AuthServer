@@ -36,8 +36,10 @@
     <Content Include="wwwroot\**\*.*" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="DddCore" Version="1.2.1" />
+    <PackageReference Include="DddCore.Contracts" Version="1.2.2" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="1.0.1" />
-    <PackageReference Include="MailKit" Version="1.14.2" />
+    <PackageReference Include="MailKit" Version="1.16.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.1" />
@@ -55,7 +57,11 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="1.1.0" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="TwoFactor\Contracts\" />
+    <Folder Include="DAL\" />
+    <Folder Include="PL\" />
+    <Folder Include="SL\Infrastructure\" />
+    <Folder Include="SL\Workflow\" />
+    <Folder Include="Services\TwoFactor\Contracts\" />
   </ItemGroup>
 
 </Project>

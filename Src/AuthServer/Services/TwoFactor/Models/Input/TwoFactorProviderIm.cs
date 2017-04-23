@@ -1,4 +1,4 @@
-﻿namespace AuthGuard.TwoFactor.Models.Input
+﻿namespace AuthGuard.Services.TwoFactor.Models.Input
 {
     public class TwoFactorProviderIm
     {

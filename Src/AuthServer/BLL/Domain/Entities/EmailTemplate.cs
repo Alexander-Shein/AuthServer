@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using DddCore.BLL.Domain.Entities.GuidEntities;
 
-namespace AuthGuard.Data.Entities
+namespace AuthGuard.BLL.Domain.Entities
 {
-    public class EmailTemplate
+    public class EmailTemplate : GuidAggregateRootEntityBase
     {
-        public Guid Id { get; set; }
-        public Guid TemplateId { get; set; }
-
         public string FromNameTemplate { get; set; }
         public string SubjectTemplate { get; set; }
         public string BodyTemplate { get; set; }
@@ -27,7 +25,8 @@ namespace AuthGuard.Data.Entities
                 Body = ApplyParameters(BodyTemplate, parameters),
                 FromName = ApplyParameters(FromNameTemplate, parameters),
                 FromEmail = FromEmail,
-                Id = Guid.NewGuid()
+                EmailTemplate = this,
+                CreatedAt = DateTime.UtcNow
             };
 
             return result;

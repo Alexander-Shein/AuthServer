@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AuthGuard.Data.Entities
+namespace AuthGuard.BLL.Domain.Entities
 {
     public class Sms
     {

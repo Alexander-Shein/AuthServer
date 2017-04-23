@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
-using AuthGuard.Data.Entities;
+using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Services.Users.Models.Input;
 using AuthGuard.Services.Users.Models.View;
 using Microsoft.AspNetCore.Identity;

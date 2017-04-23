@@ -4,7 +4,7 @@
 
 using System.Linq;
 using System.Threading.Tasks;
-using AuthGuard.Data.Entities;
+using AuthGuard.BLL.Domain.Entities;
 using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Extensions;
