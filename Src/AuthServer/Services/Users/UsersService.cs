@@ -34,13 +34,6 @@ namespace AuthGuard.Services.Users
 
         #region Public Methods
 
-        public string CleanPhoneNumber(string phone)
-        {
-            if (String.IsNullOrWhiteSpace(phone)) return String.Empty;
-
-            return new string(phone.Where(c => Char.IsDigit(c)).ToArray());
-        }
-
         public async Task<UserVm> GetCurrentUserAsync(ClaimsPrincipal claims)
         {
             var user = await userManager.GetUserAsync(claims);
@@ -59,7 +52,7 @@ namespace AuthGuard.Services.Users
 
             if (!isEmail)
             {
-                userName = CleanPhoneNumber(userName);
+                userName = ApplicationUser.CleanPhoneNumber(userName);
                 predicate = x => x.PhoneNumber == userName;
             }
             else
@@ -67,7 +60,7 @@ namespace AuthGuard.Services.Users
                 predicate = x => x.Email == userName;
             }
 
-            var user = await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(applicationDbContext.Set<ApplicationUser>(), predicate);
+            var user = await applicationDbContext.Set<ApplicationUser>().FirstOrDefaultAsync(predicate);
             return user;
         }
 
@@ -89,7 +82,7 @@ namespace AuthGuard.Services.Users
                 }
                 else
                 {
-                    throw new ArgumentException(Enumerable.First<IdentityError>(result.Errors).Description);
+                    throw new ArgumentException(result.Errors.First().Description);
                 }
             }
 

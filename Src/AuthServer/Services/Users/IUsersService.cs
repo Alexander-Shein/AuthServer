@@ -11,7 +11,6 @@ namespace AuthGuard.Services.Users
     {
         Task<ApplicationUser> GetUserByEmailOrPhoneAsync(string userName);
         Task<UserVm> GetCurrentUserAsync(ClaimsPrincipal user);
-        string CleanPhoneNumber(string phone);
         Task<UserVm> UpdateAsync(ClaimsPrincipal claims, UserIm im);
         Task<IdentityResult> ConfirmAccountAsync(ConfirmAccountIm im);
     }

@@ -22,13 +22,11 @@ namespace AuthGuard.Api
     [Route("api/[controller]")]
     public class AuthController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IEmailSender _emailSender;
-        private readonly ISmsSender _smsSender;
-        private readonly ILogger _logger;
-        private readonly IIdentityServerInteractionService _interaction;
-        private readonly IClientStore _clientStore;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly IEmailSender emailSender;
+        private readonly ISmsSender smsSender;
+        private readonly ILogger logger;
         private readonly IUsersService usersService;
 
         public AuthController(
@@ -42,13 +40,11 @@ namespace AuthGuard.Api
             IClientStore clientStore,
             IUsersService usersService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _emailSender = emailSender;
-            _smsSender = smsSender;
-            _logger = loggerFactory.CreateLogger<AppsController>();
-            _interaction = interaction;
-            _clientStore = clientStore;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
+            this.emailSender = emailSender;
+            this.smsSender = smsSender;
+            logger = loggerFactory.CreateLogger<AppsController>();
             this.usersService = usersService;
         }
 
@@ -74,21 +70,19 @@ namespace AuthGuard.Api
             }
             else
             {
-                var phone = usersService.CleanPhoneNumber(im.UserName);
-
                 user = new ApplicationUser
                 {
-                    UserName = phone,
-                    PhoneNumber = phone
+                    UserName = im.UserName,
+                    PhoneNumber = im.UserName
                 };
             }
 
-            var result = await _userManager.CreateAsync(user, im.Password);
+            var result = await userManager.CreateAsync(user, im.Password);
             if (result.Succeeded)
             {
                 if (isEmail)
                 {
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = $"http://localhost:5000/api/users/{user.Id}/providers/email/confirmed?code={WebUtility.UrlEncode(code)}&redirectUrl={WebUtility.UrlEncode(redirectUrl)}";
 
                     var parameters = new Dictionary<string, string>
@@ -97,11 +91,11 @@ namespace AuthGuard.Api
                         {"CallbackUrl", callbackUrl}
                     };
 
-                    await _emailSender.SendEmailAsync(user.Email, Template.AccountConfirmation, parameters);
+                    await emailSender.SendEmailAsync(user.Email, Template.AccountConfirmation, parameters);
                 }
                 else
                 {
-                    var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, user.PhoneNumber);
+                    var code = await userManager.GenerateChangePhoneNumberTokenAsync(user, user.PhoneNumber);
                     var callbackUrl = $"http://localhost:5000/api/users/{user.Id}/providers/phone/confirmed?code={WebUtility.UrlEncode(code)}&redirectUrl={WebUtility.UrlEncode(redirectUrl)}";
 
                     var parameters = new Dictionary<string, string>
@@ -110,11 +104,11 @@ namespace AuthGuard.Api
                         {"CallbackUrl", callbackUrl}
                     };
 
-                    await _smsSender.SendSmsAsync(user.PhoneNumber, Template.AccountConfirmation, parameters);
+                    await smsSender.SendSmsAsync(user.PhoneNumber, Template.AccountConfirmation, parameters);
                 }
 
-                await _signInManager.SignInAsync(user, isPersistent: false);
-                _logger.LogInformation(3, "User created a new account with password.");
+                await signInManager.SignInAsync(user, isPersistent: false);
+                logger.LogInformation(3, "User created a new account with password.");
                 return Ok();
             }
 
@@ -133,7 +127,7 @@ namespace AuthGuard.Api
             var user = await usersService.GetUserByEmailOrPhoneAsync(im.UserName);
             if (user == null) return BadRequest(new BadRequestResult("Invalid login attempt."));
 
-            var result = await _signInManager.PasswordSignInAsync(user, im.Password, im.RememberLogIn, lockoutOnFailure: true);
+            var result = await signInManager.PasswordSignInAsync(user, im.Password, im.RememberLogIn, lockoutOnFailure: true);
 
             if (result.IsLockedOut)
             {
@@ -159,7 +153,7 @@ namespace AuthGuard.Api
         {
             var redirectUrl = $"{Request.PathBase}/api/auth/external-log-in-callback?returnUrl={WebUtility.UrlEncode(returnUrl)}";
 
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(authenticationScheme, redirectUrl);
+            var properties = signInManager.ConfigureExternalAuthenticationProperties(authenticationScheme, redirectUrl);
             return Challenge(properties, authenticationScheme);
         }
 
@@ -173,7 +167,7 @@ namespace AuthGuard.Api
                 returnUrl += "errorMessage=" + remoteError;
                 return Redirect(returnUrl);
             }
-            var info = await _signInManager.GetExternalLoginInfoAsync();
+            var info = await signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
                 returnUrl += returnUrl.Contains("?") ? "&" : "?";
@@ -182,11 +176,11 @@ namespace AuthGuard.Api
             }
 
             // Sign in the user with this external login provider if the user already has a login.
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+            var result = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
 
             if (result.Succeeded)
             {
-                _logger.LogInformation(5, "User logged in with {Name} provider.", info.LoginProvider);
+                logger.LogInformation(5, "User logged in with {Name} provider.", info.LoginProvider);
                 return Redirect(returnUrl);
             }
             if (result.RequiresTwoFactor)
@@ -228,12 +222,12 @@ namespace AuthGuard.Api
         [Route("external-provider")]
         public async Task<IActionResult> DeleteExternalLogIn(string authenticationScheme, string key)
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await userManager.GetUserAsync(User);
 
-            var result = await _userManager.RemoveLoginAsync(user, authenticationScheme, key);
+            var result = await userManager.RemoveLoginAsync(user, authenticationScheme, key);
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                await signInManager.SignInAsync(user, isPersistent: false);
                 return Ok();
             }
 
@@ -246,7 +240,7 @@ namespace AuthGuard.Api
         public IActionResult LinkExternalLogIn(string provider, string returnUrl)
         {
             var redirectUrl = $"{Request.PathBase}/api/auth/external-provider-callback?returnUrl={WebUtility.UrlEncode(returnUrl)}";
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, _userManager.GetUserId(User));
+            var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, userManager.GetUserId(User));
             return Challenge(properties, provider);
         }
 
@@ -255,8 +249,8 @@ namespace AuthGuard.Api
         [Route("external-provider-callback")]
         public async Task<ActionResult> LinkExternalLogInCallback(string returnUrl)
         {
-            var user = await _userManager.GetUserAsync(User);
-            var info = await _signInManager.GetExternalLoginInfoAsync(await _userManager.GetUserIdAsync(user));
+            var user = await userManager.GetUserAsync(User);
+            var info = await signInManager.GetExternalLoginInfoAsync(await userManager.GetUserIdAsync(user));
 
             if (info == null)
             {
@@ -264,7 +258,7 @@ namespace AuthGuard.Api
                 returnUrl += "errorMessage=Failed";
                 return Redirect(returnUrl);
             }
-            var result = await _userManager.AddLoginAsync(user, info);
+            var result = await userManager.AddLoginAsync(user, info);
 
             if (result.Succeeded)
             {

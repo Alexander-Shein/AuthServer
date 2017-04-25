@@ -80,7 +80,11 @@ namespace AuthGuard.Services.Apps
 
             if (app == null)
             {
-                app = new App();
+                app = new App
+                {
+                    CreatedAt = DateTime.UtcNow,
+                    UserId = userContext.Id.ToString()
+            };
                 context.Set<App>().Add(app);
             }
             else
@@ -88,7 +92,25 @@ namespace AuthGuard.Services.Apps
                 context.Set<App>().Update(app);
             }
 
-            return (null, null);
+            app.IsActive = im.IsActive;
+            app.EmailSettings.IsEnabled = im.EmailSettings.IsEnabled;
+            app.EmailSettings.IsConfirmationRequired = im.EmailSettings.IsConfirmationRequired;
+            app.EmailSettings.IsPasswordEnabled = im.EmailSettings.IsPasswordEnabled;
+            app.EmailSettings.IsPasswordlessEnabled = im.EmailSettings.IsPasswordlessEnabled;
+            app.EmailSettings.IsSearchRelatedProviderEnabled = im.EmailSettings.IsSearchRelatedProviderEnabled;
+            app.IsSecurityQuestionsEnabled = im.IsSecurityQuestionsEnabled;
+            app.Key = im.Key;
+            app.WebsiteUrl = im.WebsiteUrl;
+            app.DisplayName = im.Name;
+            app.IsRememberLogInEnabled = im.IsRememberLogInEnabled;
+            app.PhoneSettings.IsEnabled = im.PhoneSettings.IsEnabled;
+            app.PhoneSettings.IsConfirmationRequired = im.PhoneSettings.IsConfirmationRequired;
+            app.PhoneSettings.IsPasswordEnabled = im.PhoneSettings.IsPasswordEnabled;
+            app.PhoneSettings.IsPasswordlessEnabled = im.PhoneSettings.IsPasswordlessEnabled;
+
+            await context.SaveChangesAsync();
+
+            return (MapToExtendedAppVm(app), OperationResult.SucceedResult);
         }
 
         public async Task<IEnumerable<ExtendedAppVm>> GetAll()

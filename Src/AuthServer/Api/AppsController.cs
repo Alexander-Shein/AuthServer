@@ -19,7 +19,7 @@ namespace AuthGuard.Api
         }
 
         [HttpGet("search")]
-        public async Task<IActionResult> Search(string returnUrl)
+        public async Task<IActionResult> SearchAsync(string returnUrl)
         {
             if (String.IsNullOrWhiteSpace(returnUrl))
             {
@@ -31,14 +31,14 @@ namespace AuthGuard.Api
 
         [Authorize]
         [HttpPost("")]
-        public async Task<IActionResult> Post([FromBody] ExtendedAppIm im)
+        public async Task<IActionResult> PostAsync([FromBody] ExtendedAppIm im)
         {
-            return await Put(Guid.NewGuid(), im);
+            return await PutAsync(Guid.NewGuid(), im);
         }
 
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(Guid id, [FromBody] ExtendedAppIm im)
+        public async Task<IActionResult> PutAsync(Guid id, [FromBody] ExtendedAppIm im)
         {
             var result = await appsService.Put(id, im);
 
@@ -52,7 +52,7 @@ namespace AuthGuard.Api
 
         [Authorize]
         [HttpGet("")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
             var result = await appsService.GetAll();
             return Ok(result);
@@ -60,7 +60,7 @@ namespace AuthGuard.Api
 
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
+        public async Task<IActionResult> GetAsync(Guid id)
         {
             var result = await appsService.Get(id);
             return Ok(result);
