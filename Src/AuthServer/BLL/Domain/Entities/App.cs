@@ -18,15 +18,17 @@ namespace AuthGuard.BLL.Domain.Entities
         public bool IsActive { get; set; }
         public int UsersCount { get; set; }
         public DateTime CreatedAt { get; set; }
-        public LocalAccountSettings EmailSettings { get; set; }
-        public LocalAccountSettings PhoneSettings { get; set; }
-        public ICollection<AppExternalProvider> ExternalProviders { get; set; }
-    }
 
-    public class AppExternalProvider : GuidEntityBase
-    {
-        public Guid AppId { get; set; }
-        public Guid ExternalProviderId { get; set; }
-        public ExternalProvider ExternalProvider { get; set; }
+        public bool IsEmailEnabled { get; set; }
+        public bool IsEmailConfirmationRequired { get; set; }
+        public bool IsEmailPasswordEnabled { get; set; }
+        public bool IsEmailPasswordlessEnabled { get; set; }
+        public bool IsEmailSearchRelatedProviderEnabled { get; set; }
+        public bool IsPhoneEnabled { get; set; }
+        public bool IsPhoneConfirmationRequired { get; set; }
+        public bool IsPhonePasswordEnabled { get; set; }
+        public bool IsPhonePasswordlessEnabled { get; set; }
+
+        public ICollection<AppExternalProvider> ExternalProviders { get; set; }
     }
 }

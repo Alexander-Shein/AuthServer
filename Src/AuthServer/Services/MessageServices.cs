@@ -9,9 +9,6 @@ using MimeKit;
 
 namespace AuthGuard.Services
 {
-    // This class is used by the application to send Email and SMS
-    // when you turn on two-factor authentication in ASP.NET Identity.
-    // For more details see this link http://go.microsoft.com/fwlink/?LinkID=532713
     public class AuthMessageSender : IEmailSender, ISmsSender
     {
         private readonly ApplicationDbContext context;
@@ -33,14 +30,10 @@ namespace AuthGuard.Services
                 throw new ArgumentException($"Email template '{template}' does not exist or is not active.");
             }
 
-            var email = emailTemplate.Render(parameters);
-            email.ToEmail = toEmail;
-            email.FromEmail = email.FromEmail;
+            var email = emailTemplate.Render(toEmail, parameters);
             await SendEmailAsync(email);
 
-            email.IsSent = true;
             context.Add(email);
-
             return email;
         }
 
@@ -56,12 +49,9 @@ namespace AuthGuard.Services
                 throw new ArgumentException($"Sms template '{template}' does not exist or is not active.");
             }
 
-            var sms = smsTemplate.Render(parameters);
-            sms.ToPhoneNumber = toPhoneNumber;
+            var sms = smsTemplate.Render(toPhoneNumber, parameters);
 
             context.Add(sms);
-            await context.SaveChangesAsync();
-
             return sms;
         }
 
@@ -85,6 +75,7 @@ namespace AuthGuard.Services
                 await client.SendAsync(mimeMessage);
                 client.Disconnect(true);
             }
+            email.IsSent = true;
         }
 
         #endregion

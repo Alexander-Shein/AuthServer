@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace AuthGuard.Services.Apps
 {
     public class AppVm
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Key { get; set; }
         public bool IsLocalAccountEnabled { get; set; }

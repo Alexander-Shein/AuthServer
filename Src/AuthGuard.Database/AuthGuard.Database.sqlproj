@@ -71,5 +71,6 @@
     </Build>
     <Build Include="Tables\ExternalProvider.sql" />
     <Build Include="Tables\AppExternalProvider.sql" />
+    <Build Include="Tables\AspNetUsers.sql" />
   </ItemGroup>
 </Project>

@@ -5,8 +5,10 @@ using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
+using AuthGuard.Data;
 using AuthGuard.Services;
 using AuthGuard.Services.Users;
+using DddCore.Contracts.BLL.Errors;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authorization;
@@ -28,6 +30,7 @@ namespace AuthGuard.Api
         private readonly ISmsSender smsSender;
         private readonly ILogger logger;
         private readonly IUsersService usersService;
+        readonly ApplicationDbContext context;
 
         public AuthController(
             UserManager<ApplicationUser> userManager,
@@ -38,7 +41,7 @@ namespace AuthGuard.Api
             IIdentityServerInteractionService interaction,
             IHttpContextAccessor httpContext,
             IClientStore clientStore,
-            IUsersService usersService)
+            IUsersService usersService, ApplicationDbContext context)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -46,15 +49,29 @@ namespace AuthGuard.Api
             this.smsSender = smsSender;
             logger = loggerFactory.CreateLogger<AppsController>();
             this.usersService = usersService;
+            this.context = context;
         }
 
         [HttpPost]
         [Route("sign-up")]
         public async Task<IActionResult> SignUpAsync([FromBody] SignUpIm im, string redirectUrl)
         {
-            if (String.IsNullOrWhiteSpace(im?.UserName) || String.IsNullOrWhiteSpace(im?.Password))
+            if (String.IsNullOrWhiteSpace(im?.UserName) || String.IsNullOrWhiteSpace(im.Password))
             {
-                return BadRequest(new BadRequestResult("Invalid username or password."));
+                return BadRequest(new List<Error>
+                {
+                    new Error {Code = 1, Description = "Invalid username or password."}
+                });
+            }
+
+            var app = await context.Set<App>().FindAsync(im.AppId);
+
+            if (app == null)
+            {
+                return BadRequest(new List<Error>
+                {
+                    new Error {Code = 2, Description = $"App with key: '{im.AppId}' does not exist."}
+                });
             }
 
             ApplicationUser user;
@@ -80,36 +97,54 @@ namespace AuthGuard.Api
             var result = await userManager.CreateAsync(user, im.Password);
             if (result.Succeeded)
             {
+                var code = user.Id.GetHashCode();
+                string provider;
+
                 if (isEmail)
                 {
-                    var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = $"http://localhost:5000/api/users/{user.Id}/providers/email/confirmed?code={WebUtility.UrlEncode(code)}&redirectUrl={WebUtility.UrlEncode(redirectUrl)}";
-
-                    var parameters = new Dictionary<string, string>
-                    {
-                        {"Code", code},
-                        {"CallbackUrl", callbackUrl}
-                    };
-
-                    await emailSender.SendEmailAsync(user.Email, Template.AccountConfirmation, parameters);
+                    ++code;
+                    provider = "email";
                 }
                 else
                 {
-                    var code = await userManager.GenerateChangePhoneNumberTokenAsync(user, user.PhoneNumber);
-                    var callbackUrl = $"http://localhost:5000/api/users/{user.Id}/providers/phone/confirmed?code={WebUtility.UrlEncode(code)}&redirectUrl={WebUtility.UrlEncode(redirectUrl)}";
-
-                    var parameters = new Dictionary<string, string>
-                    {
-                        {"Code", code},
-                        {"CallbackUrl", callbackUrl}
-                    };
-
-                    await smsSender.SendSmsAsync(user.PhoneNumber, Template.AccountConfirmation, parameters);
+                    --code;
+                    provider = "phone";
                 }
 
-                await signInManager.SignInAsync(user, isPersistent: false);
+                var callbackUrl = $"http://localhost:5000/api/users/{user.Id}/providers/{provider}/confirmed?code={code}&redirectUrl={WebUtility.UrlEncode(redirectUrl)}";
+
+                var parameters = new Dictionary<string, string>
+                {
+                    {"Code", code.ToString()},
+                    {"CallbackUrl", callbackUrl}
+                };
+
+                if (isEmail)
+                {
+                    var email = await emailSender.SendEmailAsync(user.Email, Template.AccountConfirmation, parameters);
+                    context.Set<Email>().Add(email);
+                }
+                else
+                {
+                    var sms = await smsSender.SendSmsAsync(user.PhoneNumber, Template.AccountConfirmation, parameters);
+                    context.Set<Sms>().Add(sms);
+                }
+
+                var signUpResult = new SignUpResultVm();
+
+                if ((isEmail && !app.IsEmailConfirmationRequired) || (!isEmail && !app.IsPhoneConfirmationRequired))
+                {
+                    await signInManager.SignInAsync(user, isPersistent: false);
+                }
+                else
+                {
+                    signUpResult.IsConfirmationRequired = true;
+                }
+
                 logger.LogInformation(3, "User created a new account with password.");
-                return Ok();
+
+                await context.SaveChangesAsync();
+                return Ok(signUpResult);
             }
 
             return BadRequest(new BadRequestResult(result.Errors.First().Description));
@@ -119,19 +154,31 @@ namespace AuthGuard.Api
         [Route("log-in")]
         public async Task<IActionResult> LogInAsync([FromBody] LogInIm im)
         {
-            if (String.IsNullOrWhiteSpace(im?.UserName) || String.IsNullOrWhiteSpace(im?.Password))
+            if (String.IsNullOrWhiteSpace(im?.UserName) || String.IsNullOrWhiteSpace(im.Password))
             {
-                return BadRequest(new BadRequestResult("Invalid log in attempt."));
+                return BadRequest(new List<Error>
+                {
+                    new Error {Code = 1, Description = "Invalid log in attempt."}
+                });
             }
 
             var user = await usersService.GetUserByEmailOrPhoneAsync(im.UserName);
-            if (user == null) return BadRequest(new BadRequestResult("Invalid login attempt."));
+            if (user == null)
+            {
+                return BadRequest(new List<Error>
+                {
+                    new Error {Code = 1, Description = "Invalid log in attempt."}
+                });
+            }
 
             var result = await signInManager.PasswordSignInAsync(user, im.Password, im.RememberLogIn, lockoutOnFailure: true);
 
             if (result.IsLockedOut)
             {
-                return BadRequest(new BadRequestResult("User account locked out."));
+                return BadRequest(new List<Error>
+                {
+                    new Error {Code = 2, Description = "User account locked out."}
+                });
             }
 
             if (result.Succeeded || result.RequiresTwoFactor)
@@ -141,10 +188,11 @@ namespace AuthGuard.Api
                     RequiresTwoFactor = result.RequiresTwoFactor
                 });
             }
-            else
+
+            return BadRequest(new List<Error>
             {
-                return BadRequest(new BadRequestResult("Invalid login attempt."));
-            }
+                new Error {Code = 1, Description = "Invalid log in attempt."}
+            });
         }
 
         [HttpPost]
@@ -286,6 +334,7 @@ namespace AuthGuard.Api
 
     public class SignUpIm
     {
+        public Guid AppId { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
     }

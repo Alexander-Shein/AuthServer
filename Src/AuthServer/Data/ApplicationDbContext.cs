@@ -96,16 +96,19 @@ namespace AuthGuard.Data
                 b.Property(x => x.CreatedAt);
                 b.Property(x => x.IsRememberLogInEnabled);
                 b.Property(x => x.UsersCount);
-                b.Property(x => x.EmailSettings.IsEnabled).HasColumnName("IsEmailEnabled");
-                b.Property(x => x.EmailSettings.IsConfirmationRequired).HasColumnName("IsEmailConfirmationRequired");
-                b.Property(x => x.EmailSettings.IsPasswordEnabled).HasColumnName("IsEmailPasswordEnabled");
-                b.Property(x => x.EmailSettings.IsPasswordlessEnabled).HasColumnName("IsEmailPasswordlessEnabled");
-                b.Property(x => x.EmailSettings.IsSearchRelatedProviderEnabled).HasColumnName("IsEmailSearchRelatedProviderEnabled");
+                b.Property(x => x.IsEmailEnabled);
+                b.Property(x => x.IsEmailConfirmationRequired);
+                b.Property(x => x.IsEmailPasswordEnabled);
+                b.Property(x => x.IsEmailPasswordlessEnabled);
+                b.Property(x => x.IsEmailSearchRelatedProviderEnabled);
 
-                b.Property(x => x.PhoneSettings.IsEnabled).HasColumnName("IsPhoneEnabled");
-                b.Property(x => x.PhoneSettings.IsConfirmationRequired).HasColumnName("IsPhoneConfirmationRequired");
-                b.Property(x => x.PhoneSettings.IsPasswordEnabled).HasColumnName("IsPhonePasswordEnabled");
-                b.Property(x => x.PhoneSettings.IsPasswordlessEnabled).HasColumnName("IsPhonePasswordlessEnabled");
+                b.Property(x => x.IsPhoneEnabled);
+                b.Property(x => x.IsPhoneConfirmationRequired);
+                b.Property(x => x.IsPhonePasswordEnabled);
+                b.Property(x => x.IsPhonePasswordlessEnabled);
+
+                b.Ignore(x => x.CrudState);
+                b.Ignore(x => x.Events);
 
                 b.HasMany(x => x.ExternalProviders).WithOne().HasForeignKey(x => x.AppId);
             });
@@ -113,6 +116,10 @@ namespace AuthGuard.Data
             builder.Entity<AppExternalProvider>(b =>
             {
                 b.HasKey(x => x.Id);
+
+                b.Ignore(x => x.CrudState);
+                b.Ignore(x => x.Events);
+
                 b.HasOne(x => x.ExternalProvider).WithMany().HasForeignKey(x => x.ExternalProviderId);
             });
 
@@ -121,6 +128,9 @@ namespace AuthGuard.Data
                 b.HasKey(x => x.Id);
                 b.Property(x => x.DisplayName);
                 b.Property(x => x.AuthenticationScheme);
+
+                b.Ignore(x => x.CrudState);
+                b.Ignore(x => x.Events);
             });
         }
     }

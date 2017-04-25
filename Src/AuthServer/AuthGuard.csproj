@@ -7,28 +7,24 @@
 
   <ItemGroup>
     <Compile Remove="app\**" />
-    <Compile Remove="Controllers\**" />
     <Compile Remove="Models\**" />
     <Compile Remove="Quickstart\**" />
     <Compile Remove="Services\Account\**" />
     <Compile Remove="Views\**" />
     <Compile Remove="wwwroot\dist\**" />
     <Content Remove="app\**" />
-    <Content Remove="Controllers\**" />
     <Content Remove="Models\**" />
     <Content Remove="Quickstart\**" />
     <Content Remove="Services\Account\**" />
     <Content Remove="Views\**" />
     <Content Remove="wwwroot\dist\**" />
     <EmbeddedResource Remove="app\**" />
-    <EmbeddedResource Remove="Controllers\**" />
     <EmbeddedResource Remove="Models\**" />
     <EmbeddedResource Remove="Quickstart\**" />
     <EmbeddedResource Remove="Services\Account\**" />
     <EmbeddedResource Remove="Views\**" />
     <EmbeddedResource Remove="wwwroot\dist\**" />
     <None Remove="app\**" />
-    <None Remove="Controllers\**" />
     <None Remove="Models\**" />
     <None Remove="Quickstart\**" />
     <None Remove="Services\Account\**" />
@@ -66,6 +62,11 @@
     <Folder Include="SL\Infrastructure\" />
     <Folder Include="SL\Workflow\" />
     <Folder Include="Services\TwoFactor\Contracts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.2\System.Web.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

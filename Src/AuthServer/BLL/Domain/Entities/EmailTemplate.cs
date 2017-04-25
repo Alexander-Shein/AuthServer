@@ -15,7 +15,7 @@ namespace AuthGuard.BLL.Domain.Entities
         public bool IsActive { get; set; }
         public Template Template { get; set; }
 
-        public Email Render(IDictionary<string, string> parameters)
+        public Email Render(string toEmail, IDictionary<string, string> parameters)
         {
             var result = new Email
             {
@@ -24,7 +24,8 @@ namespace AuthGuard.BLL.Domain.Entities
                 FromName = ApplyParameters(FromNameTemplate, parameters),
                 FromEmail = FromEmail,
                 EmailTemplate = this,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                ToEmail = toEmail
             };
 
             return result;

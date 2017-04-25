@@ -14,20 +14,18 @@ using DddCore.Contracts.Crosscutting.UserContext;
 
 namespace AuthGuard.Services.Apps
 {
-    public interface IAppsService : IClientStore
+    public interface IAppsService
     {
         Task<AppVm> GetAuthGuardApp();
-        Task<AppVm> Search(string returnUrl);
-        Task<(ExtendedAppVm App, OperationResult OperationResult)> Put(Guid id, ExtendedAppIm im);
-        Task<IEnumerable<ExtendedAppVm>> GetAll();
-        Task<ExtendedAppVm> Get(Guid id);
+        Task<AppVm> SearchAsync(string returnUrl);
+        Task<(ExtendedAppVm App, OperationResult OperationResult)> PutAsync(Guid id, ExtendedAppIm im);
+        Task<IEnumerable<ExtendedAppVm>> GetAllAsync();
+        Task<ExtendedAppVm> GetAsync(Guid id);
     }
 
-    public class AppsService : IAppsService
+    public class ClientsStore : IClientStore
     {
         readonly ApplicationDbContext context;
-        readonly IIdentityServerInteractionService interaction;
-        readonly IUserContext<Guid> userContext;
 
         readonly string[] allowedScopes =
         {
@@ -36,11 +34,9 @@ namespace AuthGuard.Services.Apps
             IdentityServerConstants.StandardScopes.Email
         };
 
-        public AppsService(ApplicationDbContext context, IIdentityServerInteractionService interaction, IUserContext<Guid> userContext)
+        public ClientsStore(ApplicationDbContext context)
         {
             this.context = context;
-            this.interaction = interaction;
-            this.userContext = userContext;
         }
 
         public async Task<Client> FindClientByIdAsync(string clientId)
@@ -63,18 +59,38 @@ namespace AuthGuard.Services.Apps
             };
             return client;
         }
+    }
 
-        public async Task<AppVm> Search(string returnUrl)
+    public class AppsService : IAppsService
+    {
+        readonly ApplicationDbContext context;
+        readonly IIdentityServerInteractionService interaction;
+        readonly IUserContext<Guid> userContext;
+
+        public AppsService(ApplicationDbContext context, IIdentityServerInteractionService interaction, IUserContext<Guid> userContext)
+        {
+            this.context = context;
+            this.interaction = interaction;
+            this.userContext = userContext;
+        }
+
+        public async Task<AppVm> SearchAsync(string returnUrl)
         {
             var authorizationContext = await interaction.GetAuthorizationContextAsync(returnUrl);
 
             if (authorizationContext?.ClientId == null) return null;
-            var app = await context.Set<App>().FirstOrDefaultAsync(x => x.Key == authorizationContext.ClientId);
+            var app =
+                await
+                    context
+                        .Set<App>()
+                        .Include(x => x.ExternalProviders)
+                            .ThenInclude(x => x.ExternalProvider)
+                        .FirstOrDefaultAsync(x => x.Key == authorizationContext.ClientId);
 
             return Map(app);
         }
 
-        public async Task<(ExtendedAppVm App, OperationResult OperationResult)> Put(Guid id, ExtendedAppIm im)
+        public async Task<(ExtendedAppVm App, OperationResult OperationResult)> PutAsync(Guid id, ExtendedAppIm im)
         {
             var app = await context.Set<App>().FindAsync(id);
 
@@ -93,27 +109,27 @@ namespace AuthGuard.Services.Apps
             }
 
             app.IsActive = im.IsActive;
-            app.EmailSettings.IsEnabled = im.EmailSettings.IsEnabled;
-            app.EmailSettings.IsConfirmationRequired = im.EmailSettings.IsConfirmationRequired;
-            app.EmailSettings.IsPasswordEnabled = im.EmailSettings.IsPasswordEnabled;
-            app.EmailSettings.IsPasswordlessEnabled = im.EmailSettings.IsPasswordlessEnabled;
-            app.EmailSettings.IsSearchRelatedProviderEnabled = im.EmailSettings.IsSearchRelatedProviderEnabled;
+            app.IsEmailEnabled = im.EmailSettings.IsEnabled;
+            app.IsEmailConfirmationRequired = im.EmailSettings.IsConfirmationRequired;
+            app.IsEmailPasswordEnabled = im.EmailSettings.IsPasswordEnabled;
+            app.IsEmailPasswordlessEnabled = im.EmailSettings.IsPasswordlessEnabled;
+            app.IsEmailSearchRelatedProviderEnabled = im.EmailSettings.IsSearchRelatedProviderEnabled;
             app.IsSecurityQuestionsEnabled = im.IsSecurityQuestionsEnabled;
             app.Key = im.Key;
             app.WebsiteUrl = im.WebsiteUrl;
             app.DisplayName = im.Name;
             app.IsRememberLogInEnabled = im.IsRememberLogInEnabled;
-            app.PhoneSettings.IsEnabled = im.PhoneSettings.IsEnabled;
-            app.PhoneSettings.IsConfirmationRequired = im.PhoneSettings.IsConfirmationRequired;
-            app.PhoneSettings.IsPasswordEnabled = im.PhoneSettings.IsPasswordEnabled;
-            app.PhoneSettings.IsPasswordlessEnabled = im.PhoneSettings.IsPasswordlessEnabled;
+            app.IsPhoneEnabled = im.PhoneSettings.IsEnabled;
+            app.IsPhoneConfirmationRequired = im.PhoneSettings.IsConfirmationRequired;
+            app.IsPhonePasswordEnabled = im.PhoneSettings.IsPasswordEnabled;
+            app.IsPhonePasswordlessEnabled = im.PhoneSettings.IsPasswordlessEnabled;
 
             await context.SaveChangesAsync();
 
             return (MapToExtendedAppVm(app), OperationResult.SucceedResult);
         }
 
-        public async Task<IEnumerable<ExtendedAppVm>> GetAll()
+        public async Task<IEnumerable<ExtendedAppVm>> GetAllAsync()
         {
             var userId = userContext.Id.ToString();
             var apps = await context.Set<App>().Where(x => x.UserId == userId).ToListAsync() ?? Enumerable.Empty<App>();
@@ -121,7 +137,7 @@ namespace AuthGuard.Services.Apps
             return apps.Select(MapToExtendedAppVm);
         }
 
-        public async Task<ExtendedAppVm> Get(Guid id)
+        public async Task<ExtendedAppVm> GetAsync(Guid id)
         {
             var userId = userContext.Id.ToString();
 
@@ -134,7 +150,15 @@ namespace AuthGuard.Services.Apps
 
         public async Task<AppVm> GetAuthGuardApp()
         {
-            var app = await context.Set<App>().FirstOrDefaultAsync(x => x.Key == "auth-guard");
+            var app =
+                await
+                    context
+                        .Set<App>()
+                        .Include(x => x.ExternalProviders)
+                            .ThenInclude(x => x.ExternalProvider)
+                        .FirstOrDefaultAsync(x => x.Key == "auth-guard")
+                        ?? throw new ArgumentException("'auth-guard' app is missed in DataBase. Please add it to DataBase.");
+
             return Map(app);
         }
 
@@ -144,6 +168,7 @@ namespace AuthGuard.Services.Apps
         {
             return new AppVm
             {
+                Id = app.Id,
                 Key = app.Key,
                 IsLocalAccountEnabled = app.IsLocalAccountEnabled,
                 Name = app.DisplayName,
@@ -151,18 +176,18 @@ namespace AuthGuard.Services.Apps
                 IsSecurityQuestionsEnabled = app.IsSecurityQuestionsEnabled,
                 EmailSettings = new LocalAccountSettingsVm
                 {
-                    IsEnabled = app.EmailSettings.IsEnabled,
-                    IsPasswordEnabled = app.EmailSettings.IsPasswordEnabled,
-                    IsSearchRelatedProviderEnabled = app.EmailSettings.IsSearchRelatedProviderEnabled,
-                    IsConfirmationRequired = app.EmailSettings.IsConfirmationRequired,
-                    IsPasswordlessEnabled = app.EmailSettings.IsPasswordlessEnabled
+                    IsEnabled = app.IsEmailEnabled,
+                    IsPasswordEnabled = app.IsEmailPasswordEnabled,
+                    IsSearchRelatedProviderEnabled = app.IsEmailSearchRelatedProviderEnabled,
+                    IsConfirmationRequired = app.IsEmailConfirmationRequired,
+                    IsPasswordlessEnabled = app.IsEmailPasswordlessEnabled
                 },
                 PhoneSettings = new LocalAccountSettingsVm
                 {
-                    IsEnabled = app.PhoneSettings.IsEnabled,
-                    IsPasswordEnabled = app.PhoneSettings.IsPasswordEnabled,
-                    IsConfirmationRequired = app.PhoneSettings.IsConfirmationRequired,
-                    IsPasswordlessEnabled = app.PhoneSettings.IsPasswordlessEnabled
+                    IsEnabled = app.IsPhoneEnabled,
+                    IsPasswordEnabled = app.IsPhonePasswordEnabled,
+                    IsConfirmationRequired = app.IsPhoneConfirmationRequired,
+                    IsPasswordlessEnabled = app.IsPhonePasswordlessEnabled
                 },
                 ExternalProviders =
                     app
@@ -190,18 +215,18 @@ namespace AuthGuard.Services.Apps
                 WebsiteUrl = app.WebsiteUrl,
                 EmailSettings = new LocalAccountSettingsVm
                 {
-                    IsEnabled = app.EmailSettings.IsEnabled,
-                    IsPasswordEnabled = app.EmailSettings.IsPasswordEnabled,
-                    IsSearchRelatedProviderEnabled = app.EmailSettings.IsSearchRelatedProviderEnabled,
-                    IsConfirmationRequired = app.EmailSettings.IsConfirmationRequired,
-                    IsPasswordlessEnabled = app.EmailSettings.IsPasswordlessEnabled
+                    IsEnabled = app.IsEmailEnabled,
+                    IsPasswordEnabled = app.IsEmailPasswordEnabled,
+                    IsSearchRelatedProviderEnabled = app.IsEmailSearchRelatedProviderEnabled,
+                    IsConfirmationRequired = app.IsEmailConfirmationRequired,
+                    IsPasswordlessEnabled = app.IsEmailPasswordlessEnabled
                 },
                 PhoneSettings = new LocalAccountSettingsVm
                 {
-                    IsEnabled = app.PhoneSettings.IsEnabled,
-                    IsPasswordEnabled = app.PhoneSettings.IsPasswordEnabled,
-                    IsConfirmationRequired = app.PhoneSettings.IsConfirmationRequired,
-                    IsPasswordlessEnabled = app.PhoneSettings.IsPasswordlessEnabled
+                    IsEnabled = app.IsPhoneEnabled,
+                    IsPasswordEnabled = app.IsPhonePasswordEnabled,
+                    IsConfirmationRequired = app.IsPhoneConfirmationRequired,
+                    IsPasswordlessEnabled = app.IsPhonePasswordlessEnabled
                 },
                 ExternalProviders =
                     app

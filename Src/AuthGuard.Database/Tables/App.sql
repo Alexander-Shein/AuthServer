@@ -24,5 +24,5 @@
 	[IsPhoneConfirmationRequired]			[BIT]				NOT NULL DEFAULT(0),
 
 	CONSTRAINT [PK_App_Id] PRIMARY KEY CLUSTERED([Id] ASC),
-	--CONSTRAINT [FK_App_UserId_User_Id] FOREIGN KEY([UserId]) REFERENCES [dbo].[AspNetUsers] ([Id])
+	CONSTRAINT [FK_App_UserId_User_Id] FOREIGN KEY([UserId]) REFERENCES [dbo].[AspNetUsers] ([Id])
 )

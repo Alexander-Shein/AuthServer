@@ -26,7 +26,7 @@ namespace AuthGuard.Api
                 return Ok(await appsService.GetAuthGuardApp());
             }
 
-            return Ok(await appsService.Search(returnUrl));
+            return Ok(await appsService.SearchAsync(returnUrl));
         }
 
         [Authorize]
@@ -40,7 +40,7 @@ namespace AuthGuard.Api
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAsync(Guid id, [FromBody] ExtendedAppIm im)
         {
-            var result = await appsService.Put(id, im);
+            var result = await appsService.PutAsync(id, im);
 
             if (result.OperationResult.IsNotSucceed)
             {
@@ -54,7 +54,7 @@ namespace AuthGuard.Api
         [HttpGet("")]
         public async Task<IActionResult> GetAllAsync()
         {
-            var result = await appsService.GetAll();
+            var result = await appsService.GetAllAsync();
             return Ok(result);
         }
 
@@ -62,7 +62,7 @@ namespace AuthGuard.Api
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(Guid id)
         {
-            var result = await appsService.Get(id);
+            var result = await appsService.GetAsync(id);
             return Ok(result);
         }
     }

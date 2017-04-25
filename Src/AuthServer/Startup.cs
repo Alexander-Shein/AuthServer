@@ -8,6 +8,7 @@ using AuthGuard.Services.TwoFactor;
 using AuthGuard.Services.Users;
 using DddCore.Contracts.Crosscutting.UserContext;
 using DddCore.Crosscutting.UserContext;
+using IdentityServer4.Stores;
 using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -73,18 +74,17 @@ namespace AuthGuard
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<ISupportWorkflowService, SupportWorkflowService>();
             services.AddScoped<ITwoFactorsService, TwoFactorsService>();
-            services.AddScoped<IAppsService, AppsService>();
             services.AddScoped<IUserContext<Guid>, IdentityUserContext>();
+            services.AddScoped<IClientStore, ClientsStore>();
+            services.AddScoped<IAppsService, AppsService>();
+            services.AddScoped<IRedirectUriValidator, AppRedirectUrlValidator>();
 
             services.AddIdentityServer()
-                .AddClientStoreCache<AppsService>()
                 .AddTemporarySigningCredential()
                 .AddInMemoryPersistedGrants()
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApiResources())
-                //.AddInMemoryClients(Config.GetClients())
-                .AddAspNetIdentity<ApplicationUser>()
-                .Services.AddScoped<IRedirectUriValidator, AppRedirectUrlValidator>();
+                .AddAspNetIdentity<ApplicationUser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -104,6 +104,7 @@ namespace AuthGuard
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseDefaultFiles();
             app.UseStaticFiles();
 
             app.UseIdentity();

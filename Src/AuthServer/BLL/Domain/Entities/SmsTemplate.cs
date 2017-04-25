@@ -11,13 +11,14 @@ namespace AuthGuard.BLL.Domain.Entities
         public string FromPhoneNumber { get; set; }
         public bool IsActive { get; set; }
 
-        public Sms Render(IDictionary<string, string> parameters)
+        public Sms Render(string toPhoneNumber, IDictionary<string, string> parameters)
         {
             var result = new Sms
             {
                 Message = ApplyParameters(MessageTemplate, parameters),
                 CreatedAt = DateTime.UtcNow,
-                FromPhoneNumber = FromPhoneNumber
+                FromPhoneNumber = FromPhoneNumber,
+                ToPhoneNumber = toPhoneNumber
             };
 
             return result;
