@@ -1,18 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Threading.Tasks;
-using AuthGuard.BLL.Domain.Entities;
-using AuthGuard.Services;
-using AuthGuard.Services.Account;
-using IdentityServer4.Services;
-using IdentityServer4.Stores;
+using AuthGuard.Services.Apps;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using ExternalProvider = AuthGuard.BLL.Domain.Entities.ExternalProvider;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace AuthGuard.Api
 {
@@ -20,110 +11,59 @@ namespace AuthGuard.Api
     [Route("api/[controller]")]
     public class AppsController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IEmailSender _emailSender;
-        private readonly ISmsSender _smsSender;
-        private readonly ILogger _logger;
-        private readonly IIdentityServerInteractionService _interaction;
-        private readonly IClientStore _clientStore;
-        private readonly AccountService _account;
+        readonly IAppsService appsService;
 
-        public AppsController(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            IEmailSender emailSender,
-            ISmsSender smsSender,
-            ILoggerFactory loggerFactory,
-            IIdentityServerInteractionService interaction,
-            IHttpContextAccessor httpContext,
-            IClientStore clientStore)
+        public AppsController(IAppsService appsService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _emailSender = emailSender;
-            _smsSender = smsSender;
-            _logger = loggerFactory.CreateLogger<AppsController>();
-            _interaction = interaction;
-            _clientStore = clientStore;
-
-            _account = new AccountService(interaction, httpContext, clientStore);
+            this.appsService = appsService;
         }
 
-        [HttpGet]
-        [Route("search")]
-        public async Task<IActionResult> Get(string returnUrl)
+        [HttpGet("search")]
+        public async Task<IActionResult> Search(string returnUrl)
         {
-            var vm = await _account.BuildLoginViewModelAsync(returnUrl);
-
-            return Ok(new AppVm
+            if (String.IsNullOrWhiteSpace(returnUrl))
             {
-                Name = vm.Client?.ClientName ?? "AuthGuard",
-                Key = vm.Client?.ClientId ?? "auth-guard",
-                IsLocalAccountEnabled = vm.EnableLocalLogin,
-                IsRememberLogInEnabled = true,
-                ExternalProviders = vm.ExternalProviders,
-                EmailSettings = new LocalAccountSettings
-                {
-                    IsEnabled = true,
-                    IsPasswordlessEnabled = true,
-                    IsPasswordEnabled = true,
-                    IsSearchRelatedProviderEnabled = true,
-                    IsConfirmationRequired = true
-                },
-                PhoneSettings = new LocalAccountSettings
-                {
-                    IsEnabled = true,
-                    IsPasswordlessEnabled = true,
-                    IsPasswordEnabled = true
-                }
-            });
+                return Ok(await appsService.GetAuthGuardApp());
+            }
+
+            return Ok(await appsService.Search(returnUrl));
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [Authorize]
+        [HttpPost("")]
+        public async Task<IActionResult> Post([FromBody] ExtendedAppIm im)
         {
-            return "value";
+            return await Put(Guid.NewGuid(), im);
         }
 
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT api/values/5
+        [Authorize]
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public async Task<IActionResult> Put(Guid id, [FromBody] ExtendedAppIm im)
         {
+            var result = await appsService.Put(id, im);
+
+            if (result.OperationResult.IsNotSucceed)
+            {
+                return BadRequest(result.OperationResult.Errors);
+            }
+
+            return Ok(result.App);
         }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [Authorize]
+        [HttpGet("")]
+        public async Task<IActionResult> GetAll()
         {
+            var result = await appsService.GetAll();
+            return Ok(result);
         }
-    }
 
-    public class AppVm
-    {
-        public string Name { get; set; }
-        public string Key { get; set; }
-        public bool IsLocalAccountEnabled { get; set; }
-        public bool IsRememberLogInEnabled { get; set; }
-        public bool IsSecurityQuestionsEnabled { get; set; }
-        public LocalAccountSettings EmailSettings { get; set; }
-        public LocalAccountSettings PhoneSettings { get; set; }
-        public IEnumerable<ExternalProvider> ExternalProviders { get; set; }
-    }
-
-    public class LocalAccountSettings
-    {
-        public bool IsEnabled { get; set; }
-        public bool IsPasswordlessEnabled { get; set; }
-        public bool IsPasswordEnabled { get; set; }
-        public bool IsConfirmationRequired { get; set; }
-        public bool IsSearchRelatedProviderEnabled { get; set; }
+        [Authorize]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(Guid id)
+        {
+            var result = await appsService.Get(id);
+            return Ok(result);
+        }
     }
 }

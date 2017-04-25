@@ -82,6 +82,46 @@ namespace AuthGuard.Data
 
                 b.ToTable("SmsTemplate");
             });
+
+            builder.Entity<App>(b =>
+            {
+                b.HasKey(x => x.Id);
+                b.Property(x => x.UserId);
+
+                b.Property(x => x.IsActive);
+                b.Property(x => x.DisplayName);
+                b.Property(x => x.IsLocalAccountEnabled);
+                b.Property(x => x.Key);
+                b.Property(x => x.WebsiteUrl);
+                b.Property(x => x.CreatedAt);
+                b.Property(x => x.IsRememberLogInEnabled);
+                b.Property(x => x.UsersCount);
+                b.Property(x => x.EmailSettings.IsEnabled).HasColumnName("IsEmailEnabled");
+                b.Property(x => x.EmailSettings.IsConfirmationRequired).HasColumnName("IsEmailConfirmationRequired");
+                b.Property(x => x.EmailSettings.IsPasswordEnabled).HasColumnName("IsEmailPasswordEnabled");
+                b.Property(x => x.EmailSettings.IsPasswordlessEnabled).HasColumnName("IsEmailPasswordlessEnabled");
+                b.Property(x => x.EmailSettings.IsSearchRelatedProviderEnabled).HasColumnName("IsEmailSearchRelatedProviderEnabled");
+
+                b.Property(x => x.PhoneSettings.IsEnabled).HasColumnName("IsPhoneEnabled");
+                b.Property(x => x.PhoneSettings.IsConfirmationRequired).HasColumnName("IsPhoneConfirmationRequired");
+                b.Property(x => x.PhoneSettings.IsPasswordEnabled).HasColumnName("IsPhonePasswordEnabled");
+                b.Property(x => x.PhoneSettings.IsPasswordlessEnabled).HasColumnName("IsPhonePasswordlessEnabled");
+
+                b.HasMany(x => x.ExternalProviders).WithOne().HasForeignKey(x => x.AppId);
+            });
+
+            builder.Entity<AppExternalProvider>(b =>
+            {
+                b.HasKey(x => x.Id);
+                b.HasOne(x => x.ExternalProvider).WithMany().HasForeignKey(x => x.ExternalProviderId);
+            });
+
+            builder.Entity<ExternalProvider>(b =>
+            {
+                b.HasKey(x => x.Id);
+                b.Property(x => x.DisplayName);
+                b.Property(x => x.AuthenticationScheme);
+            });
         }
     }
 }

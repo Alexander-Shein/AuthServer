@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Services;
-using AuthGuard.Services.Account;
 using AuthGuard.Services.Users;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
@@ -30,7 +29,6 @@ namespace AuthGuard.Api
         private readonly ILogger _logger;
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IClientStore _clientStore;
-        private readonly AccountService _account;
         private readonly IUsersService usersService;
 
         public AuthController(
@@ -52,8 +50,6 @@ namespace AuthGuard.Api
             _interaction = interaction;
             _clientStore = clientStore;
             this.usersService = usersService;
-
-            _account = new AccountService(interaction, httpContext, clientStore);
         }
 
         [HttpPost]

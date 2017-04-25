@@ -1,9 +1,14 @@
-﻿using AuthGuard.BLL.Domain.Entities;
+﻿using System;
+using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
 using AuthGuard.Services;
+using AuthGuard.Services.Apps;
 using AuthGuard.Services.Support;
 using AuthGuard.Services.TwoFactor;
 using AuthGuard.Services.Users;
+using DddCore.Contracts.Crosscutting.UserContext;
+using DddCore.Crosscutting.UserContext;
+using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -68,14 +73,18 @@ namespace AuthGuard
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<ISupportWorkflowService, SupportWorkflowService>();
             services.AddScoped<ITwoFactorsService, TwoFactorsService>();
+            services.AddScoped<IAppsService, AppsService>();
+            services.AddScoped<IUserContext<Guid>, IdentityUserContext>();
 
             services.AddIdentityServer()
+                .AddClientStoreCache<AppsService>()
                 .AddTemporarySigningCredential()
                 .AddInMemoryPersistedGrants()
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApiResources())
-                .AddInMemoryClients(Config.GetClients())
-                .AddAspNetIdentity<ApplicationUser>();
+                //.AddInMemoryClients(Config.GetClients())
+                .AddAspNetIdentity<ApplicationUser>()
+                .Services.AddScoped<IRedirectUriValidator, AppRedirectUrlValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
