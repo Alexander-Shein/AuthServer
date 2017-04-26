@@ -1,6 +1,7 @@
 import {Response} from '@angular/http';
 import {Observable} from "rxjs";
 import {NotificationsService} from "angular2-notifications";
+import {Error} from "../common/error";
 
 
 export abstract class ServiceBase {
@@ -14,20 +15,24 @@ export abstract class ServiceBase {
         return body || { };
     }
 
-    protected handleError(error: Response | any) {
-        let errMsg: string;
-        if (error instanceof Response) {
-            const body = error.json() || '';
-            const err = body.error || JSON.stringify(body);
-            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+    protected handleError(response: Response | any) {
+        let errors: Error[];
+        let errMsg: string = '';
+
+        if (response instanceof Response) {
+            errors = response.json() || [];
+
+            for (let error of errors) {
+                errMsg += `Code: ${error.code} - ${error.description} \r\n`;
+            }
         } else {
-            errMsg = error.message ? error.message : error.toString();
+            errMsg = response.toString();
         }
 
         this.notificationsService
             .error('Failed.', errMsg);
 
-        return Observable.throw(errMsg);
+        return Observable.throw(errors);
     }
 
 }

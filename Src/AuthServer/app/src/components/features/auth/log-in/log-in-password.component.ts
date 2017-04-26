@@ -6,6 +6,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {AuthenticationService} from "../services/authentication.service";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {LogInResult} from "../models/log-in-result";
+import {Error} from "../../../common/error";
 
 
 @Component({
@@ -38,6 +39,9 @@ import {LogInResult} from "../models/log-in-result";
                                     Min length is 6 characters for password.
                                 </span>
                             </md-hint>
+                            <md-hint *ngIf="isInvalidPasswordAttempt()" style="color: red;">
+                                <span>Invalid log in attempt.</span>
+                            </md-hint>
                             <au-show-hide-password [password]="password"></au-show-hide-password>
                         </md-input-container>
                     </div>
@@ -46,7 +50,7 @@ import {LogInResult} from "../models/log-in-result";
                     <div class="col">
                         <button
                                 class="w-100"
-                                [disabled]="!logInForm.form.valid"
+                                [disabled]="!logInForm.form.valid || isInvalidPasswordAttempt()"
                                 md-raised-button color="primary">log in</button>
                     </div>
                 </div>
@@ -93,6 +97,19 @@ export class LogInPasswordComponent extends AuthBaseComponent {
     @Input()
     public app: AppVm;
 
+    public isInvalidPasswordAttempt(): boolean {
+
+        for (let passwordAttempt of this.invalidPasswordAttempts) {
+            if (passwordAttempt === this.logIn.password) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private invalidPasswordAttempts: string[] = [];
+
     public onSubmit() {
         this.spinnerService.show();
 
@@ -113,7 +130,17 @@ export class LogInPasswordComponent extends AuthBaseComponent {
                 }
 
                 this.redirectAfterLogin();
-            }, () => this.spinnerService.hide());
+            }, (errors: Error[]) => {
+
+                for (let error of errors) {
+                    if (error.code === 1) {
+                        this.invalidPasswordAttempts.push(this.logIn.password);
+                        break;
+                    }
+                }
+
+                this.spinnerService.hide();
+            });
     }
 
 }

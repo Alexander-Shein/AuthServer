@@ -143,11 +143,14 @@ namespace AuthGuard.Api
 
                 logger.LogInformation(3, "User created a new account with password.");
 
+                app.UsersCount++;
+                context.Set<App>().Update(app);
+
                 await context.SaveChangesAsync();
                 return Ok(signUpResult);
             }
 
-            return BadRequest(new BadRequestResult(result.Errors.First().Description));
+            return BadRequest(result.Errors);
         }
 
         [HttpPost]
@@ -279,7 +282,7 @@ namespace AuthGuard.Api
                 return Ok();
             }
 
-            return BadRequest(new BadRequestResult(result.Errors.First().Description));
+            return BadRequest(result.Errors);
         }
 
         [Authorize]
@@ -353,18 +356,6 @@ namespace AuthGuard.Api
     public class LogInResultVm
     {
         public bool RequiresTwoFactor { get; set; }
-    }
-
-    public class BadRequestResult
-    {
-        public BadRequestResult() { }
-
-        public BadRequestResult(string message)
-        {
-            Error = message;
-        }
-
-        public string Error { get; set; }
     }
 
     public class SendCodeIm

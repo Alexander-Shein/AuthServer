@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
+using AuthGuard.Data;
 using AuthGuard.Services;
 using AuthGuard.Services.Users;
+using DddCore.Contracts.BLL.Errors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
@@ -18,23 +19,26 @@ namespace AuthGuard.Api
     public class PasswordsController : Controller
     {
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IEmailSender _emailSender;
-        private readonly ISmsSender _smsSender;
+        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly IEmailSender emailSender;
+        private readonly ISmsSender smsSender;
         private readonly IUsersService usersService;
+        readonly ApplicationDbContext context;
 
         public PasswordsController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
             ISmsSender smsSender,
-            IUsersService usersService)
+            IUsersService usersService,
+            ApplicationDbContext context)
         {
             this.userManager = userManager;
-            _signInManager = signInManager;
-            _emailSender = emailSender;
-            _smsSender = smsSender;
+            this.signInManager = signInManager;
+            this.emailSender = emailSender;
+            this.smsSender = smsSender;
             this.usersService = usersService;
+            this.context = context;
         }
 
         [HttpPost]
@@ -43,14 +47,20 @@ namespace AuthGuard.Api
         {
             if (String.IsNullOrWhiteSpace(im.UserName))
             {
-                return BadRequest(new BadRequestResult($"Invalid user name."));
+                return BadRequest(new List<Error>
+                {
+                    new Error {Code = 1, Description = "Invalid user name."}
+                });
             }
 
             var user = await usersService.GetUserByEmailOrPhoneAsync(im.UserName);
 
             if (user == null)
             {
-                return BadRequest(new BadRequestResult($"User with '{im.UserName}' doesn't exist."));
+                return BadRequest(new List<Error>
+                {
+                    new Error {Code = 2, Description = $"User with '{im.UserName}' doesn't exist."}
+                });
             }
 
             var isEmail = im.UserName.Contains("@");
@@ -65,13 +75,16 @@ namespace AuthGuard.Api
 
             if (isEmail)
             {
-                await _emailSender.SendEmailAsync(user.Email, Template.ResetPassword, parameters);
+                var email = await emailSender.SendEmailAsync(user.Email, Template.ResetPassword, parameters);
+                context.Set<Email>().Add(email);
             }
             else
             {
-                await _smsSender.SendSmsAsync(user.PhoneNumber, Template.ResetPassword, parameters);
+                var sms = await smsSender.SendSmsAsync(user.PhoneNumber, Template.ResetPassword, parameters);
+                context.Set<Sms>().Add(sms);
             }
 
+            await context.SaveChangesAsync();
             return Ok();
         }
 
@@ -83,17 +96,20 @@ namespace AuthGuard.Api
 
             if (user == null)
             {
-                return BadRequest(new BadRequestResult($"User with '{im.UserName}' doesn't exist."));
+                return BadRequest(new List<Error>
+                {
+                    new Error {Code = 1, Description = $"User with '{im.UserName}' doesn't exist."}
+                });
             }
 
             var result = await userManager.ResetPasswordAsync(user, im.Code, im.Password);
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, false);
+                await signInManager.SignInAsync(user, false);
                 return Ok();
             }
 
-            return BadRequest(new BadRequestResult(result.Errors.First().Description));
+            return BadRequest(result.Errors);
         }
 
         [HttpPut]
@@ -106,13 +122,11 @@ namespace AuthGuard.Api
             var result = await userManager.ChangePasswordAsync(user, im.OldPassword, im.Password);
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                await signInManager.SignInAsync(user, isPersistent: false);
                 return Ok();
             }
-            else
-            {
-                return BadRequest(new BadRequestResult(result.Errors.First().Description));
-            }
+
+            return BadRequest(result.Errors);
         }
 
         [HttpPost]
@@ -123,13 +137,11 @@ namespace AuthGuard.Api
             var result = await userManager.AddPasswordAsync(user, im.Password);
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                await signInManager.SignInAsync(user, isPersistent: false);
                 return Ok();
             }
-            else
-            {
-                return BadRequest(new BadRequestResult(result.Errors.First().Description));
-            }
+
+            return BadRequest(result.Errors);
         }
     }
 

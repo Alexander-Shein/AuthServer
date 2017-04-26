@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using AuthGuard.Services.Users;
 using AuthGuard.Services.Users.Models.Input;
@@ -63,7 +62,7 @@ namespace AuthGuard.Api
 
             if (!result.Succeeded)
             {
-                return BadRequest(new BadRequestResult(result.Errors.First().Description));
+                return BadRequest(result.Errors);
             }
 
             return Redirect(redirectUrl);
@@ -85,7 +84,7 @@ namespace AuthGuard.Api
 
             if (!result.Succeeded)
             {
-                return BadRequest(new BadRequestResult(result.Errors.First().Description));
+                return BadRequest(result.Errors);
             }
 
             return Ok();

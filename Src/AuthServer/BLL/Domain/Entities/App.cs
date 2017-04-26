@@ -24,6 +24,7 @@ namespace AuthGuard.BLL.Domain.Entities
         public bool IsEmailPasswordEnabled { get; set; }
         public bool IsEmailPasswordlessEnabled { get; set; }
         public bool IsEmailSearchRelatedProviderEnabled { get; set; }
+
         public bool IsPhoneEnabled { get; set; }
         public bool IsPhoneConfirmationRequired { get; set; }
         public bool IsPhonePasswordEnabled { get; set; }
