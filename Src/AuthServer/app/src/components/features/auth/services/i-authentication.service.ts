@@ -4,6 +4,7 @@ import {LogInResult} from "../models/log-in-result";
 import {ExternalLogIn} from "../models/external-log-in";
 import {SignUp} from "../models/sign-up";
 import {Observable} from "rxjs";
+import {SignUpResult} from "../models/sign-up-result";
 
 
 export interface IAuthenticationService {
@@ -12,7 +13,7 @@ export interface IAuthenticationService {
     observeIsLoggedIn(): EventEmitter<boolean>;
 
     logIn(logIn: LogIn): Observable<LogInResult>;
-    signUp(signUp: SignUp, redirectUrl: string): Observable<void>;
+    signUp(signUp: SignUp, redirectUrl: string): Observable<SignUpResult>;
 
     externalLogIn(externalLogIn: ExternalLogIn): void;
     externalSignUp(signUp: SignUp): Promise<void>;

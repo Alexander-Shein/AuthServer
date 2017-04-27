@@ -27,6 +27,7 @@ export class CreateAppPageComponent implements OnInit {
 
     public ngOnInit(): void {
         this.vm = {
+            id: '1',
             isActive: true,
             name: '',
             key: '',

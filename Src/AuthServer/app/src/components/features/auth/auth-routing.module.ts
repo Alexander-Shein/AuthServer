@@ -37,7 +37,7 @@ export const AuthRoutes: Routes = [
     {path: 'add-phone', component: AddPhonePageComponent, canActivate: [LoggedInGuard]},
     {path: 'add-email', component: AddEmailPageComponent, canActivate: [LoggedInGuard]},
     {path: 'email-confirmation', component: EmailConfirmationPageComponent},
-    {path: 'account-confirmation', component: AccountConfirmationPageComponent, canActivate: [LoggedInGuard]},
+    {path: 'account-confirmation', component: AccountConfirmationPageComponent},
     {
         path: 'two-factor',
         component: TwoFactorPageComponent,

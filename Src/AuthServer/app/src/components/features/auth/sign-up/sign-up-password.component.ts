@@ -5,6 +5,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {AuthenticationService} from "../services/authentication.service";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {SignUp} from "../models/sign-up";
+import {SignUpResult} from "../models/sign-up-result";
 
 
 @Component({
@@ -96,18 +97,20 @@ export class SignUpPasswordComponent extends AuthBaseComponent {
     @Input()
     public app: AppVm;
 
+    public ngOnInit() {
+        this.signUp.appId = this.app.id;
+        super.ngOnInit();
+    }
+
     public onSubmit() {
         this.spinnerService.show();
 
         this.authenticationService
             .signUp(this.signUp, this.redirectUrl || 'http://localhost:5000/dashboard')
             .subscribe(
-                () => {
-                    let isEmail = this.signUp.userName.indexOf('@') > -1;
+                (signUpResult: SignUpResult) => {
 
-                    if (
-                        (isEmail && this.app.emailSettings.isConfirmationRequired) ||
-                        (!isEmail && this.app.phoneSettings.isConfirmationRequired)) {
+                    if (signUpResult.isConfirmationRequired) {
                         this.router
                             .navigate(['account-confirmation', {
                                 userName: this.signUp.userName

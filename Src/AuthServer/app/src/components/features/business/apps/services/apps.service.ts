@@ -27,6 +27,7 @@ export class AppsService extends ServiceBase implements IAppsService {
         return new Promise<App[]>((resolve) =>
             setTimeout(() => resolve([
                 {
+                    id: '1',
                     isActive: true,
                     name: 'test-app',
                     isLocalAccountEnabled: true,
@@ -52,6 +53,7 @@ export class AppsService extends ServiceBase implements IAppsService {
                     }
                 },
                 {
+                    id: '1',
                     isActive: true,
                     name: 'staging-app',
                     isLocalAccountEnabled: true,
@@ -77,6 +79,7 @@ export class AppsService extends ServiceBase implements IAppsService {
                     }
                 },
                 {
+                    id: '1',
                     isActive: true,
                     name: 'production-app',
                     isLocalAccountEnabled: true,
@@ -107,6 +110,7 @@ export class AppsService extends ServiceBase implements IAppsService {
     public put(app: App): Promise<App> {
         return new Promise<App>((resolve) =>
             setTimeout(() => resolve({
+                id: '1',
                 isActive: true,
                 name: name,
                 isLocalAccountEnabled: true,
@@ -146,6 +150,7 @@ export class AppsService extends ServiceBase implements IAppsService {
     public get(name: string): Promise<App> {
         return new Promise<App>((resolve) =>
             setTimeout(() => resolve({
+                id: '1',
                 isActive: true,
                 name: name,
                 key: 'client-id',

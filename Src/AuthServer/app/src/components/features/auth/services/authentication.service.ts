@@ -12,6 +12,7 @@ import {LocalStorageService} from "ng2-webstorage";
 import {Consts} from "../../../consts";
 import {ServiceBase} from "../../../common/base.service";
 import {NotificationsService} from "angular2-notifications";
+import {SignUpResult} from "../models/sign-up-result";
 
 
 @Injectable()
@@ -72,10 +73,18 @@ export class AuthenticationService extends ServiceBase implements IAuthenticatio
         form.submit();
     }
 
-    public signUp(signUp: SignUp, redirectUrl: string): Observable<void> {
+    public signUp(signUp: SignUp, redirectUrl: string): Observable<SignUpResult> {
         return this.http
             .post(this.apiUrl + 'sign-up?redirectUrl=' + encodeURIComponent(redirectUrl), signUp)
-            .map(() => this.updateLoggedIn(true))
+            .map((result) => {
+                let parsedResult = this.extractData(result);
+
+                if (!parsedResult.isConfirmationRequired) {
+                    this.updateLoggedIn(true);
+                }
+
+                return parsedResult;
+            })
             .catch((error) => this.handleError(error));
     }
 

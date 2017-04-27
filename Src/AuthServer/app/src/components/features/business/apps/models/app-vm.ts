@@ -4,6 +4,7 @@ import {LocalAccountSettings} from "./local-account-settings";
 
 export class AppVm {
 
+    public id: string;
     public name: string;
     public key: string;
     public isLocalAccountEnabled: boolean;

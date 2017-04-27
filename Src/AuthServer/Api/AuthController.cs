@@ -102,12 +102,12 @@ namespace AuthGuard.Api
 
                 if (isEmail)
                 {
-                    ++code;
+                    code++;
                     provider = "email";
                 }
                 else
                 {
-                    --code;
+                    code--;
                     provider = "phone";
                 }
 
