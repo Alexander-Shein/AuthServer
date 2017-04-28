@@ -7,6 +7,7 @@ import {NotificationsService} from "angular2-notifications";
 import {Http} from "@angular/http";
 import {UserIm} from "../models/user-im";
 import {VerificationCode} from "../manage-passwords/models/verification-code";
+import {AuthenticationService} from "./authentication.service";
 
 
 @Injectable()
@@ -16,6 +17,7 @@ export class UsersService extends ServiceBase implements IUsersService {
 
     constructor(
         private http: Http,
+        private authenticationService: AuthenticationService,
         notificationsService: NotificationsService)
     {
         super(notificationsService);
@@ -47,6 +49,7 @@ export class UsersService extends ServiceBase implements IUsersService {
     public confirmAccount(im: VerificationCode, provider: string): Observable<void> {
         return this.http
             .put(this.apiUrl + 'me/providers/' + provider + '/confirmed', im)
+            .map(() => this.authenticationService.updateLoggedIn(true))
             .catch((error) => this.handleError(error));
     }
 

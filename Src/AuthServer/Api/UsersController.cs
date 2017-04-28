@@ -56,11 +56,10 @@ namespace AuthGuard.Api
             var result = await usersService.ConfirmAccountAsync(new ConfirmAccountIm
             {
                 Code = code,
-                Provider = provider,
-                UserId = userId
+                Provider = provider
             });
 
-            if (!result.Succeeded)
+            if (result.IsNotSucceed)
             {
                 return BadRequest(result.Errors);
             }
@@ -69,20 +68,16 @@ namespace AuthGuard.Api
         }
 
         [HttpPut]
-        [Authorize]
         [Route("me/providers/{provider}/confirmed")]
         public async Task<IActionResult> ConfirmAccountAsync([FromBody] ConfirmationCodeIm im, string provider)
         {
-            var user = await usersService.GetCurrentUserAsync(HttpContext.User);
-
             var result = await usersService.ConfirmAccountAsync(new ConfirmAccountIm
             {
                 Code = im.Code,
-                Provider = provider,
-                UserId = user.Id
+                Provider = provider
             });
 
-            if (!result.Succeeded)
+            if (result.IsNotSucceed)
             {
                 return BadRequest(result.Errors);
             }

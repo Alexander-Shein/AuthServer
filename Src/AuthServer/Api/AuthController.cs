@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
 using AuthGuard.Services;
+using AuthGuard.Services.Tokens;
 using AuthGuard.Services.Users;
 using DddCore.Contracts.BLL.Errors;
 using IdentityServer4.Services;
@@ -31,6 +32,7 @@ namespace AuthGuard.Api
         private readonly ILogger logger;
         private readonly IUsersService usersService;
         readonly ApplicationDbContext context;
+        readonly ITokensService tokensService;
 
         public AuthController(
             UserManager<ApplicationUser> userManager,
@@ -41,7 +43,9 @@ namespace AuthGuard.Api
             IIdentityServerInteractionService interaction,
             IHttpContextAccessor httpContext,
             IClientStore clientStore,
-            IUsersService usersService, ApplicationDbContext context)
+            IUsersService usersService,
+            ApplicationDbContext context,
+            ITokensService tokensService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -50,11 +54,12 @@ namespace AuthGuard.Api
             logger = loggerFactory.CreateLogger<AppsController>();
             this.usersService = usersService;
             this.context = context;
+            this.tokensService = tokensService;
         }
 
         [HttpPost]
         [Route("sign-up")]
-        public async Task<IActionResult> SignUpAsync([FromBody] SignUpIm im, string redirectUrl)
+        public async Task<IActionResult> SignUpAsync([FromBody] SignUpIm im)
         {
             if (String.IsNullOrWhiteSpace(im?.UserName) || String.IsNullOrWhiteSpace(im.Password))
             {
@@ -97,25 +102,20 @@ namespace AuthGuard.Api
             var result = await userManager.CreateAsync(user, im.Password);
             if (result.Succeeded)
             {
-                var code = user.Id.GetHashCode();
-                string provider;
-
-                if (isEmail)
+                var tokenData = new TokenData
                 {
-                    code++;
-                    provider = "email";
-                }
-                else
-                {
-                    code--;
-                    provider = "phone";
-                }
+                    Id = Guid.Parse(user.Id),
+                    DateTime = DateTime.UtcNow
+                };
 
-                var callbackUrl = $"http://localhost:5000/api/users/{user.Id}/providers/{provider}/confirmed?code={code}&redirectUrl={WebUtility.UrlEncode(redirectUrl)}";
+                var code = tokensService.Encode(tokenData);
+                //var provider = isEmail ? "email" : "phone";
+
+                var callbackUrl = im.AccountConfirmationUrl.Replace("{code}", code);// $"http://localhost:5000/api/users/{user.Id}/providers/{provider}/confirmed?code={code}&redirectUrl={WebUtility.UrlEncode(redirectUrl)}";
 
                 var parameters = new Dictionary<string, string>
                 {
-                    {"Code", code.ToString()},
+                    {"Code", code},
                     {"CallbackUrl", callbackUrl}
                 };
 
@@ -132,7 +132,7 @@ namespace AuthGuard.Api
 
                 var signUpResult = new SignUpResultVm();
 
-                if ((isEmail && !app.IsEmailConfirmationRequired) || (!isEmail && !app.IsPhoneConfirmationRequired))
+                if (isEmail && !app.IsEmailConfirmationRequired || !isEmail && !app.IsPhoneConfirmationRequired)
                 {
                     await signInManager.SignInAsync(user, isPersistent: false);
                 }
@@ -340,6 +340,7 @@ namespace AuthGuard.Api
         public Guid AppId { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
+        public string AccountConfirmationUrl { get; set; }
     }
 
     public class SignUpResultVm

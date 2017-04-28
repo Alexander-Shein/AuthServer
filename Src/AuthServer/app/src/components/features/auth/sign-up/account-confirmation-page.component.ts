@@ -78,20 +78,32 @@ export class AccountConfirmationPageComponent extends AuthBaseComponent {
         route: ActivatedRoute,
         router: Router,
         spinnerService: SpinnerService,
-        private usersService: UsersService
-    ) {
+        private usersService: UsersService) {
         super(route, router, spinnerService);
     }
 
     public ngOnInit(): void {
+        super.ngOnInit();
+
         this.route
             .params
             .subscribe((params: Params) => {
-                this.userName = params[Consts.UserName];
-                this.isEmail = this.userName.indexOf('@') > -1;
-            });
 
-        super.ngOnInit();
+                let code = params[Consts.Code];
+
+                if (code) {
+                    this.im.code = code;
+
+                    let provider = params[Consts.Provider] || '';
+                    this.isEmail = provider.toLowerCase() !== 'phone';
+
+                    this.confirmAccount();
+
+                } else {
+                    this.userName = params[Consts.UserName];
+                    this.isEmail = this.userName.indexOf('@') > -1;
+                }
+            });
     }
 
     public userName: string;

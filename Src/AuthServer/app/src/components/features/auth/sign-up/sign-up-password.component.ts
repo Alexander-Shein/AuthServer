@@ -6,6 +6,7 @@ import {AuthenticationService} from "../services/authentication.service";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {SignUp} from "../models/sign-up";
 import {SignUpResult} from "../models/sign-up-result";
+import {Consts} from "../../../consts";
 
 
 @Component({
@@ -103,10 +104,12 @@ export class SignUpPasswordComponent extends AuthBaseComponent {
     }
 
     public onSubmit() {
+        this.signUp.accountConfirmationUrl = this.buildAccountConfirmationUrl();
+
         this.spinnerService.show();
 
         this.authenticationService
-            .signUp(this.signUp, this.redirectUrl || 'http://localhost:5000/dashboard')
+            .signUp(this.signUp)
             .subscribe(
                 (signUpResult: SignUpResult) => {
 
@@ -122,6 +125,19 @@ export class SignUpPasswordComponent extends AuthBaseComponent {
                     this.redirectAfterLogin();
                 },
                 () => this.spinnerService.hide());
+    }
+
+    private buildAccountConfirmationUrl(): string {
+        let arr = window.location.href.split('/');
+        let result = arr[0] + '//' + arr[2];
+        let isEmail = this.signUp.userName.indexOf('@') > -1;
+        let provider = isEmail ? 'email' : 'phone';
+
+        let url =
+            result + '/account-confirmation;' +
+            Consts.Code + '={code};' + Consts.Provider + '=' + provider;
+
+        return url;
     }
 
 }

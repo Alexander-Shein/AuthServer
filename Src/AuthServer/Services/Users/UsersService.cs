@@ -5,8 +5,10 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
+using AuthGuard.Services.Tokens;
 using AuthGuard.Services.Users.Models.Input;
 using AuthGuard.Services.Users.Models.View;
+using DddCore.Contracts.BLL.Errors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,20 +18,22 @@ namespace AuthGuard.Services.Users
     {
         #region Private Members
 
-        private readonly ApplicationDbContext applicationDbContext;
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly SignInManager<ApplicationUser> signInManager;
+        readonly ApplicationDbContext applicationDbContext;
+        readonly UserManager<ApplicationUser> userManager;
+        readonly SignInManager<ApplicationUser> signInManager;
+        readonly ITokensService tokensService;
 
         #endregion
 
         public UsersService(
             ApplicationDbContext applicationDbContext,
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager, ITokensService tokensService)
         {
             this.applicationDbContext = applicationDbContext;
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.tokensService = tokensService;
         }
 
         #region Public Methods
@@ -90,33 +94,40 @@ namespace AuthGuard.Services.Users
             return vm;
         }
 
-        public async Task<IdentityResult> ConfirmAccountAsync(ConfirmAccountIm im)
+        public async Task<OperationResult> ConfirmAccountAsync(ConfirmAccountIm im)
         {
-            var user = await userManager.FindByIdAsync(im.UserId.ToString());
+            var tokenData = tokensService.Decode(im.Code);
 
-            if (user == null)
+            if (tokenData == null)
             {
-                return IdentityResult.Failed(new IdentityError
-                {
-                    Code = "1",
-                    Description = $"User with id '{im.UserId}' does not exist."
-                });
+                return OperationResult.FailedResult(1, "Invalid code.");
             }
+
+            if (tokenData.DateTime < DateTime.UtcNow.AddHours(-1))
+            {
+                return OperationResult.FailedResult(2, "Code is expired.");
+            }
+
+            var user = await userManager.FindByIdAsync(tokenData.Id.ToString());
 
             if (String.Equals(im.Provider, "Email", StringComparison.OrdinalIgnoreCase))
             {
-                return await userManager.ConfirmEmailAsync(user, im.Code);
+                user.EmailConfirmed = true;
             }
-            if (String.Equals(im.Provider, "Phone", StringComparison.OrdinalIgnoreCase))
+            else if (String.Equals(im.Provider, "Phone", StringComparison.OrdinalIgnoreCase))
             {
-                return await userManager.ChangePhoneNumberAsync(user, user.PhoneNumber, im.Code);
+                user.PhoneNumberConfirmed = true;
+            }
+            else
+            {
+                return OperationResult.FailedResult(3, $"Provider with name '{im.Provider}' is not valid.");
             }
 
-            return IdentityResult.Failed(new IdentityError
-            {
-                Code = "2",
-                Description = $"Provider with name '{im.Provider}' provider is not valid."
-            });
+            applicationDbContext.Update(user);
+            await applicationDbContext.SaveChangesAsync();
+            await signInManager.SignInAsync(user, isPersistent: true);
+
+            return OperationResult.SucceedResult;
         }
 
         #endregion

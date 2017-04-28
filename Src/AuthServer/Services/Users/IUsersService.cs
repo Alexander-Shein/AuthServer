@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Services.Users.Models.Input;
 using AuthGuard.Services.Users.Models.View;
-using Microsoft.AspNetCore.Identity;
+using DddCore.Contracts.BLL.Errors;
 
 namespace AuthGuard.Services.Users
 {
@@ -12,6 +12,6 @@ namespace AuthGuard.Services.Users
         Task<ApplicationUser> GetUserByEmailOrPhoneAsync(string userName);
         Task<UserVm> GetCurrentUserAsync(ClaimsPrincipal user);
         Task<UserVm> UpdateAsync(ClaimsPrincipal claims, UserIm im);
-        Task<IdentityResult> ConfirmAccountAsync(ConfirmAccountIm im);
+        Task<OperationResult> ConfirmAccountAsync(ConfirmAccountIm im);
     }
 }

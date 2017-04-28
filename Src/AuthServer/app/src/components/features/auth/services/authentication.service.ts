@@ -73,9 +73,9 @@ export class AuthenticationService extends ServiceBase implements IAuthenticatio
         form.submit();
     }
 
-    public signUp(signUp: SignUp, redirectUrl: string): Observable<SignUpResult> {
+    public signUp(signUp: SignUp): Observable<SignUpResult> {
         return this.http
-            .post(this.apiUrl + 'sign-up?redirectUrl=' + encodeURIComponent(redirectUrl), signUp)
+            .post(this.apiUrl + 'sign-up', signUp)
             .map((result) => {
                 let parsedResult = this.extractData(result);
 
