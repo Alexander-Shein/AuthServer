@@ -72,5 +72,7 @@
     <Build Include="Tables\ExternalProvider.sql" />
     <Build Include="Tables\AppExternalProvider.sql" />
     <Build Include="Tables\AspNetUsers.sql" />
+    <Build Include="Tables\SecurityCode.sql" />
+    <Build Include="Tables\SecurityCodeAction.sql" />
   </ItemGroup>
 </Project>

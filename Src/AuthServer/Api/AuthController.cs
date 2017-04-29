@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
 using AuthGuard.Services;
-using AuthGuard.Services.Tokens;
+using AuthGuard.Services.Security;
 using AuthGuard.Services.Users;
 using DddCore.Contracts.BLL.Errors;
 using IdentityServer4.Services;
@@ -25,14 +25,14 @@ namespace AuthGuard.Api
     [Route("api/[controller]")]
     public class AuthController : Controller
     {
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly SignInManager<ApplicationUser> signInManager;
-        private readonly IEmailSender emailSender;
-        private readonly ISmsSender smsSender;
-        private readonly ILogger logger;
-        private readonly IUsersService usersService;
+        readonly UserManager<ApplicationUser> userManager;
+        readonly SignInManager<ApplicationUser> signInManager;
+        readonly IEmailSender emailSender;
+        readonly ISmsSender smsSender;
+        readonly ILogger logger;
+        readonly IUsersService usersService;
         readonly ApplicationDbContext context;
-        readonly ITokensService tokensService;
+        readonly ISecurityCodesService securityCodesService;
 
         public AuthController(
             UserManager<ApplicationUser> userManager,
@@ -45,7 +45,7 @@ namespace AuthGuard.Api
             IClientStore clientStore,
             IUsersService usersService,
             ApplicationDbContext context,
-            ITokensService tokensService)
+            ISecurityCodesService securityCodesService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -54,7 +54,7 @@ namespace AuthGuard.Api
             logger = loggerFactory.CreateLogger<AppsController>();
             this.usersService = usersService;
             this.context = context;
-            this.tokensService = tokensService;
+            this.securityCodesService = securityCodesService;
         }
 
         [HttpPost]
@@ -102,16 +102,11 @@ namespace AuthGuard.Api
             var result = await userManager.CreateAsync(user, im.Password);
             if (result.Succeeded)
             {
-                var tokenData = new TokenData
-                {
-                    Id = Guid.Parse(user.Id),
-                    DateTime = DateTime.UtcNow
-                };
+                var securityCode = SecurityCode.Generate(SecurityCodeAction.ConfirmAccount, user.Id);
+                securityCodesService.Insert(securityCode);
 
-                var code = tokensService.Encode(tokenData);
-                //var provider = isEmail ? "email" : "phone";
-
-                var callbackUrl = im.AccountConfirmationUrl.Replace("{code}", code);// $"http://localhost:5000/api/users/{user.Id}/providers/{provider}/confirmed?code={code}&redirectUrl={WebUtility.UrlEncode(redirectUrl)}";
+                var code = securityCode.Code.ToString();
+                var callbackUrl = im.AccountConfirmationUrl.Replace("{code}", code);
 
                 var parameters = new Dictionary<string, string>
                 {

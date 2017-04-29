@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
-using AuthGuard.Services.Tokens;
+using AuthGuard.Services.Security;
 using AuthGuard.Services.Users.Models.Input;
 using AuthGuard.Services.Users.Models.View;
 using DddCore.Contracts.BLL.Errors;
@@ -21,19 +21,20 @@ namespace AuthGuard.Services.Users
         readonly ApplicationDbContext applicationDbContext;
         readonly UserManager<ApplicationUser> userManager;
         readonly SignInManager<ApplicationUser> signInManager;
-        readonly ITokensService tokensService;
+        readonly ISecurityCodesService securityCodesService;
 
         #endregion
 
         public UsersService(
             ApplicationDbContext applicationDbContext,
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager, ITokensService tokensService)
+            SignInManager<ApplicationUser> signInManager,
+            ISecurityCodesService securityCodesService)
         {
             this.applicationDbContext = applicationDbContext;
             this.userManager = userManager;
             this.signInManager = signInManager;
-            this.tokensService = tokensService;
+            this.securityCodesService = securityCodesService;
         }
 
         #region Public Methods
@@ -96,19 +97,21 @@ namespace AuthGuard.Services.Users
 
         public async Task<OperationResult> ConfirmAccountAsync(ConfirmAccountIm im)
         {
-            var tokenData = tokensService.Decode(im.Code);
+            var securityCode = await securityCodesService.Get(im.Code);
 
-            if (tokenData == null)
+            if (securityCode == null || securityCode.SecurityCodeAction != SecurityCodeAction.ConfirmAccount)
             {
                 return OperationResult.FailedResult(1, "Invalid code.");
             }
 
-            if (tokenData.DateTime < DateTime.UtcNow.AddHours(-1))
-            {
-                return OperationResult.FailedResult(2, "Code is expired.");
-            }
+            //if (securityCode.ExpiredAt > DateTime.Now)
+            //{
+            //    securityCodesService.Delete(securityCode);
+            //    await applicationDbContext.SaveChangesAsync();
+            //    return OperationResult.FailedResult(2, "Code is expired.");
+            //}
 
-            var user = await userManager.FindByIdAsync(tokenData.Id.ToString());
+            var user = await userManager.FindByIdAsync(securityCode.UserId);
 
             if (String.Equals(im.Provider, "Email", StringComparison.OrdinalIgnoreCase))
             {
@@ -123,6 +126,7 @@ namespace AuthGuard.Services.Users
                 return OperationResult.FailedResult(3, $"Provider with name '{im.Provider}' is not valid.");
             }
 
+            securityCodesService.Delete(securityCode);
             applicationDbContext.Update(user);
             await applicationDbContext.SaveChangesAsync();
             await signInManager.SignInAsync(user, isPersistent: true);

@@ -3,6 +3,7 @@ using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
 using AuthGuard.Services;
 using AuthGuard.Services.Apps;
+using AuthGuard.Services.Security;
 using AuthGuard.Services.Support;
 using AuthGuard.Services.Tokens;
 using AuthGuard.Services.TwoFactor;
@@ -80,6 +81,7 @@ namespace AuthGuard
             services.AddScoped<IAppsService, AppsService>();
             services.AddScoped<IRedirectUriValidator, AppRedirectUrlValidator>();
             services.AddScoped<ITokensService, TokensService>();
+            services.AddScoped<ISecurityCodesService, SecurityCodesService>();
 
             services.AddIdentityServer()
                 .AddTemporarySigningCredential()

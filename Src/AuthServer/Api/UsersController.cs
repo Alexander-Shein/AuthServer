@@ -49,24 +49,6 @@ namespace AuthGuard.Api
             return Ok(user);
         }
 
-        [HttpGet]
-        [Route("{userId:Guid}/providers/{provider}/confirmed")]
-        public async Task<IActionResult> ConfirmAccountAsync(Guid userId, string code, string provider, string redirectUrl)
-        {
-            var result = await usersService.ConfirmAccountAsync(new ConfirmAccountIm
-            {
-                Code = code,
-                Provider = provider
-            });
-
-            if (result.IsNotSucceed)
-            {
-                return BadRequest(result.Errors);
-            }
-
-            return Redirect(redirectUrl);
-        }
-
         [HttpPut]
         [Route("me/providers/{provider}/confirmed")]
         public async Task<IActionResult> ConfirmAccountAsync([FromBody] ConfirmationCodeIm im, string provider)

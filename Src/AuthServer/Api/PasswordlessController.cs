@@ -17,6 +17,8 @@ namespace AuthGuard.Api
         [HttpGet("log-in")]
         public async Task<IActionResult> LogInAsync()
         {
+
+
             return Ok();
         }
     }

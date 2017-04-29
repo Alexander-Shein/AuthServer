@@ -132,6 +132,17 @@ namespace AuthGuard.Data
                 b.Ignore(x => x.CrudState);
                 b.Ignore(x => x.Events);
             });
+
+            builder.Entity<SecurityCode>(b =>
+            {
+                b.HasKey(x => x.Id);
+                b.Property(x => x.Code);
+                b.Property(x => x.UserId);
+                b.Property(x => x.SecurityCodeAction).HasColumnName("SecurityCodeActionId");
+
+                b.Ignore(x => x.CrudState);
+                b.Ignore(x => x.Events);
+            });
         }
     }
 }

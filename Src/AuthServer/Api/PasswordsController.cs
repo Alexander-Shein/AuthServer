@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
 using AuthGuard.Services;
+using AuthGuard.Services.Security;
 using AuthGuard.Services.Users;
 using DddCore.Contracts.BLL.Errors;
 using Microsoft.AspNetCore.Authorization;
@@ -24,6 +24,7 @@ namespace AuthGuard.Api
         private readonly ISmsSender smsSender;
         private readonly IUsersService usersService;
         readonly ApplicationDbContext context;
+        readonly ISecurityCodesService securityCodesService;
 
         public PasswordsController(
             UserManager<ApplicationUser> userManager,
@@ -31,7 +32,8 @@ namespace AuthGuard.Api
             IEmailSender emailSender,
             ISmsSender smsSender,
             IUsersService usersService,
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            ISecurityCodesService securityCodesService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -39,6 +41,7 @@ namespace AuthGuard.Api
             this.smsSender = smsSender;
             this.usersService = usersService;
             this.context = context;
+            this.securityCodesService = securityCodesService;
         }
 
         [HttpPost]
@@ -64,13 +67,18 @@ namespace AuthGuard.Api
             }
 
             var isEmail = im.UserName.Contains("@");
-            var code = await userManager.GeneratePasswordResetTokenAsync(user);
-            im.ResetPasswordUrl += $";code={WebUtility.UrlEncode(code)};userName={WebUtility.UrlEncode(user.UserName)}";
+
+            var securityCode = SecurityCode.Generate(SecurityCodeAction.ResetPassword, user.Id);
+            securityCodesService.Insert(securityCode);
+
+            var code = securityCode.Code.ToString();
+
+            var callbakUrl = im.ResetPasswordUrl.Replace("{code}", code);// += $";code={WebUtility.UrlEncode(code)};userName={WebUtility.UrlEncode(user.UserName)}";
 
             var parameters = new Dictionary<string, string>
             {
                 {"Code", code},
-                {"CallbackUrl", im.ResetPasswordUrl}
+                {"CallbackUrl", callbakUrl}
             };
 
             if (isEmail)
@@ -92,24 +100,27 @@ namespace AuthGuard.Api
         [Route("reset")]
         public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPasswordIm im)
         {
-            ApplicationUser user = await usersService.GetUserByEmailOrPhoneAsync(im.UserName);
+            var securityCode = await securityCodesService.Get(im.Code);
 
-            if (user == null)
+            if (securityCode == null || securityCode.SecurityCodeAction != SecurityCodeAction.ResetPassword)
             {
-                return BadRequest(new List<Error>
-                {
-                    new Error {Code = 1, Description = $"User with '{im.UserName}' doesn't exist."}
-                });
+                return BadRequest(OperationResult.FailedResult(1, "Invalid code.").Errors);
             }
 
-            var result = await userManager.ResetPasswordAsync(user, im.Code, im.Password);
-            if (result.Succeeded)
-            {
-                await signInManager.SignInAsync(user, false);
-                return Ok();
-            }
+            //if (securityCode.ExpiredAt > DateTime.UtcNow)
+            //{
+            //    securityCodesService.Delete(securityCode);
+            //    await context.SaveChangesAsync();
+            //    BadRequest(OperationResult.FailedResult(2, "Code is expired.").Errors);
+            //}
 
-            return BadRequest(result.Errors);
+            var user = await userManager.FindByIdAsync(securityCode.UserId);
+            var token = await userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await userManager.ResetPasswordAsync(user, token, im.Password);
+
+            securityCodesService.Delete(securityCode);
+
+            return Ok();
         }
 
         [HttpPut]
@@ -129,6 +140,7 @@ namespace AuthGuard.Api
             return BadRequest(result.Errors);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddPassword([FromBody] PasswordIm im)
         {
@@ -160,9 +172,9 @@ namespace AuthGuard.Api
         public string OldPassword { get; set; }
     }
 
-    public class ResetPasswordIm : UserNameIm
+    public class ResetPasswordIm
     {
         public string Password { get; set; }
-        public string Code { get; set; }
+        public int Code { get; set; }
     }
 }

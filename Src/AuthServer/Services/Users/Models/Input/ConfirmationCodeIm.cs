@@ -2,6 +2,6 @@
 {
     public class ConfirmationCodeIm
     {
-        public string Code { get; set; }
+        public int Code { get; set; }
     }
 }

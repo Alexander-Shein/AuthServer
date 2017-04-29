@@ -9,6 +9,7 @@ import {ServiceBase} from "../../../../common/base.service";
 import {Http} from "@angular/http";
 import {NotificationsService} from "angular2-notifications";
 import {ForgotPassword} from "../models/forgot-password";
+import {Consts} from "../../../../consts";
 
 
 @Injectable()
@@ -26,7 +27,7 @@ export class PasswordsService extends ServiceBase implements IPasswordsService {
     public sendResetPasswordCode(userName: UserName): Observable<void> {
         let forgotPassword: ForgotPassword = {
             userName: userName.userName,
-            resetPasswordUrl: 'http://localhost:5000/reset-password'
+            resetPasswordUrl: this.buildResetPasswordUrl(userName.userName)
         };
 
         return this.http
@@ -50,6 +51,17 @@ export class PasswordsService extends ServiceBase implements IPasswordsService {
         return this.http
             .patch(this.apiUrl, newPassword)
             .catch((error) => this.handleError(error));
+    }
+
+    private buildResetPasswordUrl(userName: string): string {
+        let arr = window.location.href.split('/');
+        let result = arr[0] + '//' + arr[2];
+
+        let url =
+            result + '/reset-password;' +
+            Consts.Code + '={code};' + Consts.UserName + '=' + encodeURIComponent(userName);
+
+        return url;
     }
 
 }
