@@ -6,8 +6,8 @@ import {IPasswordlessService} from "./i-passwordless.service";
 import {CallbackUrlAndUserName} from "../../shared/models/callback-url-and-user-name";
 import {ServiceBase} from "../../../../common/base.service";
 import {NotificationsService} from "angular2-notifications";
-import {CodeAndUserName} from "../../shared/models/code-and-user-name";
 import {AuthenticationService} from "../../services/authentication.service";
+import {Code} from "../../shared/models/code";
 
 
 @Injectable()
@@ -29,15 +29,22 @@ export class PasswordlessService extends ServiceBase implements IPasswordlessSer
             .catch((error) => this.handleError(error));
     }
 
+    public logIn(code: Code): Observable<void> {
+        return this.http
+            .post(this.apiUrl + 'log-in', code)
+            .map(() => this.authenticationService.updateLoggedIn(true))
+            .catch((error) => this.handleError(error));
+    }
+
     public sendSignUpLink(callbackUrlAndUserName: CallbackUrlAndUserName): Observable<void> {
         return this.http
             .post(this.apiUrl + 'sign-up/link', callbackUrlAndUserName)
             .catch((error) => this.handleError(error));
     }
 
-    public signUp(codeAndUserName: CodeAndUserName): Observable<void> {
+    public signUp(code: Code): Observable<void> {
         return this.http
-            .post(this.apiUrl + 'sign-up', codeAndUserName)
+            .post(this.apiUrl + 'sign-up', code)
             .map(() => this.authenticationService.updateLoggedIn(true))
             .catch((error) => this.handleError(error));
     }

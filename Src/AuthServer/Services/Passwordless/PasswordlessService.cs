@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -170,7 +169,7 @@ namespace AuthGuard.Services.Passwordless
         {
             var securityCode = await securityCodesService.Get(im.Code);
 
-            if (securityCode == null || securityCode.SecurityCodeAction != SecurityCodeAction.PasswordlessSignUp)
+            if (securityCode == null || securityCode.SecurityCodeAction != SecurityCodeAction.PasswordlessLogIn)
             {
                 return OperationResult.FailedResult(1, "Invalid code.");
             }
@@ -184,10 +183,22 @@ namespace AuthGuard.Services.Passwordless
 
             securityCodesService.Delete(securityCode);
 
-            //var user = await userManager.FindByIdAsync(securityCode);
+            var user = await userManager.FindByIdAsync(securityCode.GetParameterValue(SecurityCodeParameterName.UserId));
+            var isEmail = user.UserName.Contains("@");
 
-            //await signInManager.SignInAsync(user, isPersistent: false);
-            //await context.SaveChangesAsync();
+            if (isEmail && !user.EmailConfirmed)
+            {
+                user.EmailConfirmed = true;
+                await userManager.UpdateAsync(user);
+            }
+            else if (!user.PhoneNumberConfirmed)
+            {
+                user.PhoneNumberConfirmed = true;
+                await userManager.UpdateAsync(user);
+            }
+
+            await signInManager.SignInAsync(user, isPersistent: false);
+            await context.SaveChangesAsync();
 
             return OperationResult.SucceedResult;
         }

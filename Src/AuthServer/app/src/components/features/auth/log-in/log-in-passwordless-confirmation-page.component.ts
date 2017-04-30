@@ -4,11 +4,11 @@ import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {Consts} from "../../../consts";
 import {PasswordlessService} from "../passwordless/services/passwordless.service";
-import {CodeAndUserName} from "../shared/models/code-and-user-name";
+import {Code} from "../shared/models/code";
 
 
 @Component({
-    selector: 'au-passwordless-confirmation-page',
+    selector: 'au-log-in-passwordless-confirmation-page',
     template: `
         <div class="container-fluid mt-2">
 
@@ -18,18 +18,18 @@ import {CodeAndUserName} from "../shared/models/code-and-user-name";
                     <div class="row">
                         <div class="col-12 text-center">
                             <h3>
-                                <span style="vertical-align: text-top;">Sign up</span>
+                                <span style="vertical-align: text-top;">Log in</span>
                             </h3>
                         </div>
                     </div>
 
                     <div color="row">
                         <div class="col-12">
-                            <au-icon-user-name [userName]="im.userName"></au-icon-user-name>
+                            <au-icon-user-name [userName]="userName"></au-icon-user-name>
                         </div>
                     </div>
 
-                    <form #signUpForm="ngForm" class="row" (ngSubmit)="signUp()">
+                    <form #logInForm="ngForm" class="row" (ngSubmit)="logIn()">
                         <div class="col-12 text-center">
                             <md-icon color="primary">done</md-icon>
                             <div>
@@ -64,10 +64,10 @@ import {CodeAndUserName} from "../shared/models/code-and-user-name";
 
                         <div class="col-12 mt-1">
                             <button
-                                    [disabled]="!signUpForm.form.valid"
+                                    [disabled]="!logInForm.form.valid"
                                     class="w-100"
                                     md-raised-button
-                                    color="primary">confirm</button>
+                                    color="primary">log in</button>
                         </div>
                     </form>
 
@@ -81,7 +81,7 @@ import {CodeAndUserName} from "../shared/models/code-and-user-name";
         </div>
     `
 })
-export class PasswordlessConfirmationPageComponent extends AuthBaseComponent {
+export class LogInPasswordlessConfirmationPageComponent extends AuthBaseComponent {
 
     constructor(
         route: ActivatedRoute,
@@ -102,23 +102,24 @@ export class PasswordlessConfirmationPageComponent extends AuthBaseComponent {
 
                 if (code) {
                     this.im.code = code;
-                    this.signUp();
+                    this.logIn();
 
                 } else {
-                    this.im.userName = params[Consts.UserName];
-                    this.isEmail = this.im.userName.indexOf('@') > -1;
+                    this.userName = params[Consts.UserName];
+                    this.isEmail = this.userName.indexOf('@') > -1;
                 }
             });
     }
 
+    public userName: string;
     public isEmail: boolean;
-    public im: CodeAndUserName = new CodeAndUserName();
+    public im: Code = new Code();
 
-    public signUp(): void {
+    public logIn(): void {
         this.spinnerService.show();
 
         this.passwordlessService
-            .signUp(this.im)
+            .logIn(this.im)
             .subscribe(
                 () => this.redirectAfterLogin(),
                 () => this.spinnerService.hide()

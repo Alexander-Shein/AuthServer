@@ -15,8 +15,6 @@ import {AddPhonePageComponent} from "./manage-phones/add-phone-page.component";
 import {ManageExternalProvidersPageComponent} from "./external-log-in/manage-external-providers-page.component";
 import {LogOutPageComponent} from "./log-out/log-out-page.component";
 import {ExternalLogInCallbackPageComponent} from "./external-log-in/external-log-in-callback-page.component";
-import {EmailLogInComponent} from "./log-in/email-log-in.component";
-import {PhoneLogInComponent} from "./log-in/phone-log-in.component";
 import {EmailOrPhoneValidatorDirective} from "./log-in/email-or-phone-validator.directive";
 import {PhoneValidatorDirective} from "./log-in/phone-validator.directive";
 import {SocialNetworkButtonComponent} from "./external-log-in/social-network-button.component";
@@ -29,7 +27,9 @@ import {IconUserNameComponent} from "./shared/icon-user-name.component";
 import {AccountConfirmationPageComponent} from "./sign-up/account-confirmation-page.component";
 import {ShowHidePasswordComponent} from "./shared/show-hide-password.component";
 import {SignUpPasswordlessComponent} from "./sign-up/sign-up-passwordless.component";
-import {PasswordlessConfirmationPageComponent} from "./sign-up/passwordless-confirmation-page.component";
+import {SignUpPasswordlessConfirmationPageComponent} from "./sign-up/sign-up-passwordless-confirmation-page.component";
+import {LogInPasswordlessComponent} from "./log-in/log-in-passwordless.component";
+import {LogInPasswordlessConfirmationPageComponent} from "./log-in/log-in-passwordless-confirmation-page.component";
 
 
 @NgModule({
@@ -41,8 +41,6 @@ import {PasswordlessConfirmationPageComponent} from "./sign-up/passwordless-conf
     ],
     declarations: [
         LogInComponent,
-        EmailLogInComponent,
-        PhoneLogInComponent,
         LogOutPageComponent,
         SignUpComponent,
         ForgotPasswordPageComponent,
@@ -66,7 +64,9 @@ import {PasswordlessConfirmationPageComponent} from "./sign-up/passwordless-conf
         AccountConfirmationPageComponent,
         ShowHidePasswordComponent,
         SignUpPasswordlessComponent,
-        PasswordlessConfirmationPageComponent
+        SignUpPasswordlessConfirmationPageComponent,
+        LogInPasswordlessComponent,
+        LogInPasswordlessConfirmationPageComponent
     ],
     providers: []
 })

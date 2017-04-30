@@ -54,5 +54,18 @@ namespace AuthGuard.Api
 
             return Ok();
         }
+
+        [HttpPost("log-in")]
+        public async Task<IActionResult> LogInAsync([FromBody] CodeIm im)
+        {
+            var result = await passwordlessService.LogInAsync(im);
+
+            if (result.IsNotSucceed)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return Ok();
+        }
     }
 }
