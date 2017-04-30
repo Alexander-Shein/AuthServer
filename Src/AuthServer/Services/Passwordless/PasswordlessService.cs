@@ -47,6 +47,8 @@ namespace AuthGuard.Services.Passwordless
             }
 
             var securityCode = SecurityCode.Generate(SecurityCodeAction.PasswordlessLogIn, SecurityCodeParameterName.UserId, user.Id);
+            securityCode.AddParameter(SecurityCodeParameterName.UserName, im.UserName);
+
             securityCodesService.Insert(securityCode);
 
             var isEmail = im.UserName.Contains("@");
@@ -184,17 +186,24 @@ namespace AuthGuard.Services.Passwordless
             securityCodesService.Delete(securityCode);
 
             var user = await userManager.FindByIdAsync(securityCode.GetParameterValue(SecurityCodeParameterName.UserId));
-            var isEmail = user.UserName.Contains("@");
+            var userName = securityCode.GetParameterValue(SecurityCodeParameterName.UserName);
+            var isEmail = userName.Contains("@");
 
-            if (isEmail && !user.EmailConfirmed)
+            if (isEmail)
             {
-                user.EmailConfirmed = true;
-                await userManager.UpdateAsync(user);
+                if (!user.EmailConfirmed)
+                {
+                    user.EmailConfirmed = true;
+                    await userManager.UpdateAsync(user);
+                }
             }
-            else if (!user.PhoneNumberConfirmed)
+            else
             {
-                user.PhoneNumberConfirmed = true;
-                await userManager.UpdateAsync(user);
+                if (!user.PhoneNumberConfirmed)
+                {
+                    user.PhoneNumberConfirmed = true;
+                    await userManager.UpdateAsync(user);
+                }
             }
 
             await signInManager.SignInAsync(user, isPersistent: false);

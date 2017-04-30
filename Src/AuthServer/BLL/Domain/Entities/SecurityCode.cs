@@ -41,6 +41,15 @@ namespace AuthGuard.BLL.Domain.Entities
             };
         }
 
+        public void AddParameter(SecurityCodeParameterName paramName, string value)
+        {
+            Parameters.Add(new SecurityCodeParameter
+            {
+                Name = paramName,
+                Value = value
+            });
+        }
+
         public string GetParameterValue(SecurityCodeParameterName paramName)
         {
             return Parameters.Single(x => x.Name == paramName).Value;
