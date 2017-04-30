@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[SecurityCode]
 (
 	[Id]									[UNIQUEIDENTIFIER]	NOT NULL,
-	[UserId]								[NVARCHAR](450)		NOT NULL,
+	[UserId]								[NVARCHAR](450)		NULL,
 	[SecurityCodeActionId]					[INT]				NOT NULL,
 	[Code]									[INT]				NOT NULL DEFAULT(0),
 	[ExpiredAt]								[DATETIME2](7)		NOT NULL DEFAULT(GETDATE()),

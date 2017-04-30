@@ -5,6 +5,8 @@ namespace AuthGuard.BLL.Domain.Entities
         CustomerMessage = 1,
         AccountConfirmation = 2,
         ResetPassword = 3,
-        TwoFactorCode = 4
+        TwoFactorCode = 4,
+        PasswordlessSignUp = 5,
+        PasswordlessLogIn = 6
     }
 }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AuthGuard.Api;
 using DddCore.Contracts.BLL.Errors;
@@ -9,20 +7,25 @@ namespace AuthGuard.Services.Passwordless
 {
     public interface IPasswordlessService
     {
-        Task<OperationResult> SendLogInLinkAsync(UserNameIm im);
-        Task<OperationResult> SendSignUpLinkAsync(UserNameIm im);
+        Task<OperationResult> SendLogInLinkAsync(CallbackUrlAndUserNameIm im);
+        Task<OperationResult> SendSignUpLinkAsync(CallbackUrlAndUserNameIm im);
+
+        Task<OperationResult> SignUpAsync(CodeAndUserNameIm im);
+        Task<OperationResult> LogInAsync(CodeIm im);
     }
 
-    public class PasswordlessService : IPasswordlessService
+    public class CallbackUrlAndUserNameIm : UserNameIm
     {
-        public Task<OperationResult> SendLogInLinkAsync(UserNameIm im)
-        {
-            throw new NotImplementedException();
-        }
+        public string CallbackUrl { get; set; }
+    }
 
-        public Task<OperationResult> SendSignUpLinkAsync(UserNameIm im)
-        {
-            throw new NotImplementedException();
-        }
+    public class CodeAndUserNameIm : UserNameIm
+    {
+        public int Code { get; set; }
+    }
+
+    public class CodeIm
+    {
+        public int Code { get; set; }
     }
 }

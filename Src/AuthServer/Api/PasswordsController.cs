@@ -73,7 +73,7 @@ namespace AuthGuard.Api
 
             var code = securityCode.Code.ToString();
 
-            var callbakUrl = im.ResetPasswordUrl.Replace("{code}", code);// += $";code={WebUtility.UrlEncode(code)};userName={WebUtility.UrlEncode(user.UserName)}";
+            var callbakUrl = im.ResetPasswordUrl.Replace("{code}", code);
 
             var parameters = new Dictionary<string, string>
             {
