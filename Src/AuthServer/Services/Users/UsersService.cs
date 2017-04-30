@@ -111,7 +111,7 @@ namespace AuthGuard.Services.Users
             //    return OperationResult.FailedResult(2, "Code is expired.");
             //}
 
-            var user = await userManager.FindByIdAsync(securityCode.UserId);
+            var user = await userManager.FindByIdAsync(securityCode.GetParameterValue(SecurityCodeParameterName.UserId));
 
             if (String.Equals(im.Provider, "Email", StringComparison.OrdinalIgnoreCase))
             {

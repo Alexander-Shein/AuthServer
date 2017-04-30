@@ -74,5 +74,6 @@
     <Build Include="Tables\AspNetUsers.sql" />
     <Build Include="Tables\SecurityCode.sql" />
     <Build Include="Tables\SecurityCodeAction.sql" />
+    <Build Include="Tables\SecurityCodeParameter.sql" />
   </ItemGroup>
 </Project>

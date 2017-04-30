@@ -19,6 +19,7 @@ import {AddEmailPageComponent} from "./manage-emails/add-email-page.component";
 import {CurrentUserResolver} from "./services/current-user-resolver.service";
 import {ExternalProvidersResolver} from "./external-log-in/services/external-providers-resolver.service";
 import {AccountConfirmationPageComponent} from "./sign-up/account-confirmation-page.component";
+import {PasswordlessConfirmationPageComponent} from "./sign-up/passwordless-confirmation-page.component";
 
 
 let authResolve = {
@@ -38,6 +39,7 @@ export const AuthRoutes: Routes = [
     {path: 'add-email', component: AddEmailPageComponent, canActivate: [LoggedInGuard]},
     {path: 'email-confirmation', component: EmailConfirmationPageComponent},
     {path: 'account-confirmation', component: AccountConfirmationPageComponent},
+    {path: 'sign-up/passwordless-confirmation', component: PasswordlessConfirmationPageComponent},
     {
         path: 'two-factor',
         component: TwoFactorPageComponent,

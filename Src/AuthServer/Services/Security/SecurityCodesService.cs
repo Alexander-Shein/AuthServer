@@ -17,15 +17,29 @@ namespace AuthGuard.Services.Security
         public void Insert(SecurityCode securityCode)
         {
             context.Set<SecurityCode>().Add(securityCode);
+
+            foreach (var securityCodeParameter in securityCode.Parameters)
+            {
+                context.Set<SecurityCodeParameter>().Add(securityCodeParameter);
+            }
         }
 
         public async Task<SecurityCode> Get(int code)
         {
-            return await context.Set<SecurityCode>().FirstOrDefaultAsync(x => x.Code == code);
+            return await
+                context
+                .Set<SecurityCode>()
+                .Include(x => x.Parameters)
+                .FirstOrDefaultAsync(x => x.Code == code);
         }
 
         public void Delete(SecurityCode securityCode)
         {
+            foreach (var securityCodeParameter in securityCode.Parameters)
+            {
+                context.Set<SecurityCodeParameter>().Remove(securityCodeParameter);
+            }
+
             context.Set<SecurityCode>().Remove(securityCode);
         }
     }

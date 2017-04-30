@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
@@ -45,7 +47,7 @@ namespace AuthGuard.Services.Passwordless
                 return OperationResult.FailedResult(1, "User does not exist.");
             }
 
-            var securityCode = SecurityCode.Generate(SecurityCodeAction.PasswordlessLogIn, user.Id);
+            var securityCode = SecurityCode.Generate(SecurityCodeAction.PasswordlessLogIn, SecurityCodeParameterName.UserId, user.Id);
             securityCodesService.Insert(securityCode);
 
             var isEmail = im.UserName.Contains("@");
@@ -77,7 +79,7 @@ namespace AuthGuard.Services.Passwordless
 
         public async Task<OperationResult> SendSignUpLinkAsync(CallbackUrlAndUserNameIm im)
         {
-            var securityCode = SecurityCode.Generate(SecurityCodeAction.PasswordlessSignUp, null);
+            var securityCode = SecurityCode.Generate(SecurityCodeAction.PasswordlessSignUp, SecurityCodeParameterName.UserName, im.UserName);
             securityCodesService.Insert(securityCode);
 
             var isEmail = im.UserName.Contains("@");
@@ -107,7 +109,7 @@ namespace AuthGuard.Services.Passwordless
             return OperationResult.SucceedResult;
         }
 
-        public async Task<OperationResult> SignUpAsync(CodeAndUserNameIm im)
+        public async Task<OperationResult> SignUpAsync(CodeIm im)
         {
             var securityCode = await securityCodesService.Get(im.Code);
 
@@ -124,31 +126,38 @@ namespace AuthGuard.Services.Passwordless
             //}
 
             securityCodesService.Delete(securityCode);
+            var userName = securityCode.GetParameterValue(SecurityCodeParameterName.UserName);
 
-            ApplicationUser user = await usersService.GetUserByEmailOrPhoneAsync(im.UserName);
+            ApplicationUser user = await usersService.GetUserByEmailOrPhoneAsync(userName);
 
             if (user == null)
             {
-                var isEmail = im.UserName.Contains("@");
+                var isEmail = userName.Contains("@");
 
                 if (isEmail)
                 {
                     user = new ApplicationUser
                     {
-                        UserName = im.UserName,
-                        Email = im.UserName.ToLower()
+                        UserName = userName,
+                        Email = userName.ToLower(),
+                        EmailConfirmed = true
                     };
                 }
                 else
                 {
                     user = new ApplicationUser
                     {
-                        UserName = im.UserName,
-                        PhoneNumber = im.UserName
+                        UserName = userName,
+                        PhoneNumber = userName,
+                        PhoneNumberConfirmed = true
                     };
                 }
 
                 var result = await userManager.CreateAsync(user);
+                if (!result.Succeeded)
+                {
+                    return OperationResult.FailedResult(2, result.Errors.First().Description);
+                }
             }
 
             await signInManager.SignInAsync(user, isPersistent: false);
@@ -175,10 +184,10 @@ namespace AuthGuard.Services.Passwordless
 
             securityCodesService.Delete(securityCode);
 
-            var user = await userManager.FindByIdAsync(securityCode.UserId);
+            //var user = await userManager.FindByIdAsync(securityCode);
 
-            await signInManager.SignInAsync(user, isPersistent: false);
-            await context.SaveChangesAsync();
+            //await signInManager.SignInAsync(user, isPersistent: false);
+            //await context.SaveChangesAsync();
 
             return OperationResult.SucceedResult;
         }

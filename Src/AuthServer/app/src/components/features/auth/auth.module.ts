@@ -24,12 +24,12 @@ import {LogInPasswordComponent} from "./log-in/log-in-password.component";
 import {UserNameComponent} from "./shared/user-name.component";
 import {SignInUpPageComponent} from "./sign-in-up/sign-in-up-page.component";
 import {SignUpPasswordComponent} from "./sign-up/sign-up-password.component";
-import {EmailSignUpComponent} from "./sign-up/email-sign-up.component";
-import {PhoneSignUpComponent} from "./sign-up/phone-sign-up.component";
 import {AddEmailPageComponent} from "./manage-emails/add-email-page.component";
 import {IconUserNameComponent} from "./shared/icon-user-name.component";
 import {AccountConfirmationPageComponent} from "./sign-up/account-confirmation-page.component";
 import {ShowHidePasswordComponent} from "./shared/show-hide-password.component";
+import {SignUpPasswordlessComponent} from "./sign-up/sign-up-passwordless.component";
+import {PasswordlessConfirmationPageComponent} from "./sign-up/passwordless-confirmation-page.component";
 
 
 @NgModule({
@@ -62,11 +62,11 @@ import {ShowHidePasswordComponent} from "./shared/show-hide-password.component";
         UserNameComponent,
         SignInUpPageComponent,
         SignUpPasswordComponent,
-        EmailSignUpComponent,
-        PhoneSignUpComponent,
         IconUserNameComponent,
         AccountConfirmationPageComponent,
-        ShowHidePasswordComponent
+        ShowHidePasswordComponent,
+        SignUpPasswordlessComponent,
+        PasswordlessConfirmationPageComponent
     ],
     providers: []
 })

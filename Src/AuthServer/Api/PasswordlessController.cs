@@ -1,11 +1,11 @@
 ﻿using System.Threading.Tasks;
 using AuthGuard.Services.Passwordless;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace AuthGuard.Api
 {
+    [EnableCors("default")]
     [Route("api/[controller]")]
     public class PasswordlessController : Controller
     {
@@ -16,17 +16,42 @@ namespace AuthGuard.Api
             this.passwordlessService = passwordlessService;
         }
 
-        [HttpGet("sign-up")]
-        public async Task<IActionResult> SignUpAsync([FromBody] UserNameIm im)
+        [HttpPost("sign-up/link")]
+        public async Task<IActionResult> SendSignUpLinkAsync([FromBody] CallbackUrlAndUserNameIm im)
         {
-            await passwordlessService.SendSignUpLinkAsync(im);
+            var result = await passwordlessService.SendSignUpLinkAsync(im);
+
+            if (result.IsNotSucceed)
+            {
+                return BadRequest(result.Errors);
+            }
+
             return Ok();
         }
 
-        [HttpGet("log-in")]
-        public async Task<IActionResult> LogInAsync([FromBody] UserNameIm im)
+        [HttpPost("sign-up")]
+        public async Task<IActionResult> SignUpAsync([FromBody] CodeIm im)
         {
-            await passwordlessService.SendLogInLinkAsync(im);
+            var result = await passwordlessService.SignUpAsync(im);
+
+            if (result.IsNotSucceed)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return Ok();
+        }
+
+        [HttpPost("log-in/link")]
+        public async Task<IActionResult> SendLogInLinkAsync([FromBody] CallbackUrlAndUserNameIm im)
+        {
+            var result = await passwordlessService.SendLogInLinkAsync(im);
+
+            if (result.IsNotSucceed)
+            {
+                return BadRequest(result.Errors);
+            }
+
             return Ok();
         }
     }

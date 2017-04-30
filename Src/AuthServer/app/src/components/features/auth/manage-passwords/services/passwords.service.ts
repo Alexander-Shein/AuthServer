@@ -19,8 +19,7 @@ export class PasswordsService extends ServiceBase implements IPasswordsService {
 
     constructor(
         private http: Http,
-        notificationsService: NotificationsService)
-    {
+        notificationsService: NotificationsService) {
         super(notificationsService);
     }
 

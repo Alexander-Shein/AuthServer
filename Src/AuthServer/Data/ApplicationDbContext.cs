@@ -137,8 +137,20 @@ namespace AuthGuard.Data
             {
                 b.HasKey(x => x.Id);
                 b.Property(x => x.Code);
-                b.Property(x => x.UserId);
                 b.Property(x => x.SecurityCodeAction).HasColumnName("SecurityCodeActionId");
+                b.HasMany(x => x.Parameters).WithOne().HasForeignKey(x => x.SecurityCodeId);
+
+                b.Ignore(x => x.CrudState);
+                b.Ignore(x => x.Events);
+            });
+
+            builder.Entity<SecurityCodeParameter>(b =>
+            {
+                b.HasKey(x => x.Id);
+                b.Property(x => x.Value);
+
+                b.Ignore(x => x.Name);
+                b.Property(x => x.NameString).HasColumnName("Name");
 
                 b.Ignore(x => x.CrudState);
                 b.Ignore(x => x.Events);

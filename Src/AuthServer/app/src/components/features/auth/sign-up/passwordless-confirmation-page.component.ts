@@ -3,12 +3,12 @@ import {AuthBaseComponent} from "../auth-base.component";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {Consts} from "../../../consts";
-import {VerificationCode} from "../manage-passwords/models/verification-code";
-import {UsersService} from "../services/users.service";
+import {PasswordlessService} from "../passwordless/services/passwordless.service";
+import {CodeAndUserName} from "../shared/models/code-and-user-name";
 
 
 @Component({
-    selector: 'au-account-confirmation-page',
+    selector: 'au-passwordless-confirmation-page',
     template: `
         <div class="container-fluid mt-2">
 
@@ -18,18 +18,18 @@ import {UsersService} from "../services/users.service";
                     <div class="row">
                         <div class="col-12 text-center">
                             <h3>
-                                <span style="vertical-align: text-top;">Account confirmation</span>
+                                <span style="vertical-align: text-top;">Sign up</span>
                             </h3>
                         </div>
                     </div>
-                    
+
                     <div color="row">
                         <div class="col-12">
-                            <au-icon-user-name [userName]="userName"></au-icon-user-name>
+                            <au-icon-user-name [userName]="im.userName"></au-icon-user-name>
                         </div>
                     </div>
 
-                    <form #confirmAccountForm="ngForm" class="row" (ngSubmit)="confirmAccount()">
+                    <form #signUpForm="ngForm" class="row" (ngSubmit)="signUp()">
                         <div class="col-12 text-center">
                             <md-icon color="primary">done</md-icon>
                             <div>
@@ -52,7 +52,7 @@ import {UsersService} from "../services/users.service";
                                         [(ngModel)]="im.code">
                                 <md-hint align="end">{{code.value?.length || 0}} / 4</md-hint>
                                 <md-hint *ngIf="code.errors && (code.dirty || code.touched)" style="color: red;">
-                                <span [hidden]="!code.errors.required" >
+                                <span [hidden]="!code.errors.required">
                                     Code is required.
                                 </span>
                                     <span [hidden]="!code.errors.minlength || code.errors.required">
@@ -64,7 +64,7 @@ import {UsersService} from "../services/users.service";
 
                         <div class="col-12 mt-1">
                             <button
-                                    [disabled]="!confirmAccountForm.form.valid"
+                                    [disabled]="!signUpForm.form.valid"
                                     class="w-100"
                                     md-raised-button
                                     color="primary">confirm</button>
@@ -81,13 +81,13 @@ import {UsersService} from "../services/users.service";
         </div>
     `
 })
-export class AccountConfirmationPageComponent extends AuthBaseComponent {
+export class PasswordlessConfirmationPageComponent extends AuthBaseComponent {
 
     constructor(
         route: ActivatedRoute,
         router: Router,
         spinnerService: SpinnerService,
-        private usersService: UsersService) {
+        private passwordlessService: PasswordlessService) {
         super(route, router, spinnerService);
     }
 
@@ -102,28 +102,23 @@ export class AccountConfirmationPageComponent extends AuthBaseComponent {
 
                 if (code) {
                     this.im.code = code;
-
-                    let provider = params[Consts.Provider] || '';
-                    this.isEmail = provider.toLowerCase() !== 'phone';
-
-                    this.confirmAccount();
+                    this.signUp();
 
                 } else {
-                    this.userName = params[Consts.UserName];
-                    this.isEmail = this.userName.indexOf('@') > -1;
+                    this.im.userName = params[Consts.UserName];
+                    this.isEmail = this.im.userName.indexOf('@') > -1;
                 }
             });
     }
 
-    public userName: string;
     public isEmail: boolean;
-    public im: VerificationCode = new VerificationCode();
+    public im: CodeAndUserName = new CodeAndUserName();
 
-    public confirmAccount(): void {
+    public signUp(): void {
         this.spinnerService.show();
 
-        this.usersService
-            .confirmAccount(this.im, this.isEmail ? 'email' : 'phone')
+        this.passwordlessService
+            .signUp(this.im)
             .subscribe(
                 () => this.redirectAfterLogin(),
                 () => this.spinnerService.hide()

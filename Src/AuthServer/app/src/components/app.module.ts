@@ -37,6 +37,7 @@ import {JwtService} from "./features/auth/services/jwt.service";
 import {SearchableProvidersResolver} from "./features/auth/external-log-in/services/searchable-providers-resolver";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {EmailsService} from "./features/auth/manage-emails/services/emails.service";
+import {PasswordlessService} from "./features/auth/passwordless/services/passwordless.service";
 
 
 @NgModule({
@@ -83,7 +84,8 @@ import {EmailsService} from "./features/auth/manage-emails/services/emails.servi
         SearchableProvidersResolver,
         MessagesService,
         LoggedInGuard,
-        JwtService
+        JwtService,
+        PasswordlessService
     ],
     entryComponents: [ ConfirmationDialogComponent ],
     bootstrap: [ AppComponent ]

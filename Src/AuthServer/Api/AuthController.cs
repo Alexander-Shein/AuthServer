@@ -102,7 +102,7 @@ namespace AuthGuard.Api
             var result = await userManager.CreateAsync(user, im.Password);
             if (result.Succeeded)
             {
-                var securityCode = SecurityCode.Generate(SecurityCodeAction.ConfirmAccount, user.Id);
+                var securityCode = SecurityCode.Generate(SecurityCodeAction.ConfirmAccount, SecurityCodeParameterName.UserId, user.Id);
                 securityCodesService.Insert(securityCode);
 
                 var code = securityCode.Code.ToString();

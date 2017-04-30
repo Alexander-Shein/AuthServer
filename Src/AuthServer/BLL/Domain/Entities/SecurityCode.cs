@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using DddCore.BLL.Domain.Entities.GuidEntities;
 
 namespace AuthGuard.BLL.Domain.Entities
@@ -9,26 +11,39 @@ namespace AuthGuard.BLL.Domain.Entities
         const int Max = 9999;
         static readonly TimeSpan DefaultExpireTime = TimeSpan.FromHours(1);
 
-        public string UserId { get; set; }
         public int Code { get; set; }
         public DateTime ExpiredAt { get; set; }
 
         public SecurityCodeAction SecurityCodeAction { get; set; }
 
-        public static SecurityCode Generate(SecurityCodeAction action, string userId)
+        public ICollection<SecurityCodeParameter> Parameters { get; set; }
+
+        public static SecurityCode Generate(SecurityCodeAction action, SecurityCodeParameterName paramName, string paramValue)
         {
-            return Generate(action, userId, DefaultExpireTime);
+            return Generate(action, paramName, paramValue, DefaultExpireTime);
         }
 
-        public static SecurityCode Generate(SecurityCodeAction action, string userId, TimeSpan expirationTime)
+        public static SecurityCode Generate(SecurityCodeAction action, SecurityCodeParameterName paramName, string paramValue, TimeSpan expirationTime)
         {
             return new SecurityCode
             {
                 Code = GenerateRandomNumber(),
                 SecurityCodeAction = action,
-                UserId = userId,
-                ExpiredAt = DateTime.Now.Add(expirationTime)
+                ExpiredAt = DateTime.Now.Add(expirationTime),
+                Parameters = new List<SecurityCodeParameter>
+                {
+                    new SecurityCodeParameter
+                    {
+                         Name = paramName,
+                         Value = paramValue
+                    }
+                }
             };
+        }
+
+        public string GetParameterValue(SecurityCodeParameterName paramName)
+        {
+            return Parameters.Single(x => x.Name == paramName).Value;
         }
 
         private static int GenerateRandomNumber()

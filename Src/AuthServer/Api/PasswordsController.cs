@@ -68,7 +68,7 @@ namespace AuthGuard.Api
 
             var isEmail = im.UserName.Contains("@");
 
-            var securityCode = SecurityCode.Generate(SecurityCodeAction.ResetPassword, user.Id);
+            var securityCode = SecurityCode.Generate(SecurityCodeAction.ResetPassword, SecurityCodeParameterName.UserId, user.Id);
             securityCodesService.Insert(securityCode);
 
             var code = securityCode.Code.ToString();
@@ -114,7 +114,7 @@ namespace AuthGuard.Api
             //    BadRequest(OperationResult.FailedResult(2, "Code is expired.").Errors);
             //}
 
-            var user = await userManager.FindByIdAsync(securityCode.UserId);
+            var user = await userManager.FindByIdAsync(securityCode.GetParameterValue(SecurityCodeParameterName.UserId));
             var token = await userManager.GeneratePasswordResetTokenAsync(user);
             var result = await userManager.ResetPasswordAsync(user, token, im.Password);
 

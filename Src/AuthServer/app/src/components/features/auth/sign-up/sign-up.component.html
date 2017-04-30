@@ -42,8 +42,16 @@
             <au-icon-user-name [userName]="signUp.userName"></au-icon-user-name>
         </div>
         <div class="col-12">
-            <au-email-sign-up [app]="app" [signUp]="signUp" *ngIf="isEmail"></au-email-sign-up>
-            <au-phone-sign-up [app]="app" [signUp]="signUp" *ngIf="!isEmail"></au-phone-sign-up>
+            <au-sign-up-password
+                    [signUp]="signUp"
+                    [app]="app"
+                    *ngIf="(isEmail && app.emailSettings.isPasswordEnabled) || (!isEmail && app.phoneSettings.isPasswordEnabled)">
+            </au-sign-up-password>
+            <au-sign-up-passwordless
+                    [signUp]="signUp"
+                    [app]="app"
+                    *ngIf="(isEmail && app.emailSettings.isPasswordlessEnabled) || (!isEmail && app.phoneSettings.isPasswordlessEnabled)">
+            </au-sign-up-passwordless>
         </div>
     </div>
 
