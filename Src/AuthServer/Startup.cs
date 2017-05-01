@@ -4,6 +4,7 @@ using AuthGuard.Data;
 using AuthGuard.Services;
 using AuthGuard.Services.Apps;
 using AuthGuard.Services.Passwordless;
+using AuthGuard.Services.Passwords;
 using AuthGuard.Services.Security;
 using AuthGuard.Services.Support;
 using AuthGuard.Services.Tokens;
@@ -84,6 +85,7 @@ namespace AuthGuard
             services.AddScoped<ITokensService, TokensService>();
             services.AddScoped<ISecurityCodesService, SecurityCodesService>();
             services.AddScoped<IPasswordlessService, PasswordlessService>();
+            services.AddScoped<IPasswordsService, PasswordsService>();
 
             services.AddIdentityServer()
                 .AddTemporarySigningCredential()

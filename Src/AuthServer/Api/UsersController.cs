@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AuthGuard.Services.Users;
 using AuthGuard.Services.Users.Models.Input;
 using Microsoft.AspNetCore.Authorization;

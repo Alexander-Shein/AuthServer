@@ -59,6 +59,8 @@ namespace AuthGuard.Services
 
         private async Task SendEmailAsync(Email email)
         {
+            //9a20e2a97a07670b75e787047a63508887a63b3d
+
             var mimeMessage = new MimeMessage();
             mimeMessage.From.Add(new MailboxAddress(email.FromName, email.FromEmail));
             mimeMessage.To.Add(new MailboxAddress(String.Empty, email.ToEmail));
