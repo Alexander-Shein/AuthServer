@@ -55,6 +55,9 @@ namespace AuthGuard
             services.AddIdentity<ApplicationUser, IdentityRole>(o =>
                 {
                     o.Password.RequireNonAlphanumeric = false;
+                    o.Password.RequireDigit = false;
+                    o.Password.RequireLowercase = false;
+                    o.Password.RequireUppercase = false;
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
