@@ -6,11 +6,17 @@ using AuthGuard.Data;
 using MailKit.Net.Smtp;
 using Microsoft.EntityFrameworkCore;
 using MimeKit;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
+using Twilio.Types;
 
 namespace AuthGuard.Services
 {
     public class AuthMessageSender : IEmailSender, ISmsSender
     {
+        const string AccountSid = "ACeaba8d4f6486f20a46db5db7c2fd3ddf";
+        const string AuthToken = "61733dfbf99ac90b6add0cefa916602c";
+
         private readonly ApplicationDbContext context;
 
         public AuthMessageSender(ApplicationDbContext context)
@@ -50,6 +56,20 @@ namespace AuthGuard.Services
             }
 
             var sms = smsTemplate.Render(toPhoneNumber, parameters);
+
+            TwilioClient.Init(AccountSid, AuthToken);
+
+            var message = await MessageResource.CreateAsync(
+                to: new PhoneNumber(toPhoneNumber),
+                from: new PhoneNumber(sms.FromPhoneNumber),
+                body: sms.Message);
+
+            if (message.ErrorCode.HasValue)
+            {
+                throw new InvalidOperationException(message.ErrorMessage);
+            }
+
+            sms.IsSent = true;
 
             context.Add(sms);
             return sms;
