@@ -30,6 +30,7 @@ import {SignUpPasswordlessComponent} from "./sign-up/sign-up-passwordless.compon
 import {SignUpPasswordlessConfirmationPageComponent} from "./sign-up/sign-up-passwordless-confirmation-page.component";
 import {LogInPasswordlessComponent} from "./log-in/log-in-passwordless.component";
 import {LogInPasswordlessConfirmationPageComponent} from "./log-in/log-in-passwordless-confirmation-page.component";
+import {EqualValidator} from "./shared/directives/equal-validator.directive";
 
 
 @NgModule({
@@ -66,7 +67,8 @@ import {LogInPasswordlessConfirmationPageComponent} from "./log-in/log-in-passwo
         SignUpPasswordlessComponent,
         SignUpPasswordlessConfirmationPageComponent,
         LogInPasswordlessComponent,
-        LogInPasswordlessConfirmationPageComponent
+        LogInPasswordlessConfirmationPageComponent,
+        EqualValidator
     ],
     providers: []
 })

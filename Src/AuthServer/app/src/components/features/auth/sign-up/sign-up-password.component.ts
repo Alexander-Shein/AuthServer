@@ -54,6 +54,7 @@ import {Consts} from "../../../consts";
                                     maxlength="100"
                                     minlength="6"
                                     required
+                                    equalsto="password"
                                     [(ngModel)]="signUp.confirmPassword"
                                     #confirmPassword="ngModel">
                             <md-hint align="end">{{confirmPassword.value?.length || 0}} / 100</md-hint>
@@ -63,6 +64,9 @@ import {Consts} from "../../../consts";
                                 </span>
                                 <span [hidden]="!confirmPassword.errors.minlength || confirmPassword.errors.required">
                                     Min length is 6 characters for password.
+                                </span>
+                                <span [hidden]="!confirmPassword.errors.equalsto || confirmPassword.errors.required || confirmPassword.errors.minlength">
+                                    Password and confirm password do not match.
                                 </span>
                             </md-hint>
                             <au-show-hide-password [password]="confirmPassword"></au-show-hide-password>
