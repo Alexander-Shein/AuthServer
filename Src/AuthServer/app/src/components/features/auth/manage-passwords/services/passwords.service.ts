@@ -8,8 +8,8 @@ import {Observable} from "rxjs";
 import {ServiceBase} from "../../../../common/base.service";
 import {Http} from "@angular/http";
 import {NotificationsService} from "angular2-notifications";
-import {ForgotPassword} from "../models/forgot-password";
 import {Consts} from "../../../../consts";
+import {CallbackUrlAndUserName} from "../../shared/models/callback-url-and-user-name";
 
 
 @Injectable()
@@ -24,9 +24,9 @@ export class PasswordsService extends ServiceBase implements IPasswordsService {
     }
 
     public sendResetPasswordCode(userName: UserName): Observable<void> {
-        let forgotPassword: ForgotPassword = {
+        let forgotPassword: CallbackUrlAndUserName = {
             userName: userName.userName,
-            resetPasswordUrl: this.buildResetPasswordUrl(userName.userName)
+            callbackUrl: this.buildResetPasswordUrl(userName.userName)
         };
 
         return this.http
