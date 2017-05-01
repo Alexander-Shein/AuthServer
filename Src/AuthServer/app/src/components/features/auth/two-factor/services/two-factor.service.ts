@@ -6,7 +6,7 @@ import {ServiceBase} from "../../../../common/base.service";
 import {NotificationsService} from "angular2-notifications";
 import {Http} from "@angular/http";
 import {TwoFactorVerification} from "../models/two-factor-verification";
-import {TwoFactorSettings} from "../models/two-factor-settings";
+import {AuthenticationService} from "../../services/authentication.service";
 
 
 @Injectable()
@@ -16,6 +16,7 @@ export class TwoFactorService extends ServiceBase implements ITwoFactorService {
 
     constructor(
         private http: Http,
+        private authenticationService: AuthenticationService,
         notificationsService: NotificationsService)
     {
         super(notificationsService);
@@ -36,14 +37,8 @@ export class TwoFactorService extends ServiceBase implements ITwoFactorService {
 
     public verifyCode(twoFactorVerification: TwoFactorVerification): Observable<void> {
         return this.http
-            .post(this.apiUrl, twoFactorVerification)
-            .catch((error) => this.handleError(error));
-    }
-
-    public updateTwoFactorSettings(twoFactorSettings: TwoFactorSettings): Observable<TwoFactorSettings> {
-        return this.http
-            .put(this.apiUrl + 'settings', twoFactorSettings)
-            .map((res) => this.extractData(res))
+            .post(this.apiUrl + 'verified', twoFactorVerification)
+            .map(() => this.authenticationService.updateLoggedIn(true))
             .catch((error) => this.handleError(error));
     }
 

@@ -1,21 +1,24 @@
 <div class="container-fluid mt-2">
 
-    <div class="row">
-        <div class="col-12">
-            <h3 class="text-center">Two factor page.</h3>
-        </div>
-    </div>
-
     <div class="row justify-content-center">
         <div class="col-12 col-md-6 col-lg-5 col-xl-4" style="max-width: 320px;">
+
+            <div class="row">
+                <div class="col-12">
+                    <h3 class="text-center">
+                        <span>Two factor verification</span>
+                    </h3>
+                </div>
+            </div>
+
             <form class="row" (ngSubmit)="sendCode()" *ngIf="!isCodeSent">
                 <div class="col-12 mt-3">
                     <md-select
                             placeholder="Provider"
-                            [(ngModel)]="twoFactorVerification.provider"
+                            [(ngModel)]="selectedProvider"
                             name="provider"
                             class="w-100">
-                        <md-option *ngFor="let provider of providers" [value]="provider">{{ provider.name }}</md-option>
+                        <md-option *ngFor="let provider of providers" [value]="provider">{{ provider.displayName }}</md-option>
                     </md-select>
                 </div>
 
@@ -24,23 +27,32 @@
                             md-raised-button
                             color="primary"
                             class="w-100"
-                            [disabled]="!twoFactorVerification.provider">send code</button>
+                            [disabled]="!selectedProvider">send code</button>
                 </div>
             </form>
 
-            <form class="row" (ngSubmit)="verifyCode()" *ngIf="isCodeSent">
+            <form class="row" (ngSubmit)="verifyCode()" #verifyCodeForm="ngForm" *ngIf="isCodeSent">
                 <div class="col-12">
                     <md-input-container class="w-100">
                         <input
                                 mdInput
-                                #code
+                                #code="ngModel"
                                 placeholder="Code"
                                 type="text"
                                 name="code"
-                                maxlength="100"
+                                maxlength="4"
+                                minlength="4"
                                 required
                                 [(ngModel)]="twoFactorVerification.code">
-                        <md-hint align="end">{{code.value.length}} / 100</md-hint>
+                        <md-hint align="end">{{code.value?.length || 0}} / 4</md-hint>
+                        <md-hint *ngIf="code.errors && (code.dirty || code.touched)" style="color: red;">
+                            <span [hidden]="!code.errors.required">
+                                Code is required.
+                            </span>
+                            <span [hidden]="!code.errors.minlength || code.errors.required">
+                                Code must be 4 digits.
+                            </span>
+                        </md-hint>
                     </md-input-container>
                 </div>
 
@@ -48,7 +60,7 @@
                     <button
                             md-raised-button
                             color="primary"
-                            [disabled]="!twoFactorVerification.code"
+                            [disabled]="!verifyCodeForm.form.valid"
                             class="w-100">verify code</button>
                 </div>
 

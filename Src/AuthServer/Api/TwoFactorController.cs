@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using AuthGuard.Services.TwoFactor;
 using AuthGuard.Services.TwoFactor.Models.Input;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace AuthGuard.Api
             this.twoFactorsService = twoFactorsService;
         }
 
+        [Authorize]
         [HttpGet("providers")]
         public async Task<IActionResult> GetTwoFactorProviders()
         {
@@ -29,6 +31,7 @@ namespace AuthGuard.Api
             return Ok(result.Providers);
         }
 
+        [Authorize]
         [HttpPost("codes")]
         public async Task<IActionResult> SendCode([FromBody] TwoFactorProviderIm im)
         {
@@ -42,6 +45,7 @@ namespace AuthGuard.Api
             return Ok();
         }
 
+        [Authorize]
         [HttpPost("verified")]
         public async Task<IActionResult> VerifyCode([FromBody] TwoFactorVerificationIm im)
         {

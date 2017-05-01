@@ -1,6 +1,6 @@
 export class Provider {
 
-    public name: string = '';
-    public value: string = '';
+    public displayName: string;
+    public key: string;
 
 }

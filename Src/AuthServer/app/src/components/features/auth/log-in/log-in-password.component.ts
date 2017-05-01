@@ -125,7 +125,8 @@ export class LogInPasswordComponent extends AuthBaseComponent {
                             queryParams: {
                                 redirectUrl: this.redirectUrl
                             }
-                        });
+                        })
+                        .then(() => this.spinnerService.hide());
                     return;
                 }
 

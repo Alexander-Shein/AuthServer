@@ -3,13 +3,13 @@ using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
 using AuthGuard.Services;
 using AuthGuard.Services.Apps;
-using AuthGuard.Services.Passwordless;
 using AuthGuard.Services.Passwords;
 using AuthGuard.Services.Security;
 using AuthGuard.Services.Support;
 using AuthGuard.Services.Tokens;
 using AuthGuard.Services.TwoFactor;
 using AuthGuard.Services.Users;
+using AuthGuard.SL.Passwordless.Workflow;
 using DddCore.Contracts.Crosscutting.UserContext;
 using DddCore.Crosscutting.UserContext;
 using IdentityServer4.Stores;
@@ -84,7 +84,7 @@ namespace AuthGuard
             services.AddScoped<IRedirectUriValidator, AppRedirectUrlValidator>();
             services.AddScoped<ITokensService, TokensService>();
             services.AddScoped<ISecurityCodesService, SecurityCodesService>();
-            services.AddScoped<IPasswordlessService, PasswordlessService>();
+            services.AddScoped<IPasswordlessWorkflowService, PasswordlessWorkflowService>();
             services.AddScoped<IPasswordsService, PasswordsService>();
 
             services.AddIdentityServer()

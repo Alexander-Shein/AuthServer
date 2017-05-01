@@ -1,25 +1,16 @@
 ﻿using System.Threading.Tasks;
-using AuthGuard.Api;
+using AuthGuard.SL.Passwordless.Models;
 using DddCore.Contracts.BLL.Errors;
+using DddCore.Contracts.SL.Services.Application;
 
-namespace AuthGuard.Services.Passwordless
+namespace AuthGuard.SL.Passwordless.Workflow
 {
-    public interface IPasswordlessService
+    public interface IPasswordlessWorkflowService : IWorkflowService
     {
         Task<OperationResult> SendLogInLinkAsync(CallbackUrlAndUserNameIm im);
         Task<OperationResult> SendSignUpLinkAsync(CallbackUrlAndUserNameIm im);
 
         Task<OperationResult> SignUpAsync(CodeIm im);
         Task<OperationResult> LogInAsync(CodeIm im);
-    }
-
-    public class CallbackUrlAndUserNameIm : UserNameIm
-    {
-        public string CallbackUrl { get; set; }
-    }
-
-    public class CodeIm
-    {
-        public int Code { get; set; }
     }
 }

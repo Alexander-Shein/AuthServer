@@ -48,7 +48,7 @@ export class PasswordsService extends ServiceBase implements IPasswordsService {
 
     public addPassword(newPassword: NewPassword): Observable<void> {
         return this.http
-            .patch(this.apiUrl, newPassword)
+            .post(this.apiUrl, newPassword)
             .catch((error) => this.handleError(error));
     }
 

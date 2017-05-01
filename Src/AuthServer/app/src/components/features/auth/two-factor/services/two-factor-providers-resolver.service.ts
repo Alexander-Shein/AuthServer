@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Resolve, RouterStateSnapshot, ActivatedRouteSnapshot} from "@angular/router";
-import {TwoFactorService} from "../services/two-factor.service";
+import {TwoFactorService} from "./two-factor.service";
 import {Provider} from "../models/provider";
 import {Observable} from "rxjs";
 

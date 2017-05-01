@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
-using AuthGuard.Services.Passwordless;
 using AuthGuard.Services.Security;
 using AuthGuard.Services.Users;
+using AuthGuard.SL.Passwordless.Models;
 using DddCore.Contracts.BLL.Errors;
 using DddCore.Contracts.Crosscutting.UserContext;
 using Microsoft.AspNetCore.Identity;
@@ -101,7 +101,14 @@ namespace AuthGuard.Services.Passwords
             var token = await userManager.GeneratePasswordResetTokenAsync(user);
             var result = await userManager.ResetPasswordAsync(user, token, im.Password);
 
+            if (!result.Succeeded)
+            {
+                return OperationResult.FailedResult(2, result.Errors.First().Description);
+            }
+
             securityCodesService.Delete(securityCode);
+
+            await context.SaveChangesAsync();
 
             return OperationResult.SucceedResult;
         }
@@ -117,7 +124,7 @@ namespace AuthGuard.Services.Passwords
                 return OperationResult.SucceedResult;
             }
 
-            return OperationResult.FailedResult(1, Enumerable.First<IdentityError>(result.Errors).Description);
+            return OperationResult.FailedResult(1, result.Errors.First<IdentityError>().Description);
         }
 
         public async Task<OperationResult> AddPassword(PasswordIm im)
@@ -131,7 +138,7 @@ namespace AuthGuard.Services.Passwords
                 return OperationResult.SucceedResult;
             }
 
-            return OperationResult.FailedResult(1, Enumerable.First<IdentityError>(result.Errors).Description);
+            return OperationResult.FailedResult(1, result.Errors.First<IdentityError>().Description);
         }
     }
 }

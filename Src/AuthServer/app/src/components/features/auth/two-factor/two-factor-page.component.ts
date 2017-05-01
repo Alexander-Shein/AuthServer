@@ -29,7 +29,7 @@ export class TwoFactorPageComponent extends AuthBaseComponent {
             .data
             .subscribe((data: {providers: Provider[]}) => {
                 this.providers = data.providers;
-                this.twoFactorVerification.provider = this.providers[0];
+                this.selectedProvider = this.providers[0];
             });
 
         this.route
@@ -42,16 +42,20 @@ export class TwoFactorPageComponent extends AuthBaseComponent {
     }
 
     public providers: Provider[];
+    public selectedProvider: Provider;
     public isCodeSent: boolean = false;
     public twoFactorVerification: TwoFactorVerification = new TwoFactorVerification();
 
     public sendCode(): void {
+        this.spinnerService.show();
+
         this.twoFactorService
-            .sendCode(this.twoFactorVerification.provider)
+            .sendCode(this.selectedProvider)
             .subscribe(
                 () => {
                     this.isCodeSent = true;
-                    this.spinnerService.hide(); },
+                    this.spinnerService.hide();
+                },
                 () => this.spinnerService.hide()
             );
     }

@@ -3,14 +3,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
+using AuthGuard.Services;
 using AuthGuard.Services.Security;
 using AuthGuard.Services.Users;
+using AuthGuard.SL.Passwordless.Models;
 using DddCore.Contracts.BLL.Errors;
 using Microsoft.AspNetCore.Identity;
 
-namespace AuthGuard.Services.Passwordless
+namespace AuthGuard.SL.Passwordless.Workflow
 {
-    public class PasswordlessService : IPasswordlessService
+    public class PasswordlessWorkflowService : IPasswordlessWorkflowService
     {
         readonly ISecurityCodesService securityCodesService;
         readonly IEmailSender emailSender;
@@ -20,7 +22,7 @@ namespace AuthGuard.Services.Passwordless
         readonly SignInManager<ApplicationUser> signInManager;
         readonly IUsersService usersService;
 
-        public PasswordlessService(
+        public PasswordlessWorkflowService(
             ISecurityCodesService securityCodesService,
             IEmailSender emailSender,
             ISmsSender smsSender,

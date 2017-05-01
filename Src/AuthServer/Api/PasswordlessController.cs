@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
-using AuthGuard.Services.Passwordless;
+using AuthGuard.SL.Passwordless.Models;
+using AuthGuard.SL.Passwordless.Workflow;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +10,9 @@ namespace AuthGuard.Api
     [Route("api/[controller]")]
     public class PasswordlessController : Controller
     {
-        readonly IPasswordlessService passwordlessService;
+        readonly IPasswordlessWorkflowService passwordlessService;
 
-        public PasswordlessController(IPasswordlessService passwordlessService)
+        public PasswordlessController(IPasswordlessWorkflowService passwordlessService)
         {
             this.passwordlessService = passwordlessService;
         }

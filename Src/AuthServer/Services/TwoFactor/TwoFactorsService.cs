@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
+using AuthGuard.Data;
+using AuthGuard.Services.Security;
 using AuthGuard.Services.TwoFactor.Models.Input;
 using AuthGuard.Services.TwoFactor.Models.View;
 using DddCore.Contracts.BLL.Errors;
@@ -12,21 +14,27 @@ namespace AuthGuard.Services.TwoFactor
 {
     public class TwoFactorsService : ITwoFactorsService
     {
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly SignInManager<ApplicationUser> signInManager;
-        private readonly IEmailSender emailSender;
-        private readonly ISmsSender smsSender;
+        readonly UserManager<ApplicationUser> userManager;
+        readonly SignInManager<ApplicationUser> signInManager;
+        readonly IEmailSender emailSender;
+        readonly ISmsSender smsSender;
+        readonly ISecurityCodesService securityCodesService;
+        readonly ApplicationDbContext context;
 
         public TwoFactorsService(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            ISmsSender smsSender)
+            ISmsSender smsSender,
+            ISecurityCodesService securityCodesService,
+            ApplicationDbContext context)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.emailSender = emailSender;
             this.smsSender = smsSender;
+            this.securityCodesService = securityCodesService;
+            this.context = context;
         }
 
         public async Task<(IEnumerable<TwoFactorProviderVm> Providers, OperationResult OperationResult)> GetTwoFactorProvidersAsync()
@@ -55,14 +63,17 @@ namespace AuthGuard.Services.TwoFactor
             var user = await signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
-                return OperationResult.FailedResult(2, "User is not logged in for 2 factor validation.");
+                return OperationResult.FailedResult(1, "User is not logged in for 2 factor validation.");
             }
 
-            var code = await userManager.GenerateTwoFactorTokenAsync(user, provider);
+            var securityCode = SecurityCode.Generate(SecurityCodeAction.TwoFactorVerification, SecurityCodeParameterName.UserId, user.Id);
+            securityCode.AddParameter(SecurityCodeParameterName.LocalProvider, im.Key);
+
+            securityCodesService.Insert(securityCode);
 
             var parameters = new Dictionary<string, string>
             {
-                {"Code", code}
+                {"Code", securityCode.Code.ToString()}
             };
 
             if (String.Equals(provider, "Email", StringComparison.OrdinalIgnoreCase))
@@ -75,12 +86,34 @@ namespace AuthGuard.Services.TwoFactor
                 await smsSender.SendSmsAsync(await userManager.GetPhoneNumberAsync(user), Template.TwoFactorCode, parameters);
             }
 
+            await context.SaveChangesAsync();
+
             return OperationResult.SucceedResult;
         }
 
         public async Task<OperationResult> VerifyCode(TwoFactorVerificationIm im)
         {
-            var signInResult = await signInManager.TwoFactorSignInAsync(im.TwoFactorProviderKey, im.Code, im.RememberLogIn, im.RememberBrowser);
+            var user = await signInManager.GetTwoFactorAuthenticationUserAsync();
+            if (user == null)
+            {
+                return OperationResult.FailedResult(1, "User is not logged in for 2 factor validation.");
+            }
+
+            var securityCode = await securityCodesService.Get(im.Code);
+
+            if (securityCode == null || user.Id != securityCode.GetParameterValue(SecurityCodeParameterName.UserId))
+            {
+                return OperationResult.FailedResult(2, "Invalid code.");
+            }
+
+            var provider = securityCode.GetParameterValue(SecurityCodeParameterName.LocalProvider);
+            var code = await userManager.GenerateTwoFactorTokenAsync(user, provider);
+
+            var signInResult = await signInManager.TwoFactorSignInAsync(provider, code, im.RememberLogIn, im.RememberBrowser);
+
+            securityCodesService.Delete(securityCode);
+
+            await context.SaveChangesAsync();
 
             if (signInResult.IsLockedOut)
             {

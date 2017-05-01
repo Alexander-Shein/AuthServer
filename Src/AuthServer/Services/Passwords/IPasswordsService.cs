@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using AuthGuard.Services.Passwordless;
+using AuthGuard.SL.Passwordless.Models;
 using DddCore.Contracts.BLL.Errors;
 
 namespace AuthGuard.Services.Passwords
