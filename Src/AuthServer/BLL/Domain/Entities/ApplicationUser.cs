@@ -20,5 +20,31 @@ namespace AuthGuard.BLL.Domain.Entities
 
             return "+" + new string(phone.Where(Char.IsDigit).ToArray());
         }
+
+        public void PutConfirmedEmail(string email)
+        {
+            EmailConfirmed = true;
+            Email = email.ToLower();
+            NormalizedEmail = email.ToUpper();
+        }
+
+        public void DeleteEmail()
+        {
+            Email = null;
+            NormalizedEmail = null;
+            EmailConfirmed = false;
+        }
+
+        public void DeletePhone()
+        {
+            PhoneNumber = null;
+            PhoneNumberConfirmed = false;
+        }
+
+        public void PutConfirmedPhone(string phone)
+        {
+            PhoneNumber = phone;
+            PhoneNumberConfirmed = true;
+        }
     }
 }

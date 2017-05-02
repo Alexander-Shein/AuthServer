@@ -7,6 +7,7 @@ namespace AuthGuard.BLL.Domain.Entities
         ResetPassword = 3,
         TwoFactorCode = 4,
         PasswordlessSignUp = 5,
-        PasswordlessLogIn = 6
+        PasswordlessLogIn = 6,
+        AddLocalProvider = 7
     }
 }

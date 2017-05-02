@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AuthGuard.Api;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
 using AuthGuard.Services.Security;
@@ -18,10 +20,12 @@ namespace AuthGuard.Services.Users
     {
         #region Private Members
 
-        readonly ApplicationDbContext applicationDbContext;
+        readonly ApplicationDbContext context;
         readonly UserManager<ApplicationUser> userManager;
         readonly SignInManager<ApplicationUser> signInManager;
         readonly ISecurityCodesService securityCodesService;
+        readonly ISmsSender smsSender;
+        readonly IEmailSender emailSender;
 
         #endregion
 
@@ -29,12 +33,16 @@ namespace AuthGuard.Services.Users
             ApplicationDbContext applicationDbContext,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ISecurityCodesService securityCodesService)
+            ISecurityCodesService securityCodesService,
+            ISmsSender smsSender,
+            IEmailSender emailSender)
         {
-            this.applicationDbContext = applicationDbContext;
+            this.context = applicationDbContext;
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.securityCodesService = securityCodesService;
+            this.smsSender = smsSender;
+            this.emailSender = emailSender;
         }
 
         #region Public Methods
@@ -65,17 +73,27 @@ namespace AuthGuard.Services.Users
                 predicate = x => x.Email == userName;
             }
 
-            var user = await applicationDbContext.Set<ApplicationUser>().FirstOrDefaultAsync(predicate);
+            var user = await context.Set<ApplicationUser>().FirstOrDefaultAsync(predicate);
             return user;
         }
 
-        public async Task<UserVm> UpdateAsync(ClaimsPrincipal claims, UserIm im)
+        public async Task<(UserVm User, OperationResult OperationResult)> UpdateAsync(ClaimsPrincipal claims, UserIm im)
         {
             var user = await userManager.GetUserAsync(claims);
-            if (user == null) throw new ArgumentException();
 
-            await UpdateEmailAsync(user, im.Email, im.EmailCode);
-            await UpdatePhoneAsync(user, im.PhoneNumber, im.PhoneNumberCode);
+            var putEmailResult = await UpdateEmailAsync(user, im.Email, im.EmailCode ?? -1);
+
+            if (putEmailResult.IsNotSucceed)
+            {
+                return (null, putEmailResult);
+            }
+
+            var putPhoneResult = await UpdatePhoneAsync(user, im.PhoneNumber, im.PhoneNumberCode ?? -1);
+
+            if (putPhoneResult.IsNotSucceed)
+            {
+                return (null, putPhoneResult);
+            }
 
             if (im.IsTwoFactorEnabled.HasValue && user.TwoFactorEnabled != im.IsTwoFactorEnabled)
             {
@@ -92,7 +110,37 @@ namespace AuthGuard.Services.Users
             }
 
             var vm = Map(user);
-            return vm;
+
+            await context.SaveChangesAsync();
+
+            return (vm, OperationResult.SucceedResult);
+        }
+
+        public async Task<OperationResult> SendCodeToAddLocalProvider(UserNameIm im)
+        {
+            var securityCode = SecurityCode.Generate(SecurityCodeAction.AddLocalProvider, SecurityCodeParameterName.UserName, im.UserName);
+            securityCodesService.Insert(securityCode);
+
+            var isEmail = im.UserName.Contains("@");
+
+            var parameters = new Dictionary<string, string>
+            {
+                {"Code", securityCode.Code.ToString()}
+            };
+
+            if (isEmail)
+            {
+                await emailSender.SendEmailAsync(im.UserName, Template.AddLocalProvider, parameters);
+            }
+            else
+            {
+                var phone = ApplicationUser.CleanPhoneNumber(im.UserName);
+                await smsSender.SendSmsAsync(phone, Template.AddLocalProvider, parameters);
+            }
+
+            await context.SaveChangesAsync();
+
+            return OperationResult.SucceedResult;
         }
 
         public async Task<OperationResult> ConfirmAccountAsync(ConfirmAccountIm im)
@@ -127,8 +175,8 @@ namespace AuthGuard.Services.Users
             }
 
             securityCodesService.Delete(securityCode);
-            applicationDbContext.Update(user);
-            await applicationDbContext.SaveChangesAsync();
+            context.Update(user);
+            await context.SaveChangesAsync();
             await signInManager.SignInAsync(user, isPersistent: true);
 
             return OperationResult.SucceedResult;
@@ -138,9 +186,9 @@ namespace AuthGuard.Services.Users
 
         #region Private Methods
 
-        private async Task UpdatePhoneAsync(ApplicationUser user, string phone, string code)
+        private async Task<OperationResult> UpdatePhoneAsync(ApplicationUser user, string phone, int code)
         {
-            if (phone == null) return;
+            if (phone == null) return OperationResult.SucceedResult;
 
             var userHasPhone = !String.IsNullOrEmpty(user.PhoneNumber);
 
@@ -148,19 +196,37 @@ namespace AuthGuard.Services.Users
             {
                 if (userHasPhone)
                 {
-                    await userManager.SetPhoneNumberAsync(user, null);
+                    user.DeletePhone();
                 }
             }
             else
             {
-                if (String.Equals(user.PhoneNumber, phone, StringComparison.OrdinalIgnoreCase)) return;
-                await userManager.ChangePhoneNumberAsync(user, phone, code);
+                if (String.Equals(user.PhoneNumber, phone, StringComparison.OrdinalIgnoreCase))
+                {
+                    return OperationResult.SucceedResult;
+                }
+
+                var securityCode = await securityCodesService.Get(code);
+                securityCodesService.Delete(securityCode);
+                
+
+                if (
+                    securityCode == null ||
+                    !String.Equals(securityCode.GetParameterValue(SecurityCodeParameterName.UserName), phone, StringComparison.OrdinalIgnoreCase))
+                {
+                    return OperationResult.FailedResult(1, "Invalid code.");
+                }
+
+                user.PutConfirmedPhone(phone);
             }
+
+            context.Update(user);
+            return OperationResult.SucceedResult;
         }
 
-        private async Task UpdateEmailAsync(ApplicationUser user, string email, string code)
+        private async Task<OperationResult> UpdateEmailAsync(ApplicationUser user, string email, int code)
         {
-            if (email == null) return;
+            if (email == null) return OperationResult.SucceedResult;
 
             var userHasEmail = !String.IsNullOrEmpty(user.Email);
 
@@ -168,14 +234,31 @@ namespace AuthGuard.Services.Users
             {
                 if (userHasEmail)
                 {
-                    await userManager.SetEmailAsync(user, null);
+                    user.DeleteEmail();
                 }
             }
             else
             {
-                if (String.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase)) return;
-                await userManager.ChangeEmailAsync(user, email, code);
+                if (String.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase))
+                {
+                    return OperationResult.SucceedResult;
+                }
+
+                var securityCode = await securityCodesService.Get(code);
+                securityCodesService.Delete(securityCode);
+
+                if (
+                    securityCode == null ||
+                    !String.Equals(securityCode.GetParameterValue(SecurityCodeParameterName.UserName), email, StringComparison.OrdinalIgnoreCase))
+                {
+                    return OperationResult.FailedResult(1, "Invalid code.");
+                }
+
+                user.PutConfirmedEmail(email);
             }
+
+            context.Update(user);
+            return OperationResult.SucceedResult;
         }
 
         private UserVm Map(ApplicationUser user)

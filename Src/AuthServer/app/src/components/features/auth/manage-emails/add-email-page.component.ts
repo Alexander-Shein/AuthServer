@@ -2,7 +2,6 @@ import {Component} from "@angular/core";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {AuthBaseComponent} from "../auth-base.component";
-import {EmailsService} from "./services/emails.service";
 import {Consts} from "../../../consts";
 import {UserIm} from "../models/user-im";
 import {UsersService} from "../services/users.service";
@@ -16,7 +15,6 @@ import {UsersService} from "../services/users.service";
 export class AddEmailPageComponent extends AuthBaseComponent {
 
     constructor(
-        private emailsService: EmailsService,
         private usersService: UsersService,
         route: ActivatedRoute,
         router: Router,
@@ -44,13 +42,14 @@ export class AddEmailPageComponent extends AuthBaseComponent {
     public isCodeSent: boolean = false;
 
     public sendCode(): void {
-        this.emailsService
-            .sendVerificationCode({emailAddress: this.im.email})
-            .then(() => {
+        this.spinnerService.show();
+
+        this.usersService
+            .sendCodeToAddLocalProvider({userName: this.im.email})
+            .subscribe(() => {
                 this.isCodeSent = true;
                 this.spinnerService.hide();
-            })
-            .catch(() => this.spinnerService.hide());
+            }, () => this.spinnerService.hide());
     }
 
     public addEmail(): void {

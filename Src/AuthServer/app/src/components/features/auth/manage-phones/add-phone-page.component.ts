@@ -2,7 +2,6 @@ import {Component} from "@angular/core";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {AuthBaseComponent} from "../auth-base.component";
-import {PhonesService} from "./services/phones.service";
 import {Consts} from "../../../consts";
 import {UserIm} from "../models/user-im";
 import {UsersService} from "../services/users.service";
@@ -16,7 +15,6 @@ import {UsersService} from "../services/users.service";
 export class AddPhonePageComponent extends AuthBaseComponent {
 
     constructor(
-        private phonesService: PhonesService,
         private usersService: UsersService,
         route: ActivatedRoute,
         router: Router,
@@ -44,13 +42,15 @@ export class AddPhonePageComponent extends AuthBaseComponent {
     public isCodeSent: boolean = false;
 
     public sendCode(): void {
-        this.phonesService
-            .sendVerificationCode(this.im)
-            .then(() => {
+        this.spinnerService.show();
+
+        this.usersService
+            .sendCodeToAddLocalProvider({userName: this.im.phoneNumber})
+            .subscribe(() => {
                 this.isCodeSent = true;
                 this.spinnerService.hide();
-            })
-            .catch(() => this.spinnerService.hide());
+
+            }, () => this.spinnerService.hide());
     }
 
     public addPhone(): void {

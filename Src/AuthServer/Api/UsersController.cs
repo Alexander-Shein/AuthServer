@@ -44,8 +44,29 @@ namespace AuthGuard.Api
         [Route("me")]
         public async Task<IActionResult> UpdateAsync([FromBody] UserIm im)
         {
-            var user = await usersService.UpdateAsync(HttpContext.User, im);
-            return Ok(user);
+            var result = await usersService.UpdateAsync(HttpContext.User, im);
+
+            if (result.OperationResult.IsNotSucceed)
+            {
+                return BadRequest(result.OperationResult.Errors);
+            }
+
+            return Ok(result.User);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [Route("me/notifications/new-local-provider")]
+        public async Task<IActionResult> SendCodeToAddLocalProvider([FromBody] UserNameIm im)
+        {
+            var result = await usersService.SendCodeToAddLocalProvider(im);
+
+            if (result.IsNotSucceed)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return Ok();
         }
 
         [HttpPut]

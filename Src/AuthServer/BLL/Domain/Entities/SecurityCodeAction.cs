@@ -6,6 +6,7 @@ namespace AuthGuard.BLL.Domain.Entities
         ConfirmAccount = 2,
         PasswordlessSignUp = 3,
         PasswordlessLogIn = 4,
-        TwoFactorVerification = 5
+        TwoFactorVerification = 5,
+        AddLocalProvider = 6
     }
 }

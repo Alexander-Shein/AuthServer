@@ -52,12 +52,12 @@ import {Code} from "../shared/models/code";
                                         [(ngModel)]="im.code">
                                 <md-hint align="end">{{code.value?.length || 0}} / 4</md-hint>
                                 <md-hint *ngIf="code.errors && (code.dirty || code.touched)" style="color: red;">
-                                <span [hidden]="!code.errors.required">
-                                    Code is required.
-                                </span>
-                                    <span [hidden]="!code.errors.minlength || code.errors.required">
-                                    Code must be 4 digits.
-                                </span>
+                                    <span [hidden]="!code.errors.required">
+                                        Code is required.
+                                    </span>
+                                        <span [hidden]="!code.errors.minlength || code.errors.required">
+                                        Code must be 4 digits.
+                                    </span>
                                 </md-hint>
                             </md-input-container>
                         </div>

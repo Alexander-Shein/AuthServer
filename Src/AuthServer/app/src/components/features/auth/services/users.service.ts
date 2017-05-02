@@ -8,6 +8,7 @@ import {Http} from "@angular/http";
 import {UserIm} from "../models/user-im";
 import {VerificationCode} from "../manage-passwords/models/verification-code";
 import {AuthenticationService} from "./authentication.service";
+import {UserName} from "../models/user-name";
 
 
 @Injectable()
@@ -50,6 +51,12 @@ export class UsersService extends ServiceBase implements IUsersService {
         return this.http
             .put(this.apiUrl + 'me/providers/' + provider + '/confirmed', im)
             .map(() => this.authenticationService.updateLoggedIn(true))
+            .catch((error) => this.handleError(error));
+    }
+
+    public sendCodeToAddLocalProvider(userName: UserName): Observable<void> {
+        return this.http
+            .post(this.apiUrl + 'me/notifications/new-local-provider', userName)
             .catch((error) => this.handleError(error));
     }
 

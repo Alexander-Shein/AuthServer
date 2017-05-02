@@ -32,12 +32,12 @@
                                 #email="ngModel">
                         <md-hint align="end">{{email.value?.length || 0}} / 256</md-hint>
                         <md-hint *ngIf="email.errors && (email.dirty || email.touched)" style="color: red;">
-                                    <span [hidden]="!email.errors.required">
-                                        Email is required.
-                                    </span>
+                            <span [hidden]="!email.errors.required">
+                                Email is required.
+                            </span>
                             <span [hidden]="!email.errors.phone || email.errors.required">
-                                        Email is not valid.
-                                    </span>
+                                Email is not valid.
+                            </span>
                         </md-hint>
                     </md-input-container>
                 </div>
@@ -64,10 +64,19 @@
                                 placeholder="Code"
                                 type="text"
                                 name="code"
-                                maxlength="100"
+                                maxlength="4"
+                                minlength="4"
                                 required
                                 [(ngModel)]="im.emailCode">
-                        <md-hint align="end">{{code.value?.length || 0}} / 100</md-hint>
+                        <md-hint align="end">{{code.value?.length || 0}} / 4</md-hint>
+                        <md-hint *ngIf="code.errors && (code.dirty || code.touched)" style="color: red;">
+                            <span [hidden]="!code.errors.required">
+                                Code is required.
+                            </span>
+                            <span [hidden]="!code.errors.minlength || code.errors.required">
+                                Code must be 4 digits.
+                            </span>
+                        </md-hint>
                     </md-input-container>
                 </div>
 

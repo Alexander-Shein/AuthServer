@@ -17,7 +17,6 @@ import {DashboardPageComponent} from "./features/dashboard/dashboard-page.compon
 import {CurrentUserResolver} from "./features/auth/services/current-user-resolver.service";
 import {AuthenticationService} from "./features/auth/services/authentication.service";
 import {PasswordsService} from "./features/auth/manage-passwords/services/passwords.service";
-import {PhonesService} from "./features/auth/manage-phones/services/phones.service";
 import {TwoFactorService} from "./features/auth/two-factor/services/two-factor.service";
 import {TwoFactorProvidersResolver} from "./features/auth/two-factor/services/two-factor-providers-resolver.service";
 import {ExternalProvidersService} from "./features/auth/external-log-in/services/external-providers.service";
@@ -36,7 +35,6 @@ import {LoggedInGuard} from "./features/auth/services/logged-in.guard";
 import {JwtService} from "./features/auth/services/jwt.service";
 import {SearchableProvidersResolver} from "./features/auth/external-log-in/services/searchable-providers-resolver";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {EmailsService} from "./features/auth/manage-emails/services/emails.service";
 import {PasswordlessService} from "./features/auth/passwordless/services/passwordless.service";
 
 
@@ -70,8 +68,6 @@ import {PasswordlessService} from "./features/auth/passwordless/services/passwor
         AuthenticationService,
         PasswordsService,
         CurrentUserResolver,
-        PhonesService,
-        EmailsService,
         TwoFactorService,
         AppsService,
         AppsResolver,

@@ -35,6 +35,7 @@ namespace AuthGuard.Services.Security
 
         public void Delete(SecurityCode securityCode)
         {
+            if (securityCode == null) return;
             foreach (var securityCodeParameter in securityCode.Parameters)
             {
                 context.Set<SecurityCodeParameter>().Remove(securityCodeParameter);
