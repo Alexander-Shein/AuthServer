@@ -92,10 +92,12 @@ namespace AuthGuard.Api
             }
             else
             {
+                var phone = ApplicationUser.CleanPhoneNumber(im.UserName);
+
                 user = new ApplicationUser
                 {
-                    UserName = im.UserName,
-                    PhoneNumber = im.UserName
+                    UserName = phone,
+                    PhoneNumber = phone
                 };
             }
 

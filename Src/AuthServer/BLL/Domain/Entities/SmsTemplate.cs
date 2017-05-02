@@ -18,7 +18,8 @@ namespace AuthGuard.BLL.Domain.Entities
                 Message = ApplyParameters(MessageTemplate, parameters),
                 CreatedAt = DateTime.UtcNow,
                 FromPhoneNumber = FromPhoneNumber,
-                ToPhoneNumber = toPhoneNumber
+                ToPhoneNumber = toPhoneNumber,
+                SmsTemplate = this
             };
 
             return result;

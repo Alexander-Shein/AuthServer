@@ -24,7 +24,7 @@ import {UsersService} from "../services/users.service";
                     </div>
                     
                     <div color="row">
-                        <div class="col-12">
+                        <div class="col-12 text-center">
                             <au-icon-user-name [userName]="userName"></au-icon-user-name>
                         </div>
                     </div>
