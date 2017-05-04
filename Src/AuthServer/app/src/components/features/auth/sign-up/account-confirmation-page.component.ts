@@ -86,9 +86,9 @@ export class AccountConfirmationPageComponent extends AuthBaseComponent {
     constructor(
         route: ActivatedRoute,
         router: Router,
-        spinnerService: SpinnerService,
+        private spinnerService: SpinnerService,
         private usersService: UsersService) {
-        super(route, router, spinnerService);
+        super(route, router);
     }
 
     public ngOnInit(): void {

@@ -3,7 +3,6 @@ import {AppVm} from "../../business/apps/models/app-vm";
 import {UserName} from "../models/user-name";
 import {ExternalProvider} from "../external-log-in/models/external-provider";
 import {AuthenticationService} from "../services/authentication.service";
-import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {SearchableExternalProvider} from "../external-log-in/models/searchable-external-provider";
 import {AuthBaseComponent} from "../auth-base.component";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -21,10 +20,9 @@ export class UserNameComponent extends AuthBaseComponent {
         private authenticationService: AuthenticationService,
         private usersService: UsersService,
         route: ActivatedRoute,
-        router: Router,
-        spinnerService: SpinnerService
+        router: Router
     ) {
-        super(route, router, spinnerService);
+        super(route, router);
     }
 
     public ngOnInit(): void {

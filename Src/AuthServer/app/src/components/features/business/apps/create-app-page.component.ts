@@ -84,8 +84,7 @@ export class CreateAppPageComponent implements OnInit {
             .put(this.vm)
             .then(() => {
                 this.router
-                    .navigate(['/business-apps/' + this.vm.name])
-                    .then(() => this.spinnerService.hide());
+                    .navigate(['/business-apps/' + this.vm.name]);
             })
             .catch(() => this.spinnerService.hide());
     }

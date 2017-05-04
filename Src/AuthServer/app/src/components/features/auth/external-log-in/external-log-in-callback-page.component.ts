@@ -3,7 +3,6 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
 import {Consts} from "../../../consts";
 import {NotificationsService} from "angular2-notifications";
 import {AuthBaseComponent} from "../auth-base.component";
-import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {AuthenticationService} from "../services/authentication.service";
 
 
@@ -17,10 +16,9 @@ export class ExternalLogInCallbackPageComponent extends AuthBaseComponent {
         route: ActivatedRoute,
         router: Router,
         private notificationsService: NotificationsService,
-        private authenticationService: AuthenticationService,
-        spinnerService: SpinnerService
+        private authenticationService: AuthenticationService
     ) {
-        super(route, router, spinnerService);
+        super(route, router);
     }
 
     public ngOnInit(): void {

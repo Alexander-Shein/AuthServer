@@ -86,9 +86,9 @@ export class LogInPasswordlessConfirmationPageComponent extends AuthBaseComponen
     constructor(
         route: ActivatedRoute,
         router: Router,
-        spinnerService: SpinnerService,
+        private spinnerService: SpinnerService,
         private passwordlessService: PasswordlessService) {
-        super(route, router, spinnerService);
+        super(route, router);
     }
 
     public ngOnInit(): void {

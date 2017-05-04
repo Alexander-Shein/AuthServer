@@ -43,8 +43,7 @@ export class AppPageComponent implements OnInit {
                     .remove(this.vm.name)
                     .then(() => {
                         this.router
-                            .navigate(['dashboard'])
-                            .then(() => this.spinnerService.hide());
+                            .navigate(['dashboard']);
                     })
                     .catch(() => this.spinnerService.hide());
             }

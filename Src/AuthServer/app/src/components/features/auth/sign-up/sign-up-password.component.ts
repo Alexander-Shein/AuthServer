@@ -91,9 +91,9 @@ export class SignUpPasswordComponent extends AuthBaseComponent {
         route: ActivatedRoute,
         router: Router,
         private authenticationService: AuthenticationService,
-        spinnerService: SpinnerService
+        private spinnerService: SpinnerService
     ) {
-        super(route, router, spinnerService);
+        super(route, router);
     }
 
     @Input()
@@ -121,8 +121,7 @@ export class SignUpPasswordComponent extends AuthBaseComponent {
                         this.router
                             .navigate(['account-confirmation', {
                                 userName: this.signUp.userName
-                            }])
-                            .then(() => this.spinnerService.hide());
+                            }]);
                         return;
                     }
 

@@ -30,10 +30,10 @@ export class LogInPasswordlessComponent extends AuthBaseComponent {
     constructor(
         route: ActivatedRoute,
         router: Router,
-        spinnerService: SpinnerService,
+        private spinnerService: SpinnerService,
         private passwordlessService: PasswordlessService
     ) {
-        super(route, router, spinnerService);
+        super(route, router);
     }
 
     public ngOnInit(): void {
@@ -67,9 +67,8 @@ export class LogInPasswordlessComponent extends AuthBaseComponent {
                     .navigate(['/log-in/passwordless-confirmation', {
                         userName: this.logIn.userName
                     }])
-                    .then(() => this.spinnerService.hide());
             }, () => {
-                this.spinnerService.hide()
+                this.spinnerService.hide();
             });
     }
 

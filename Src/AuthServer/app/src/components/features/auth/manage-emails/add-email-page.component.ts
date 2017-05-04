@@ -18,9 +18,9 @@ export class AddEmailPageComponent extends AuthBaseComponent {
         private usersService: UsersService,
         route: ActivatedRoute,
         router: Router,
-        spinnerService: SpinnerService
+        private spinnerService: SpinnerService
     ) {
-        super(route, router, spinnerService);
+        super(route, router);
     }
 
     public ngOnInit() {

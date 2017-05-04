@@ -5,7 +5,7 @@ import {Observable} from "rxjs";
 
 export interface IAppsService {
 
-    getAll(): Promise<App[]>;
+    getAll(): Observable<App[]>;
     put(app: App): Promise<App>;
     get(name: string): Promise<App>;
     remove(name: string): Promise<void>;

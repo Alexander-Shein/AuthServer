@@ -23,88 +23,12 @@ export class AppsService extends ServiceBase implements IAppsService {
 
     private readonly apiUrl: string = 'http://localhost:5000/api/apps/';
 
-    public getAll(): Promise<App[]> {
-        return new Promise<App[]>((resolve) =>
-            setTimeout(() => resolve([
-                {
-                    id: '1',
-                    isActive: true,
-                    name: 'test-app',
-                    isLocalAccountEnabled: true,
-                    key: 'client-id',
-                    externalProviders: [],
-                    websiteUrl: 'http://localhost:8000',
-                    usersCount: 435,
-                    isRememberLogInEnabled: false,
-                    isSecurityQuestionsEnabled: false,
-                    emailSettings: {
-                        isEnabled : true,
-                        isConfirmationRequired: true,
-                        isPasswordlessEnabled: true,
-                        isPasswordEnabled: true,
-                        isSearchRelatedProviderEnabled: true
-                    },
-                    phoneSettings: {
-                        isEnabled : true,
-                        isConfirmationRequired: true,
-                        isPasswordlessEnabled: true,
-                        isPasswordEnabled: true,
-                        isSearchRelatedProviderEnabled: true
-                    }
-                },
-                {
-                    id: '1',
-                    isActive: true,
-                    name: 'staging-app',
-                    isLocalAccountEnabled: true,
-                    key: 'client-id',
-                    externalProviders: [],
-                    websiteUrl: 'http://localhost:8000',
-                    usersCount: 4476,
-                    isRememberLogInEnabled: false,
-                    isSecurityQuestionsEnabled: false,
-                    emailSettings: {
-                        isEnabled : true,
-                        isConfirmationRequired: true,
-                        isPasswordlessEnabled: true,
-                        isPasswordEnabled: true,
-                        isSearchRelatedProviderEnabled: true
-                    },
-                    phoneSettings: {
-                        isEnabled : true,
-                        isConfirmationRequired: true,
-                        isPasswordlessEnabled: true,
-                        isPasswordEnabled: true,
-                        isSearchRelatedProviderEnabled: true
-                    }
-                },
-                {
-                    id: '1',
-                    isActive: true,
-                    name: 'production-app',
-                    isLocalAccountEnabled: true,
-                    key: 'client-id',
-                    externalProviders: [],
-                    websiteUrl: 'http://localhost:8000',
-                    usersCount: 123435,
-                    isRememberLogInEnabled: false,
-                    isSecurityQuestionsEnabled: false,
-                    emailSettings: {
-                        isEnabled : true,
-                        isConfirmationRequired: true,
-                        isPasswordlessEnabled: true,
-                        isPasswordEnabled: true,
-                        isSearchRelatedProviderEnabled: true
-                    },
-                    phoneSettings: {
-                        isEnabled : true,
-                        isConfirmationRequired: true,
-                        isPasswordlessEnabled: true,
-                        isPasswordEnabled: true,
-                        isSearchRelatedProviderEnabled: true
-                    }
-                }]), 500)
-        );
+    public getAll(): Observable<App[]> {
+
+        return this.http
+            .get(this.apiUrl)
+            .map((res) => this.extractData(res))
+            .catch((errors) => this.handleError(errors));
     }
 
     public put(app: App): Promise<App> {

@@ -1,4 +1,3 @@
-import {SpinnerService} from "../../common/spinner/services/spinner.service";
 import {Router, ActivatedRoute, Params} from "@angular/router";
 import {OnInit} from "@angular/core";
 import {Consts} from "../../consts";
@@ -8,8 +7,7 @@ export abstract class AuthBaseComponent implements OnInit {
 
     constructor(
         protected route: ActivatedRoute,
-        protected router: Router,
-        protected spinnerService: SpinnerService
+        protected router: Router
     ) { }
 
     public redirectUrl: string;
@@ -27,10 +25,7 @@ export abstract class AuthBaseComponent implements OnInit {
             window.location.href = this.redirectUrl;
         } else {
             this.router
-                .navigate(['/dashboard'])
-                .then(() => {
-                    this.spinnerService.hide()
-                });
+                .navigate(['/dashboard']);
         }
     }
 

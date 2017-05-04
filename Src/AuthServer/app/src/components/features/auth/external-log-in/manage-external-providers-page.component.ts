@@ -19,9 +19,9 @@ export class ManageExternalProvidersPageComponent extends AuthBaseComponent {
         private externalProvidersService : ExternalProvidersService,
         route: ActivatedRoute,
         router: Router,
-        spinnerService: SpinnerService
+        private spinnerService: SpinnerService
     ) {
-        super(route, router, spinnerService);
+        super(route, router);
     }
 
     public canDeleteExternalLogIn: boolean;
@@ -44,7 +44,6 @@ export class ManageExternalProvidersPageComponent extends AuthBaseComponent {
     }
 
     public deleteExternalLogIn(userExternalProvider: UserExternalProvider): void {
-        debugger;
         this.spinnerService.show();
 
         this.externalProvidersService

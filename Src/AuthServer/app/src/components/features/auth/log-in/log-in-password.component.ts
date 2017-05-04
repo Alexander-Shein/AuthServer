@@ -86,9 +86,9 @@ export class LogInPasswordComponent extends AuthBaseComponent {
         route: ActivatedRoute,
         router: Router,
         private authenticationService: AuthenticationService,
-        spinnerService: SpinnerService
+        private spinnerService: SpinnerService
     ) {
-        super(route, router, spinnerService);
+        super(route, router);
     }
 
     @Input()
@@ -125,8 +125,7 @@ export class LogInPasswordComponent extends AuthBaseComponent {
                             queryParams: {
                                 redirectUrl: this.redirectUrl
                             }
-                        })
-                        .then(() => this.spinnerService.hide());
+                        });
                     return;
                 }
 

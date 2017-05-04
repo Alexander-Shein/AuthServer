@@ -18,9 +18,9 @@ export class EmailConfirmationPageComponent extends AuthBaseComponent {
         route: ActivatedRoute,
         router: Router,
         private authenticationService: AuthenticationService,
-        spinnerService: SpinnerService
+        private spinnerService: SpinnerService
     ) {
-        super(route, router, spinnerService);
+        super(route, router);
     }
 
     public loginProvider: string = '';

@@ -20,9 +20,9 @@ export class ForgotPasswordPageComponent extends AuthBaseComponent {
         private passwordsService: PasswordsService,
         route: ActivatedRoute,
         router: Router,
-        spinnerService: SpinnerService
+        private spinnerService: SpinnerService
     ) {
-        super(route, router, spinnerService);
+        super(route, router);
     }
 
     public ngOnInit(): void {

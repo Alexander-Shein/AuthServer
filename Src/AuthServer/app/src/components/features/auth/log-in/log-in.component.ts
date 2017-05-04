@@ -3,7 +3,6 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {AuthBaseComponent} from '../auth-base.component';
 import {AuthenticationService} from "../services/authentication.service";
 import {LogIn} from "../models/log-in";
-import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {ExternalProvider} from "../external-log-in/models/external-provider";
 import {AppVm} from "../../business/apps/models/app-vm";
 
@@ -18,10 +17,9 @@ export class LogInComponent extends AuthBaseComponent {
     constructor(
         route: ActivatedRoute,
         router: Router,
-        private authenticationService: AuthenticationService,
-        spinnerService: SpinnerService
+        private authenticationService: AuthenticationService
     ) {
-        super(route, router, spinnerService);
+        super(route, router);
     }
 
     public ngOnInit(): void {
