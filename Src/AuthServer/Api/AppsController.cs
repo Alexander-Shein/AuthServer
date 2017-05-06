@@ -11,11 +11,11 @@ namespace AuthGuard.Api
     [Route("api/[controller]")]
     public class AppsController : Controller
     {
-        readonly IAppsService appsService;
+        readonly IAppsWorkflowService appsWorkflowService;
 
-        public AppsController(IAppsService appsService)
+        public AppsController(IAppsWorkflowService appsWorkflowService)
         {
-            this.appsService = appsService;
+            this.appsWorkflowService = appsWorkflowService;
         }
 
         [HttpGet("search")]
@@ -23,10 +23,10 @@ namespace AuthGuard.Api
         {
             if (String.IsNullOrWhiteSpace(returnUrl))
             {
-                return Ok(await appsService.GetAuthGuardApp());
+                return Ok(await appsWorkflowService.GetAuthGuardApp());
             }
 
-            return Ok(await appsService.SearchAsync(returnUrl));
+            return Ok(await appsWorkflowService.SearchAsync(returnUrl));
         }
 
         [Authorize]
@@ -40,7 +40,7 @@ namespace AuthGuard.Api
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAsync(Guid id, [FromBody] ExtendedAppIm im)
         {
-            var result = await appsService.PutAsync(id, im);
+            var result = await appsWorkflowService.PutAsync(id, im);
 
             if (result.OperationResult.IsNotSucceed)
             {
@@ -54,7 +54,7 @@ namespace AuthGuard.Api
         [HttpGet("")]
         public async Task<IActionResult> GetAllAsync()
         {
-            var result = await appsService.GetAllAsync();
+            var result = await appsWorkflowService.GetAllAsync();
             return Ok(result);
         }
 
@@ -62,7 +62,7 @@ namespace AuthGuard.Api
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(Guid id)
         {
-            var result = await appsService.GetAsync(id);
+            var result = await appsWorkflowService.GetAsync(id);
             return Ok(result);
         }
     }

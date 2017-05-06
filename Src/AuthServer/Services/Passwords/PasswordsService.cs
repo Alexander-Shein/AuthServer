@@ -40,14 +40,14 @@ namespace AuthGuard.Services.Passwords
         {
             if (String.IsNullOrWhiteSpace(im.UserName))
             {
-                return OperationResult.FailedResult(1, "Invalid user name.");
+                return OperationResult.Failed(1, "Invalid user name.");
             }
 
             var user = await usersService.GetUserByEmailOrPhoneAsync(im.UserName);
 
             if (user == null)
             {
-                return OperationResult.FailedResult(2, $"User with '{im.UserName}' doesn't exist.");
+                return OperationResult.Failed(2, $"User with '{im.UserName}' doesn't exist.");
             }
 
             var isEmail = im.UserName.Contains("@");
@@ -78,7 +78,7 @@ namespace AuthGuard.Services.Passwords
 
             await context.SaveChangesAsync();
 
-            return OperationResult.SucceedResult;
+            return OperationResult.Succeed;
         }
 
         public async Task<OperationResult> ResetPasswordAsync(ResetPasswordIm im)
@@ -87,7 +87,7 @@ namespace AuthGuard.Services.Passwords
 
             if (securityCode == null || securityCode.SecurityCodeAction != SecurityCodeAction.ResetPassword)
             {
-                return OperationResult.FailedResult(1, "Invalid code.");
+                return OperationResult.Failed(1, "Invalid code.");
             }
 
             //if (securityCode.ExpiredAt > DateTime.UtcNow)
@@ -103,14 +103,14 @@ namespace AuthGuard.Services.Passwords
 
             if (!result.Succeeded)
             {
-                return OperationResult.FailedResult(2, result.Errors.First().Description);
+                return OperationResult.Failed(2, result.Errors.First().Description);
             }
 
             securityCodesService.Delete(securityCode);
 
             await context.SaveChangesAsync();
 
-            return OperationResult.SucceedResult;
+            return OperationResult.Succeed;
         }
 
         public async Task<OperationResult> ChangePasswordAsync(ChangePasswordIm im)
@@ -121,10 +121,10 @@ namespace AuthGuard.Services.Passwords
             if (result.Succeeded)
             {
                 await signInManager.SignInAsync(user, isPersistent: false);
-                return OperationResult.SucceedResult;
+                return OperationResult.Succeed;
             }
 
-            return OperationResult.FailedResult(1, result.Errors.First<IdentityError>().Description);
+            return OperationResult.Failed(1, result.Errors.First().Description);
         }
 
         public async Task<OperationResult> AddPassword(PasswordIm im)
@@ -135,10 +135,10 @@ namespace AuthGuard.Services.Passwords
             if (result.Succeeded)
             {
                 await signInManager.SignInAsync(user, isPersistent: false);
-                return OperationResult.SucceedResult;
+                return OperationResult.Succeed;
             }
 
-            return OperationResult.FailedResult(1, result.Errors.First<IdentityError>().Description);
+            return OperationResult.Failed(1, result.Errors.First().Description);
         }
     }
 }

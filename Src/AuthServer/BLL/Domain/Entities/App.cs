@@ -1,15 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using DddCore.BLL.Domain.Entities.BusinessRules;
 using DddCore.BLL.Domain.Entities.GuidEntities;
 using DddCore.Contracts.BLL.Domain.Entities.Audit.At;
+using FluentValidation;
 
 namespace AuthGuard.BLL.Domain.Entities
 {
     public class App : GuidAggregateRootEntityBase, ICreatedAt
     {
+        string displayName;
+
         public string UserId { get; set; }
 
-        public string DisplayName { get; set; }
+        public string DisplayName
+        {
+            get => displayName;
+            set => displayName = value?.Trim();
+        }
+
         public string Key { get; set; }
         public string WebsiteUrl { get; set; }
         public bool IsLocalAccountEnabled { get; set; }
@@ -30,6 +39,21 @@ namespace AuthGuard.BLL.Domain.Entities
         public bool IsPhonePasswordEnabled { get; set; }
         public bool IsPhonePasswordlessEnabled { get; set; }
 
-        public ICollection<AppExternalProvider> ExternalProviders { get; set; }
+        public ICollection<AppExternalProvider> ExternalProviders { get; set; } = new List<AppExternalProvider>();
+    }
+
+    public class AppBusinessRules : BusinessRulesValidatorBase<App>
+    {
+        public AppBusinessRules()
+        {
+            RuleFor(x => x.DisplayName)
+                .NotEmpty()
+                .Length(2, 100);
+
+            RuleFor(x => x.WebsiteUrl)
+                .NotEmpty()
+                .Length(10, 100)
+                .Must(x => Uri.IsWellFormedUriString(x, UriKind.Absolute));
+        }
     }
 }

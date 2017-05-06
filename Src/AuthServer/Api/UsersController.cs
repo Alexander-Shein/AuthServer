@@ -35,7 +35,7 @@ namespace AuthGuard.Api
         [Route("me")]
         public async Task<IActionResult> GetCurrentUserAsync()
         {
-            var user = await usersService.GetCurrentUserAsync(HttpContext.User);
+            var user = await usersService.GetCurrentUserAsync();
             return Ok(user);
         }
 
@@ -44,7 +44,7 @@ namespace AuthGuard.Api
         [Route("me")]
         public async Task<IActionResult> UpdateAsync([FromBody] UserIm im)
         {
-            var result = await usersService.UpdateAsync(HttpContext.User, im);
+            var result = await usersService.UpdateAsync(im);
 
             if (result.OperationResult.IsNotSucceed)
             {

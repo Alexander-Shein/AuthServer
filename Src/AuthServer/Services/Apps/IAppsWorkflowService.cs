@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DddCore.Contracts.BLL.Errors;
+using DddCore.Contracts.SL.Services.Application;
 
 namespace AuthGuard.Services.Apps
 {
-    public interface IAppsService
+    public interface IAppsWorkflowService : IWorkflowService
     {
         Task<AppVm> GetAuthGuardApp();
         Task<AppVm> SearchAsync(string returnUrl);

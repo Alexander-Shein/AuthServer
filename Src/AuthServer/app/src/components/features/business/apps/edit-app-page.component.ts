@@ -57,11 +57,11 @@ export class EditAppPageComponent implements OnInit {
 
         this.appsService
             .put(this.vm)
-            .then(() => {
+            .subscribe(() => {
                 this.router
                     .navigate(['/business-apps/' + this.vm.name]);
-            })
-            .catch(() => this.spinnerService.hide());
+            },
+            () => this.spinnerService.hide());
     }
 
     private removeSelectedExternalProviders() {

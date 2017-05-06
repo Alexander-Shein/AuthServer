@@ -27,7 +27,7 @@ export class CreateAppPageComponent implements OnInit {
 
     public ngOnInit(): void {
         this.vm = {
-            id: '1',
+            id: null,
             isActive: true,
             name: '',
             key: '',
@@ -81,12 +81,12 @@ export class CreateAppPageComponent implements OnInit {
             .show();
 
         this.appsService
-            .put(this.vm)
-            .then(() => {
+            .post(this.vm)
+            .subscribe(() => {
                 this.router
                     .navigate(['/business-apps/' + this.vm.name]);
-            })
-            .catch(() => this.spinnerService.hide());
+            },
+            () => this.spinnerService.hide());
     }
 
 }

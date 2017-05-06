@@ -3,10 +3,23 @@ import {IExternalProvidersService} from "./i-external-providers.service";
 import {ExternalProvider} from "../models/external-provider";
 import {SearchableExternalProvider} from "../models/searchable-external-provider";
 import {UserExternalProvider} from "../models/user-external-provider";
+import {ServiceBase} from "../../../../common/base.service";
+import {Http} from "@angular/http";
+import {NotificationsService} from "angular2-notifications";
+import {Observable} from "rxjs/Observable";
 
 
 @Injectable()
-export class ExternalProvidersService implements IExternalProvidersService {
+export class ExternalProvidersService extends ServiceBase implements IExternalProvidersService {
+
+    private readonly apiUrl: string = 'http://localhost:5000/api/external-providers/';
+
+    constructor(
+        private http: Http,
+        notificationsService: NotificationsService)
+    {
+        super(notificationsService);
+    }
 
     public getSearchableProviders(): Promise<SearchableExternalProvider[]> {
         return Promise.resolve([
@@ -30,30 +43,11 @@ export class ExternalProvidersService implements IExternalProvidersService {
         return Promise.resolve();
     }
 
-    public getAll(): Promise<ExternalProvider[]> {
-        return new Promise<ExternalProvider[]>((resolve) =>
-            setTimeout(() => resolve([
-                {
-                    displayName: 'twitter',
-                    authenticationScheme: 'Twitter'
-                },
-                {
-                    displayName: 'facebook',
-                    authenticationScheme: 'Facebook'
-                },
-                {
-                    displayName: 'vk',
-                    authenticationScheme: 'Vk'
-                },
-                {
-                    displayName: 'linkedin',
-                    authenticationScheme: 'LinkedIn'
-                },
-                {
-                    displayName: 'google+',
-                    authenticationScheme: 'GooglePlus'
-                }]), 700)
-        );
+    public getAll(): Observable<ExternalProvider[]> {
+        return this.http
+            .get(this.apiUrl)
+            .map((res) => this.extractData(res))
+            .catch((error) => this.handleError(error));
     }
 
 }

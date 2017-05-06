@@ -11,6 +11,7 @@ using AuthGuard.Services.Security;
 using AuthGuard.Services.Users.Models.Input;
 using AuthGuard.Services.Users.Models.View;
 using DddCore.Contracts.BLL.Errors;
+using DddCore.Contracts.Crosscutting.UserContext;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,6 +27,7 @@ namespace AuthGuard.Services.Users
         readonly ISecurityCodesService securityCodesService;
         readonly ISmsSender smsSender;
         readonly IEmailSender emailSender;
+        readonly IUserContext<Guid> userContext;
 
         #endregion
 
@@ -35,7 +37,8 @@ namespace AuthGuard.Services.Users
             SignInManager<ApplicationUser> signInManager,
             ISecurityCodesService securityCodesService,
             ISmsSender smsSender,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IUserContext<Guid> userContext)
         {
             this.context = applicationDbContext;
             this.userManager = userManager;
@@ -43,14 +46,14 @@ namespace AuthGuard.Services.Users
             this.securityCodesService = securityCodesService;
             this.smsSender = smsSender;
             this.emailSender = emailSender;
+            this.userContext = userContext;
         }
 
         #region Public Methods
 
-        public async Task<UserVm> GetCurrentUserAsync(ClaimsPrincipal claims)
+        public async Task<UserVm> GetCurrentUserAsync()
         {
-            var user = await userManager.GetUserAsync(claims);
-            if (user == null) return null;
+            var user = await context.Set<ApplicationUser>().FindAsync(userContext.Id);
 
             var vm = Map(user);
             return vm;
@@ -77,9 +80,9 @@ namespace AuthGuard.Services.Users
             return user;
         }
 
-        public async Task<(UserVm User, OperationResult OperationResult)> UpdateAsync(ClaimsPrincipal claims, UserIm im)
+        public async Task<(UserVm User, OperationResult OperationResult)> UpdateAsync(UserIm im)
         {
-            var user = await userManager.GetUserAsync(claims);
+            var user = await context.Set<ApplicationUser>().FindAsync(userContext.Id);
 
             var putEmailResult = await UpdateEmailAsync(user, im.Email, im.EmailCode ?? -1);
 
@@ -113,7 +116,7 @@ namespace AuthGuard.Services.Users
 
             await context.SaveChangesAsync();
 
-            return (vm, OperationResult.SucceedResult);
+            return (vm, OperationResult.Succeed);
         }
 
         public async Task<OperationResult> SendCodeToAddLocalProvider(UserNameIm im)
@@ -140,7 +143,7 @@ namespace AuthGuard.Services.Users
 
             await context.SaveChangesAsync();
 
-            return OperationResult.SucceedResult;
+            return OperationResult.Succeed;
         }
 
         public async Task<OperationResult> ConfirmAccountAsync(ConfirmAccountIm im)
@@ -149,7 +152,7 @@ namespace AuthGuard.Services.Users
 
             if (securityCode == null || securityCode.SecurityCodeAction != SecurityCodeAction.ConfirmAccount)
             {
-                return OperationResult.FailedResult(1, "Invalid code.");
+                return OperationResult.Failed(1, "Invalid code.");
             }
 
             //if (securityCode.ExpiredAt > DateTime.Now)
@@ -171,7 +174,7 @@ namespace AuthGuard.Services.Users
             }
             else
             {
-                return OperationResult.FailedResult(3, $"Provider with name '{im.Provider}' is not valid.");
+                return OperationResult.Failed(3, $"Provider with name '{im.Provider}' is not valid.");
             }
 
             securityCodesService.Delete(securityCode);
@@ -179,7 +182,7 @@ namespace AuthGuard.Services.Users
             await context.SaveChangesAsync();
             await signInManager.SignInAsync(user, isPersistent: true);
 
-            return OperationResult.SucceedResult;
+            return OperationResult.Succeed;
         }
 
         #endregion
@@ -188,7 +191,7 @@ namespace AuthGuard.Services.Users
 
         private async Task<OperationResult> UpdatePhoneAsync(ApplicationUser user, string phone, int code)
         {
-            if (phone == null) return OperationResult.SucceedResult;
+            if (phone == null) return OperationResult.Succeed;
 
             var userHasPhone = !String.IsNullOrEmpty(user.PhoneNumber);
 
@@ -203,7 +206,7 @@ namespace AuthGuard.Services.Users
             {
                 if (String.Equals(user.PhoneNumber, phone, StringComparison.OrdinalIgnoreCase))
                 {
-                    return OperationResult.SucceedResult;
+                    return OperationResult.Succeed;
                 }
 
                 var securityCode = await securityCodesService.Get(code);
@@ -214,19 +217,19 @@ namespace AuthGuard.Services.Users
                     securityCode == null ||
                     !String.Equals(securityCode.GetParameterValue(SecurityCodeParameterName.UserName), phone, StringComparison.OrdinalIgnoreCase))
                 {
-                    return OperationResult.FailedResult(1, "Invalid code.");
+                    return OperationResult.Failed(1, "Invalid code.");
                 }
 
                 user.PutConfirmedPhone(phone);
             }
 
             context.Update(user);
-            return OperationResult.SucceedResult;
+            return OperationResult.Succeed;
         }
 
         private async Task<OperationResult> UpdateEmailAsync(ApplicationUser user, string email, int code)
         {
-            if (email == null) return OperationResult.SucceedResult;
+            if (email == null) return OperationResult.Succeed;
 
             var userHasEmail = !String.IsNullOrEmpty(user.Email);
 
@@ -241,7 +244,7 @@ namespace AuthGuard.Services.Users
             {
                 if (String.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase))
                 {
-                    return OperationResult.SucceedResult;
+                    return OperationResult.Succeed;
                 }
 
                 var securityCode = await securityCodesService.Get(code);
@@ -251,14 +254,14 @@ namespace AuthGuard.Services.Users
                     securityCode == null ||
                     !String.Equals(securityCode.GetParameterValue(SecurityCodeParameterName.UserName), email, StringComparison.OrdinalIgnoreCase))
                 {
-                    return OperationResult.FailedResult(1, "Invalid code.");
+                    return OperationResult.Failed(1, "Invalid code.");
                 }
 
                 user.PutConfirmedEmail(email);
             }
 
             context.Update(user);
-            return OperationResult.SucceedResult;
+            return OperationResult.Succeed;
         }
 
         private UserVm Map(ApplicationUser user)

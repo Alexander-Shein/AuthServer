@@ -10,8 +10,15 @@ using AuthGuard.Services.Tokens;
 using AuthGuard.Services.TwoFactor;
 using AuthGuard.Services.Users;
 using AuthGuard.SL.Passwordless.Workflow;
+using DddCore.BLL.Domain.Entities;
+using DddCore.Contracts.BLL.Domain.Entities;
 using DddCore.Contracts.Crosscutting.UserContext;
+using DddCore.Contracts.DAL;
+using DddCore.Contracts.SL.Services.Application.DomainStack;
+using DddCore.Crosscutting.DependencyInjection;
 using DddCore.Crosscutting.UserContext;
+using DddCore.SL.Services;
+using DddCore.SL.Services.Application.DomainStack;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Builder;
@@ -73,7 +80,17 @@ namespace AuthGuard
                 });
             });
 
+            var module = new DddCoreDiModuleInstaller();
+
+            new DiBootstrapper()
+                .AddConfig(services)
+                .Bootstrap(module);
+            services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
+
             services.AddMvc();
+            //services.AddDddCore();
+            services.AddScoped<IDomainFactory, DomainFactory>();
+            services.AddScoped<IGuard, Guard>();
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
@@ -83,7 +100,6 @@ namespace AuthGuard
             services.AddScoped<ITwoFactorsService, TwoFactorsService>();
             services.AddScoped<IUserContext<Guid>, IdentityUserContext>();
             services.AddScoped<IClientStore, ClientsStore>();
-            services.AddScoped<IAppsService, AppsService>();
             services.AddScoped<IRedirectUriValidator, AppRedirectUrlValidator>();
             services.AddScoped<ITokensService, TokensService>();
             services.AddScoped<ISecurityCodesService, SecurityCodesService>();

@@ -46,12 +46,16 @@
                                 type="text"
                                 name="key"
                                 maxlength="100"
+                                pattern="^[a-zA-Z0-9_-]*$"
                                 required
                                 [(ngModel)]="vm.key">
                         <md-hint align="end">{{key.value?.length || 0}} / 100</md-hint>
                         <md-hint *ngIf="key.errors && (key.dirty || key.touched)" style="color: red;">
                             <span [hidden]="!key.errors.required">
                                 App key is required.
+                            </span>
+                            <span [hidden]="!key.errors.pattern">
+                                Only letters, numbers and -_ allowed.
                             </span>
                         </md-hint>
                     </md-input-container>
@@ -67,14 +71,15 @@
                                 name="websiteUrl"
                                 maxlength="100"
                                 required
+                                pattern="https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)"
                                 [(ngModel)]="vm.websiteUrl">
                         <md-hint align="end">{{websiteUrl.value?.length || 0}} / 100</md-hint>
                         <md-hint *ngIf="websiteUrl.errors && (websiteUrl.dirty || websiteUrl.touched)" style="color: red;">
                             <span [hidden]="!websiteUrl.errors.required">
                                 Website url is required.
                             </span>
-                            <span [hidden]="!websiteUrl.errors.url">
-                                Url is not valid.
+                            <span [hidden]="!websiteUrl.errors.pattern">
+                                Website url is not valid.
                             </span>
                         </md-hint>
                     </md-input-container>

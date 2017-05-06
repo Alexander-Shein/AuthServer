@@ -32,6 +32,8 @@ namespace AuthGuard.Data
 
                 b.Ignore(x => x.CrudState);
                 b.Ignore(x => x.Events);
+                b.Ignore(x => x.BusinessRulesValidatorFactory);
+                b.Ignore(x => x.DomainEventDispatcher);
 
                 b.ToTable("Email");
             });
@@ -49,6 +51,8 @@ namespace AuthGuard.Data
 
                 b.Ignore(x => x.CrudState);
                 b.Ignore(x => x.Events);
+                b.Ignore(x => x.BusinessRulesValidatorFactory);
+                b.Ignore(x => x.DomainEventDispatcher);
 
                 b.ToTable("EmailTemplate");
             });
@@ -65,6 +69,8 @@ namespace AuthGuard.Data
 
                 b.Ignore(x => x.CrudState);
                 b.Ignore(x => x.Events);
+                b.Ignore(x => x.BusinessRulesValidatorFactory);
+                b.Ignore(x => x.DomainEventDispatcher);
 
                 b.ToTable("Sms");
             });
@@ -79,6 +85,8 @@ namespace AuthGuard.Data
 
                 b.Ignore(x => x.CrudState);
                 b.Ignore(x => x.Events);
+                b.Ignore(x => x.BusinessRulesValidatorFactory);
+                b.Ignore(x => x.DomainEventDispatcher);
 
                 b.ToTable("SmsTemplate");
             });
@@ -109,6 +117,8 @@ namespace AuthGuard.Data
 
                 b.Ignore(x => x.CrudState);
                 b.Ignore(x => x.Events);
+                b.Ignore(x => x.BusinessRulesValidatorFactory);
+                b.Ignore(x => x.DomainEventDispatcher);
 
                 b.HasMany(x => x.ExternalProviders).WithOne().HasForeignKey(x => x.AppId);
             });
@@ -119,6 +129,8 @@ namespace AuthGuard.Data
 
                 b.Ignore(x => x.CrudState);
                 b.Ignore(x => x.Events);
+                b.Ignore(x => x.BusinessRulesValidatorFactory);
+                b.Ignore(x => x.DomainEventDispatcher);
 
                 b.HasOne(x => x.ExternalProvider).WithMany().HasForeignKey(x => x.ExternalProviderId);
             });
@@ -131,6 +143,8 @@ namespace AuthGuard.Data
 
                 b.Ignore(x => x.CrudState);
                 b.Ignore(x => x.Events);
+                b.Ignore(x => x.BusinessRulesValidatorFactory);
+                b.Ignore(x => x.DomainEventDispatcher);
             });
 
             builder.Entity<SecurityCode>(b =>
@@ -142,6 +156,8 @@ namespace AuthGuard.Data
 
                 b.Ignore(x => x.CrudState);
                 b.Ignore(x => x.Events);
+                b.Ignore(x => x.BusinessRulesValidatorFactory);
+                b.Ignore(x => x.DomainEventDispatcher);
             });
 
             builder.Entity<SecurityCodeParameter>(b =>
@@ -154,6 +170,8 @@ namespace AuthGuard.Data
 
                 b.Ignore(x => x.CrudState);
                 b.Ignore(x => x.Events);
+                b.Ignore(x => x.BusinessRulesValidatorFactory);
+                b.Ignore(x => x.DomainEventDispatcher);
             });
         }
     }

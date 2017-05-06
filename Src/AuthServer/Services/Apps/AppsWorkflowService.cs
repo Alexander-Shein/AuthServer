@@ -4,35 +4,39 @@ using System.Linq;
 using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
-using AuthGuard.Services.Users;
+using AuthGuard.DAL.Repositories.Apps;
 using DddCore.Contracts.BLL.Errors;
+using DddCore.Contracts.Crosscutting.UserContext;
+using DddCore.Contracts.DAL.DomainStack;
 using IdentityServer4.Services;
 using Microsoft.EntityFrameworkCore;
-using DddCore.Contracts.Crosscutting.UserContext;
-using Microsoft.AspNetCore.Http;
 
 namespace AuthGuard.Services.Apps
 {
-    public class AppsService : IAppsService
+    public class AppsWorkflowService : IAppsWorkflowService
     {
         readonly ApplicationDbContext context;
         readonly IIdentityServerInteractionService interaction;
+        readonly IAppsEntityService appsEntityService;
+        readonly IUnitOfWork unitOfWork;
+        readonly IAppsRepository appsRepository;
         readonly IUserContext<Guid> userContext;
-        readonly IHttpContextAccessor httpContextAccessor;
-        readonly IUsersService usersService;
 
-        public AppsService(
+        const string AuthGuardKey = "auth-guard";
+
+        public AppsWorkflowService(
             ApplicationDbContext context,
             IIdentityServerInteractionService interaction,
-            IUserContext<Guid> userContext,
-            IHttpContextAccessor httpContextAccessor,
-            IUsersService usersService)
+            IAppsEntityService appsEntityService,
+            IUnitOfWork unitOfWork,
+            IAppsRepository appsRepository, IUserContext<Guid> userContext)
         {
             this.context = context;
             this.interaction = interaction;
+            this.appsEntityService = appsEntityService;
+            this.unitOfWork = unitOfWork;
+            this.appsRepository = appsRepository;
             this.userContext = userContext;
-            this.httpContextAccessor = httpContextAccessor;
-            this.usersService = usersService;
         }
 
         public async Task<AppVm> SearchAsync(string returnUrl)
@@ -40,60 +44,26 @@ namespace AuthGuard.Services.Apps
             var authorizationContext = await interaction.GetAuthorizationContextAsync(returnUrl);
 
             if (authorizationContext?.ClientId == null) return null;
-            var app =
-                await
-                    context
-                        .Set<App>()
-                        .Include(x => x.ExternalProviders)
-                            .ThenInclude(x => x.ExternalProvider)
-                        .FirstOrDefaultAsync(x => x.Key == authorizationContext.ClientId);
 
+            var app = await appsRepository.ReadWithProvidersByKey(authorizationContext.ClientId);
             return Map(app);
         }
 
         public async Task<(ExtendedAppVm App, OperationResult OperationResult)> PutAsync(Guid id, ExtendedAppIm im)
         {
-            var app = await context.Set<App>().FindAsync(id);
+            var result = await appsEntityService.PutAsync(id, im);
 
-            if (app == null)
+            if (result.OperationResult.IsSucceed)
             {
-                app = new App
-                {
-                    CreatedAt = DateTime.UtcNow,
-                    UserId = userContext.Id.ToString()
-            };
-                context.Set<App>().Add(app);
-            }
-            else
-            {
-                context.Set<App>().Update(app);
+                await unitOfWork.SaveAsync();
             }
 
-            app.IsActive = im.IsActive;
-            app.IsEmailEnabled = im.EmailSettings.IsEnabled;
-            app.IsEmailConfirmationRequired = im.EmailSettings.IsConfirmationRequired;
-            app.IsEmailPasswordEnabled = im.EmailSettings.IsPasswordEnabled;
-            app.IsEmailPasswordlessEnabled = im.EmailSettings.IsPasswordlessEnabled;
-            app.IsEmailSearchRelatedProviderEnabled = im.EmailSettings.IsSearchRelatedProviderEnabled;
-            app.IsSecurityQuestionsEnabled = im.IsSecurityQuestionsEnabled;
-            app.Key = im.Key;
-            app.WebsiteUrl = im.WebsiteUrl;
-            app.DisplayName = im.Name;
-            app.IsRememberLogInEnabled = im.IsRememberLogInEnabled;
-            app.IsPhoneEnabled = im.PhoneSettings.IsEnabled;
-            app.IsPhoneConfirmationRequired = im.PhoneSettings.IsConfirmationRequired;
-            app.IsPhonePasswordEnabled = im.PhoneSettings.IsPasswordEnabled;
-            app.IsPhonePasswordlessEnabled = im.PhoneSettings.IsPasswordlessEnabled;
-
-            await context.SaveChangesAsync();
-
-            return (MapToExtendedAppVm(app), OperationResult.SucceedResult);
+            return (MapToExtendedAppVm(result.App), result.OperationResult);
         }
 
         public async Task<IEnumerable<ExtendedAppVm>> GetAllAsync()
         {
-            var claims = httpContextAccessor.HttpContext.User;
-            var userId = (await usersService.GetCurrentUserAsync(claims)).Id.ToString();
+            var userId = userContext.Id.ToString();
 
             var apps = await context.Set<App>().Where(x => x.UserId == userId).ToListAsync() ?? Enumerable.Empty<App>();
 
@@ -104,7 +74,7 @@ namespace AuthGuard.Services.Apps
         {
             var userId = userContext.Id.ToString();
 
-            var app = await context.Set<App>().FindAsync(id);
+            var app = await appsRepository.ReadWithProvidersById(id);
             if (app == null || app.UserId == userId) return null;
 
             var result = MapToExtendedAppVm(app);
@@ -115,12 +85,8 @@ namespace AuthGuard.Services.Apps
         {
             var app =
                 await
-                    context
-                        .Set<App>()
-                        .Include(x => x.ExternalProviders)
-                            .ThenInclude(x => x.ExternalProvider)
-                        .FirstOrDefaultAsync(x => x.Key == "auth-guard")
-                        ?? throw new ArgumentException("'auth-guard' app is missed in DataBase. Please add it to DataBase.");
+                    appsRepository.ReadWithProvidersByKey(AuthGuardKey)
+                    ?? throw new ArgumentException("'auth-guard' app is missed in DataBase. Please add it to DataBase.");
 
             return Map(app);
         }

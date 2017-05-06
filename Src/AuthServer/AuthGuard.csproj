@@ -36,10 +36,10 @@
     <Content Include="wwwroot\**\*.*" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DddCore" Version="1.2.2" />
-    <PackageReference Include="DddCore.Contracts" Version="1.2.2" />
+    <PackageReference Include="DddCore" Version="1.2.8" />
+    <PackageReference Include="DddCore.Contracts" Version="1.2.6" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="1.0.1" />
-    <PackageReference Include="MailKit" Version="1.16.0" />
+    <PackageReference Include="MailKit" Version="1.16.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.1" />
@@ -58,7 +58,6 @@
     <PackageReference Include="Twilio" Version="5.4.0" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DAL\" />
     <Folder Include="PL\" />
     <Folder Include="Services\TwoFactor\Contracts\" />
   </ItemGroup>

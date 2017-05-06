@@ -43,7 +43,7 @@ namespace AuthGuard.Services.TwoFactor
 
             if (user == null)
             {
-                return (null, OperationResult.FailedResult(1, "User is not logged in for 2 factor validation."));
+                return (null, OperationResult.Failed(1, "User is not logged in for 2 factor validation."));
             }
 
             var userFactors = await userManager.GetValidTwoFactorProvidersAsync(user);
@@ -53,7 +53,7 @@ namespace AuthGuard.Services.TwoFactor
                 Key = x
             });
 
-            return (providers, OperationResult.SucceedResult);
+            return (providers, OperationResult.Succeed);
         }
 
         public async Task<OperationResult> SendCodeAsync(TwoFactorProviderIm im)
@@ -63,7 +63,7 @@ namespace AuthGuard.Services.TwoFactor
             var user = await signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
-                return OperationResult.FailedResult(1, "User is not logged in for 2 factor validation.");
+                return OperationResult.Failed(1, "User is not logged in for 2 factor validation.");
             }
 
             var securityCode = SecurityCode.Generate(SecurityCodeAction.TwoFactorVerification, SecurityCodeParameterName.UserId, user.Id);
@@ -88,7 +88,7 @@ namespace AuthGuard.Services.TwoFactor
 
             await context.SaveChangesAsync();
 
-            return OperationResult.SucceedResult;
+            return OperationResult.Succeed;
         }
 
         public async Task<OperationResult> VerifyCode(TwoFactorVerificationIm im)
@@ -96,14 +96,14 @@ namespace AuthGuard.Services.TwoFactor
             var user = await signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
-                return OperationResult.FailedResult(1, "User is not logged in for 2 factor validation.");
+                return OperationResult.Failed(1, "User is not logged in for 2 factor validation.");
             }
 
             var securityCode = await securityCodesService.Get(im.Code);
 
             if (securityCode == null || user.Id != securityCode.GetParameterValue(SecurityCodeParameterName.UserId))
             {
-                return OperationResult.FailedResult(2, "Invalid code.");
+                return OperationResult.Failed(2, "Invalid code.");
             }
 
             var provider = securityCode.GetParameterValue(SecurityCodeParameterName.LocalProvider);
@@ -117,10 +117,10 @@ namespace AuthGuard.Services.TwoFactor
 
             if (signInResult.IsLockedOut)
             {
-                return OperationResult.FailedResult(3, "Account is locked.");
+                return OperationResult.Failed(3, "Account is locked.");
             }
 
-            return OperationResult.SucceedResult;
+            return OperationResult.Succeed;
         }
     }
 }

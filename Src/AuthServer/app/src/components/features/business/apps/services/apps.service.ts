@@ -31,44 +31,18 @@ export class AppsService extends ServiceBase implements IAppsService {
             .catch((errors) => this.handleError(errors));
     }
 
-    public put(app: App): Promise<App> {
-        return new Promise<App>((resolve) =>
-            setTimeout(() => resolve({
-                id: '1',
-                isActive: true,
-                name: name,
-                isLocalAccountEnabled: true,
-                key: 'client-id',
-                externalProviders: [
-                    {
-                        displayName: 'twitter',
-                        authenticationScheme: 'Twitter'
-                    },
-                    {
-                        displayName: 'facebook',
-                        authenticationScheme: 'Facebook'
-                    }
-                ],
-                websiteUrl: 'http://localhost:8000',
-                usersCount: 435,
-                isRememberLogInEnabled: false,
-                isSecurityQuestionsEnabled: false,
-                emailSettings: {
-                    isEnabled : true,
-                    isConfirmationRequired: true,
-                    isPasswordlessEnabled: true,
-                    isPasswordEnabled: true,
-                    isSearchRelatedProviderEnabled: true
-                },
-                phoneSettings: {
-                    isEnabled : true,
-                    isConfirmationRequired: true,
-                    isPasswordlessEnabled: true,
-                    isPasswordEnabled: true,
-                    isSearchRelatedProviderEnabled: true
-                }
-            }), 500)
-        );
+    public put(app: App): Observable<App> {
+        return this.http
+            .put(this.apiUrl, app)
+            .map((res) => this.extractData(res))
+            .catch((errors) => this.handleError(errors));
+    }
+
+    public post(app: App): Observable<App> {
+        return this.http
+            .post(this.apiUrl, app)
+            .map((res) => this.extractData(res))
+            .catch((errors) => this.handleError(errors));
     }
 
     public get(name: string): Promise<App> {
@@ -80,10 +54,12 @@ export class AppsService extends ServiceBase implements IAppsService {
                 key: 'client-id',
                 externalProviders: [
                     {
+                        id: "1",
                         displayName: 'twitter',
                         authenticationScheme: 'Twitter'
                     },
                     {
+                        id: "1",
                         displayName: 'facebook',
                         authenticationScheme: 'Facebook'
                     }

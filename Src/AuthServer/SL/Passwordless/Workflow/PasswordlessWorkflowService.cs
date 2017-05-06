@@ -45,7 +45,7 @@ namespace AuthGuard.SL.Passwordless.Workflow
 
             if (user == null)
             {
-                return OperationResult.FailedResult(1, "User does not exist.");
+                return OperationResult.Failed(1, "User does not exist.");
             }
 
             var securityCode = SecurityCode.Generate(SecurityCodeAction.PasswordlessLogIn, SecurityCodeParameterName.UserId, user.Id);
@@ -77,7 +77,7 @@ namespace AuthGuard.SL.Passwordless.Workflow
 
             await context.SaveChangesAsync();
 
-            return OperationResult.SucceedResult;
+            return OperationResult.Succeed;
         }
 
         public async Task<OperationResult> SendSignUpLinkAsync(CallbackUrlAndUserNameIm im)
@@ -109,7 +109,7 @@ namespace AuthGuard.SL.Passwordless.Workflow
 
             await context.SaveChangesAsync();
 
-            return OperationResult.SucceedResult;
+            return OperationResult.Succeed;
         }
 
         public async Task<OperationResult> SignUpAsync(CodeIm im)
@@ -118,7 +118,7 @@ namespace AuthGuard.SL.Passwordless.Workflow
 
             if (securityCode == null || securityCode.SecurityCodeAction != SecurityCodeAction.PasswordlessSignUp)
             {
-                return OperationResult.FailedResult(1, "Invalid code.");
+                return OperationResult.Failed(1, "Invalid code.");
             }
 
             //if (securityCode.ExpiredAt > DateTime.UtcNow)
@@ -159,14 +159,14 @@ namespace AuthGuard.SL.Passwordless.Workflow
                 var result = await userManager.CreateAsync(user);
                 if (!result.Succeeded)
                 {
-                    return OperationResult.FailedResult(2, result.Errors.First().Description);
+                    return OperationResult.Failed(2, result.Errors.First().Description);
                 }
             }
 
             await signInManager.SignInAsync(user, isPersistent: false);
             await context.SaveChangesAsync();
 
-            return OperationResult.SucceedResult;
+            return OperationResult.Succeed;
         }
 
         public async Task<OperationResult> LogInAsync(CodeIm im)
@@ -175,7 +175,7 @@ namespace AuthGuard.SL.Passwordless.Workflow
 
             if (securityCode == null || securityCode.SecurityCodeAction != SecurityCodeAction.PasswordlessLogIn)
             {
-                return OperationResult.FailedResult(1, "Invalid code.");
+                return OperationResult.Failed(1, "Invalid code.");
             }
 
             //if (securityCode.ExpiredAt > DateTime.UtcNow)
@@ -211,7 +211,7 @@ namespace AuthGuard.SL.Passwordless.Workflow
             await signInManager.SignInAsync(user, isPersistent: false);
             await context.SaveChangesAsync();
 
-            return OperationResult.SucceedResult;
+            return OperationResult.Succeed;
         }
     }
 }
