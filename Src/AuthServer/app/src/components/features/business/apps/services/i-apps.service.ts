@@ -10,7 +10,8 @@ export interface IAppsService {
     put(id: string, app: ExtendedAppIm): Observable<ExtendedAppVm>;
     post(app: ExtendedAppIm): Observable<ExtendedAppVm>;
     get(id: string): Observable<ExtendedAppVm>;
-    remove(name: string): Promise<void>;
+    remove(id: string): Observable<void>;
     getByUrl(url: string): Observable<AppVm>;
+    isAppExist(key: string): Observable<void>;
 
 }

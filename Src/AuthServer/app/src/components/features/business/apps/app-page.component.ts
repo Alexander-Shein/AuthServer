@@ -40,12 +40,12 @@ export class AppPageComponent implements OnInit {
                     .show();
 
                 this.appsService
-                    .remove(this.vm.name)
-                    .then(() => {
+                    .remove(this.vm.id)
+                    .subscribe(() => {
                         this.router
                             .navigate(['dashboard']);
-                    })
-                    .catch(() => this.spinnerService.hide());
+
+                    }, () => this.spinnerService.hide());
             }
         });
     }

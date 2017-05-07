@@ -10,6 +10,8 @@ namespace AuthGuard.BLL.Domain.Entities
     public class App : GuidAggregateRootEntityBase, ICreatedAt
     {
         string displayName;
+        string key;
+        string websiteUrl;
 
         public string UserId { get; set; }
 
@@ -19,8 +21,18 @@ namespace AuthGuard.BLL.Domain.Entities
             set => displayName = value?.Trim();
         }
 
-        public string Key { get; set; }
-        public string WebsiteUrl { get; set; }
+        public string Key
+        {
+            get => key;
+            set => key = value?.Trim().ToLower();
+        }
+
+        public string WebsiteUrl
+        {
+            get => websiteUrl;
+            set => websiteUrl = value?.Trim();
+        }
+
         public bool IsLocalAccountEnabled { get; set; }
         public bool IsRememberLogInEnabled { get; set; }
         public bool IsSecurityQuestionsEnabled { get; set; }
@@ -54,6 +66,11 @@ namespace AuthGuard.BLL.Domain.Entities
                 .NotEmpty()
                 .Length(10, 100)
                 .Must(x => Uri.IsWellFormedUriString(x, UriKind.Absolute));
+
+            RuleFor(x => x.Key)
+                .NotEmpty()
+                .Matches("^[a-zA-Z0-9-]*$").WithMessage("Only letters, numbers and '-' allowed.")
+                .Length(2, 100);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
+using AuthGuard.DAL.QueryRepositories.Apps;
 using AuthGuard.DAL.Repositories.Apps;
 using DddCore.Contracts.BLL.Errors;
 using DddCore.Contracts.Crosscutting.UserContext;
@@ -21,6 +22,7 @@ namespace AuthGuard.Services.Apps
         readonly IUnitOfWork unitOfWork;
         readonly IAppsRepository appsRepository;
         readonly IUserContext<Guid> userContext;
+        readonly IAppsQueryRepository appsQueryRepository;
 
         const string AuthGuardKey = "auth-guard";
 
@@ -29,7 +31,9 @@ namespace AuthGuard.Services.Apps
             IIdentityServerInteractionService interaction,
             IAppsEntityService appsEntityService,
             IUnitOfWork unitOfWork,
-            IAppsRepository appsRepository, IUserContext<Guid> userContext)
+            IAppsRepository appsRepository,
+            IUserContext<Guid> userContext,
+            IAppsQueryRepository appsQueryRepository)
         {
             this.context = context;
             this.interaction = interaction;
@@ -37,6 +41,7 @@ namespace AuthGuard.Services.Apps
             this.unitOfWork = unitOfWork;
             this.appsRepository = appsRepository;
             this.userContext = userContext;
+            this.appsQueryRepository = appsQueryRepository;
         }
 
         public async Task<AppVm> SearchAsync(string returnUrl)
@@ -78,6 +83,25 @@ namespace AuthGuard.Services.Apps
             if (app == null || app.UserId != userId) return null;
 
             var result = MapToExtendedAppVm(app);
+            return result;
+        }
+
+        public async Task<bool> IsAppExistAsync(string key)
+        {
+            if (String.IsNullOrWhiteSpace(key)) return false;
+
+            return await appsQueryRepository.IsAppExist(key);
+        }
+
+        public async Task<OperationResult> DeleteAsync(Guid id)
+        {
+            var result = await appsEntityService.DeleteAsync(id);
+
+            if (result.IsSucceed)
+            {
+                await unitOfWork.SaveAsync();
+            }
+
             return result;
         }
 

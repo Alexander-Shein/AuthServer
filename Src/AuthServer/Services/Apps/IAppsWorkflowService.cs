@@ -13,5 +13,7 @@ namespace AuthGuard.Services.Apps
         Task<(ExtendedAppVm App, OperationResult OperationResult)> PutAsync(Guid id, ExtendedAppIm im);
         Task<IEnumerable<ExtendedAppVm>> GetAllAsync();
         Task<ExtendedAppVm> GetAsync(Guid id);
+        Task<bool> IsAppExistAsync(string key);
+        Task<OperationResult> DeleteAsync(Guid id);
     }
 }

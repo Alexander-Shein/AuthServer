@@ -26,12 +26,16 @@
                                 type="text"
                                 name="name"
                                 maxlength="100"
+                                minlength="2"
                                 required
                                 [(ngModel)]="vm.name">
                         <md-hint align="end">{{name.value?.length || 0}} / 100</md-hint>
                         <md-hint *ngIf="name.errors && (name.dirty || name.touched)" style="color: red;">
                             <span [hidden]="!name.errors.required">
                                 App name is required.
+                            </span>
+                            <span [hidden]="!name.errors.minlength || name.errors.required">
+                                Min length is 2 characters.
                             </span>
                         </md-hint>
                     </md-input-container>
@@ -46,18 +50,25 @@
                                 type="text"
                                 name="key"
                                 maxlength="100"
-                                pattern="^[a-zA-Z0-9_-]*$"
+                                minlength="2"
+                                pattern="^[a-zA-Z0-9-]*$"
                                 required
+                                (input)="validateKey(!(key.errors && (key.dirty || key.touched)))"
                                 [(ngModel)]="vm.key">
                         <md-hint align="end">{{key.value?.length || 0}} / 100</md-hint>
                         <md-hint *ngIf="key.errors && (key.dirty || key.touched)" style="color: red;">
                             <span [hidden]="!key.errors.required">
                                 App key is required.
                             </span>
-                            <span [hidden]="!key.errors.pattern">
-                                Only letters, numbers and -_ allowed.
+                            <span [hidden]="!key.errors.minlength || key.errors.required">
+                                Min length is 2 characters.
+                            </span>
+                            <span [hidden]="!key.errors.pattern || key.errors.required || key.errors.minlength">
+                                Only letters, numbers and '-' allowed.
                             </span>
                         </md-hint>
+                        <md-hint *ngIf="appKeyErrorMessage" style="color: red;"><span>{{appKeyErrorMessage}}</span></md-hint>
+                        <md-spinner mdPostfix class="au-input-spinner" *ngIf="inProgress"></md-spinner>
                     </md-input-container>
                 </div>
 
@@ -78,7 +89,7 @@
                             <span [hidden]="!websiteUrl.errors.required">
                                 Website url is required.
                             </span>
-                            <span [hidden]="!websiteUrl.errors.pattern">
+                            <span [hidden]="!websiteUrl.errors.pattern || websiteUrl.errors.required">
                                 Website url is not valid.
                             </span>
                         </md-hint>
@@ -304,7 +315,7 @@
 
                 <div class="col-12 text-right mt-1">
                     <button
-                            [disabled]="!putAppForm.form.valid"
+                            [disabled]="!putAppForm.form.valid || appKeyErrorMessage !== '' || inProgress"
                             md-raised-button
                             color="primary">save</button>
                 </div>

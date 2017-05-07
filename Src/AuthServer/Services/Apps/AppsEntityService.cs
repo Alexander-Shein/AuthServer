@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.DAL.Repositories.Apps;
 using DddCore.Contracts.BLL.Domain.Entities;
+using DddCore.Contracts.BLL.Domain.Entities.BusinessRules;
 using DddCore.Contracts.BLL.Domain.Entities.Model;
+using DddCore.Contracts.BLL.Domain.Events;
 using DddCore.Contracts.BLL.Errors;
 using DddCore.Contracts.Crosscutting.UserContext;
 using DddCore.Contracts.SL.Services.Application.DomainStack;
@@ -17,16 +19,22 @@ namespace AuthGuard.Services.Apps
         readonly IAppsRepository appsRepository;
         readonly IDomainFactory domainFactory;
         readonly IUserContext<Guid> userContext;
+        readonly IDomainEventDispatcher domainEventDispatcher;
+        readonly IBusinessRulesValidatorFactory businessRulesValidatorFactory;
 
         public AppsEntityService(
             IAppsRepository repository,
             IGuard guard,
             IDomainFactory domainFactory,
-            IUserContext<Guid> userContext) : base(repository, guard)
+            IUserContext<Guid> userContext,
+            IDomainEventDispatcher domainEventDispatcher,
+            IBusinessRulesValidatorFactory businessRulesValidatorFactory) : base(repository, guard)
         {
             appsRepository = repository;
             this.domainFactory = domainFactory;
             this.userContext = userContext;
+            this.domainEventDispatcher = domainEventDispatcher;
+            this.businessRulesValidatorFactory = businessRulesValidatorFactory;
         }
 
         public async Task<(App App, OperationResult OperationResult)> PutAsync(Guid id, ExtendedAppIm im)
@@ -44,6 +52,7 @@ namespace AuthGuard.Services.Apps
                 app.CrudState = CrudState.Modified;
             }
 
+            app.IsLocalAccountEnabled = im.IsLocalAccountEnabled;
             app.IsActive = im.IsActive;
             app.IsEmailEnabled = im.EmailSettings.IsEnabled;
             app.IsEmailConfirmationRequired = im.EmailSettings.IsConfirmationRequired;
@@ -89,6 +98,9 @@ namespace AuthGuard.Services.Apps
                 app.ExternalProviders.Add(externalProvider);
             }
 
+            app.BusinessRulesValidatorFactory = businessRulesValidatorFactory;
+            app.DomainEventDispatcher = domainEventDispatcher;
+
             var result = ValidateAndPersist(app);
 
             if (result.IsSucceed)
@@ -97,6 +109,26 @@ namespace AuthGuard.Services.Apps
             }
 
             return (null, result);
+        }
+
+        public async Task<OperationResult> DeleteAsync(Guid id)
+        {
+            var app = await appsRepository.ReadWithProvidersById(id);
+
+            if (app == null) return OperationResult.Succeed;
+
+            if (app.UserId != userContext.Id.ToString())
+            {
+                return OperationResult.Failed(1, "App does not belong to the current user.");
+            }
+
+            app.BusinessRulesValidatorFactory = businessRulesValidatorFactory;
+            app.DomainEventDispatcher = domainEventDispatcher;
+
+            app.WalkGraph(x => x.CrudState = CrudState.Deleted);
+            appsRepository.Persist(app);
+
+            return OperationResult.Succeed;
         }
     }
 }

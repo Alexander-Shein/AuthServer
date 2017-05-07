@@ -65,5 +65,26 @@ namespace AuthGuard.Api
             var result = await appsWorkflowService.GetAsync(id);
             return Ok(result);
         }
+
+        [Authorize]
+        [HttpHead("")]
+        public async Task<IActionResult> IsAppExistAsync(string key)
+        {
+            var isExist = await appsWorkflowService.IsAppExistAsync(key);
+            if (!isExist)
+            {
+                return NotFound();
+            }
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAsync(Guid id)
+        {
+            await appsWorkflowService.DeleteAsync(id);
+            return Ok();
+        }
     }
 }

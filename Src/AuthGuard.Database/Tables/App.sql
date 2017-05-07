@@ -25,4 +25,7 @@
 
 	CONSTRAINT [PK_App_Id] PRIMARY KEY CLUSTERED([Id] ASC),
 	CONSTRAINT [FK_App_UserId_User_Id] FOREIGN KEY([UserId]) REFERENCES [dbo].[AspNetUsers] ([Id])
-)
+);
+
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IDX_App_Key_U_N] ON [dbo].[App]([Key] ASC);

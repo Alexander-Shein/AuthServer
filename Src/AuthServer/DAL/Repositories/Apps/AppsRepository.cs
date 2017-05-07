@@ -10,7 +10,10 @@ namespace AuthGuard.DAL.Repositories.Apps
 {
     public class AppsRepository : Repository<App, Guid>, IAppsRepository
     {
-        public AppsRepository(IDataContext dataContext, IUserContext<Guid> userContext) : base(dataContext, userContext)
+
+        public AppsRepository(
+            IDataContext dataContext,
+            IUserContext<Guid> userContext) : base(dataContext, userContext)
         {
         }
 

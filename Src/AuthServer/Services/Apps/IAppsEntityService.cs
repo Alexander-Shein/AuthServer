@@ -9,5 +9,6 @@ namespace AuthGuard.Services.Apps
     public interface IAppsEntityService : IEntityService<App, Guid>
     {
         Task<(App App, OperationResult OperationResult)> PutAsync(Guid id, ExtendedAppIm im);
+        Task<OperationResult> DeleteAsync(Guid id);
     }
 }

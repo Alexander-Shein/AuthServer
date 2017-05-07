@@ -23,6 +23,9 @@ export class EditAppPageComponent implements OnInit {
     public vm: ExtendedAppVm;
     public externalProviders: ExternalProvider[];
     public title: string = 'Edit app';
+    public inProgress = false;
+    public appKeyErrorMessage: string = '';
+    public currentAppKey: string;
 
     public ngOnInit(): void {
         this.route
@@ -31,6 +34,7 @@ export class EditAppPageComponent implements OnInit {
                 this.vm = data.app;
                 this.externalProviders = data.externalProviders;
                 this.removeSelectedExternalProviders();
+                this.currentAppKey = this.vm.key;
             });
     }
 
@@ -62,6 +66,27 @@ export class EditAppPageComponent implements OnInit {
                     .navigate(['/business-apps/' + this.vm.id]);
             },
             () => this.spinnerService.hide());
+    }
+
+    public validateKey(isFieldValid: boolean): void {
+        if (!isFieldValid) return;
+        if (this.currentAppKey === this.vm.key.toLocaleLowerCase()) return;
+        if (this.inProgress) return;
+        if (!this.vm.key) return;
+
+        this.inProgress = true;
+
+        this.appsService
+            .isAppExist(this.vm.key)
+            .subscribe(
+                () => {
+                    this.appKeyErrorMessage = 'App key already exists.';
+                    this.inProgress = false;
+                },
+                () => {
+                    this.appKeyErrorMessage = '';
+                    this.inProgress = false;
+                });
     }
 
     private removeSelectedExternalProviders() {

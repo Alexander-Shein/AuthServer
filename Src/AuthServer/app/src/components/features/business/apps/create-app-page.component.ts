@@ -24,6 +24,8 @@ export class CreateAppPageComponent implements OnInit {
     public vm: ExtendedAppIm;
     public externalProviders: ExternalProvider[] = [];
     public title: string = 'Create app';
+    public inProgress = false;
+    public appKeyErrorMessage: string = '';
 
     public ngOnInit(): void {
         this.vm = {
@@ -85,6 +87,26 @@ export class CreateAppPageComponent implements OnInit {
                     .navigate(['/business-apps/' + vm.id]);
             },
             () => this.spinnerService.hide());
+    }
+
+    public validateKey(isFieldValid: boolean): void {
+        if (!isFieldValid) return;
+        if (this.inProgress) return;
+        if (!this.vm.key) return;
+
+        this.inProgress = true;
+
+        this.appsService
+            .isAppExist(this.vm.key)
+            .subscribe(
+                () => {
+                    this.appKeyErrorMessage = 'App key already exists.';
+                    this.inProgress = false;
+                },
+                () => {
+                    this.appKeyErrorMessage = '';
+                    this.inProgress = false;
+                });
     }
 
 }

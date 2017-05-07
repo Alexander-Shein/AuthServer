@@ -54,10 +54,10 @@ export class AppsService extends ServiceBase implements IAppsService {
             .catch((errors) => this.handleError(errors));
     }
 
-    public remove(name: string): Promise<void> {
-        return new Promise<void>((resolve) =>
-            setTimeout(() => resolve(), 500)
-        );
+    public remove(id: string): Observable<void> {
+        return this.http
+            .delete(this.apiUrl + id)
+            .catch((errors) => this.handleError(errors));;
     }
 
     public getByUrl(redirectUrl: string): Observable<AppVm> {
@@ -68,6 +68,12 @@ export class AppsService extends ServiceBase implements IAppsService {
                     .get(this.apiUrl + 'search', { search: params })
                     .map((res) => this.extractData(res))
                     .catch((error) => this.handleError(error));
+    }
+
+    public isAppExist(key: string): Observable<void> {
+        return this.http
+            .head(this.apiUrl + '?key=' + encodeURIComponent(key))
+            .catch((error) => this.handleError(error));
     }
 
 }
