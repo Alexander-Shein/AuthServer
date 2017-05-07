@@ -7,3 +7,6 @@
 	CONSTRAINT [FK_AppExternalProvider_AppId_App_Id] FOREIGN KEY([AppId]) REFERENCES [dbo].[App] ([Id]),
 	CONSTRAINT [FK_AppExternalProvider_ExternalProviderId_ExternalProvider_Id] FOREIGN KEY([ExternalProviderId]) REFERENCES [dbo].[ExternalProvider] ([Id])
 )
+
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IDX_AppExternalProvider_AppId_ExternalProviderId_U_N] ON [dbo].[AppExternalProvider]([AppId] ASC, [ExternalProviderId] ASC);

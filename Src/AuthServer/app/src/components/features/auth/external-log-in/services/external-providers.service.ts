@@ -21,19 +21,11 @@ export class ExternalProvidersService extends ServiceBase implements IExternalPr
         super(notificationsService);
     }
 
-    public getSearchableProviders(): Promise<SearchableExternalProvider[]> {
-        return Promise.resolve([
-                {
-                    matches: ['@live', '@outlook'],
-                    displayName: 'Microsoft',
-                    authenticationScheme: 'Microsoft'
-                },
-                {
-                    matches: ['@gmail', '@outlook'],
-                    displayName: 'Google',
-                    authenticationScheme: 'Google'
-                }
-            ]);
+    public getSearchableProviders(): Observable<SearchableExternalProvider[]> {
+        return this.http
+            .get(this.apiUrl + 'search?filter=searchable')
+            .map((res) => this.extractData(res))
+            .catch((error) => this.handleError(error));
     }
 
     public linkExternalLogIn(provider: string): void {

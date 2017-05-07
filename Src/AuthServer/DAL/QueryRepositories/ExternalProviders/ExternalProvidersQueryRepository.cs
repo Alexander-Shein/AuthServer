@@ -17,5 +17,11 @@ namespace AuthGuard.DAL.QueryRepositories.ExternalProviders
             var sql = "SELECT * FROM [dbo].[ExternalProvider];";
             return await GetListAsync<ExternalProviderDto>(sql);
         }
+
+        public async Task<IEnumerable<SearchableExternalProviderDto>> GetSearchableAsync()
+        {
+            var sql = "SELECT * FROM [dbo].[ExternalProvider] WHERE [IsSearchable] = 1;";
+            return await GetListAsync<SearchableExternalProviderDto>(sql);
+        }
     }
 }

@@ -7,4 +7,4 @@
 
 	CONSTRAINT [PK_SecurityCode_Id] PRIMARY KEY CLUSTERED([Id] ASC),
 	CONSTRAINT [FK_SecurityCode_SecurityCodeActionId_SecurityCodeAction_Id] FOREIGN KEY([SecurityCodeActionId]) REFERENCES [dbo].[SecurityCodeAction] ([Id])
-)
+);

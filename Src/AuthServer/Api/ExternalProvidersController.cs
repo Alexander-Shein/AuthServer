@@ -19,9 +19,16 @@ namespace AuthGuard.Api
 
         [Authorize]
         [HttpGet("")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var providers = await workflowService.GetAll();
+            var providers = await workflowService.GetAllAsync();
+            return Ok(providers);
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchAsync(string filter)
+        {
+            var providers = await workflowService.SearchAsync(filter);
             return Ok(providers);
         }
     }

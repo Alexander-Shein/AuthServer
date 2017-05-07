@@ -9,6 +9,6 @@ export interface IExternalProvidersService {
     linkExternalLogIn(provider: string): void;
     deleteExternalLogIn(userExternalProvider: UserExternalProvider): Promise<void>;
     getAll(): Observable<ExternalProvider[]>;
-    getSearchableProviders(): Promise<SearchableExternalProvider[]>;
+    getSearchableProviders(): Observable<SearchableExternalProvider[]>;
 
 }

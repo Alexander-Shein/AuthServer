@@ -7,6 +7,7 @@ namespace AuthGuard.Services.ExternalProviders
 {
     public interface IExternalProvidersWorkflowService : IWorkflowService
     {
-        Task<IEnumerable<ExternalProviderVm>> GetAll();
+        Task<IEnumerable<ExternalProviderVm>> GetAllAsync();
+        Task<IEnumerable<ExternalProviderVm>> SearchAsync(string filter);
     }
 }
