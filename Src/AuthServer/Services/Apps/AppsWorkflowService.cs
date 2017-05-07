@@ -75,7 +75,7 @@ namespace AuthGuard.Services.Apps
             var userId = userContext.Id.ToString();
 
             var app = await appsRepository.ReadWithProvidersById(id);
-            if (app == null || app.UserId == userId) return null;
+            if (app == null || app.UserId != userId) return null;
 
             var result = MapToExtendedAppVm(app);
             return result;

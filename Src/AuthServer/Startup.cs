@@ -1,24 +1,13 @@
-﻿using System;
-using AuthGuard.BLL.Domain.Entities;
+﻿using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
 using AuthGuard.Services;
 using AuthGuard.Services.Apps;
 using AuthGuard.Services.Passwords;
 using AuthGuard.Services.Security;
-using AuthGuard.Services.Support;
 using AuthGuard.Services.Tokens;
-using AuthGuard.Services.TwoFactor;
-using AuthGuard.Services.Users;
-using AuthGuard.SL.Passwordless.Workflow;
-using DddCore.BLL.Domain.Entities;
-using DddCore.Contracts.BLL.Domain.Entities;
-using DddCore.Contracts.Crosscutting.UserContext;
 using DddCore.Contracts.DAL;
-using DddCore.Contracts.SL.Services.Application.DomainStack;
 using DddCore.Crosscutting.DependencyInjection;
-using DddCore.Crosscutting.UserContext;
 using DddCore.SL.Services;
-using DddCore.SL.Services.Application.DomainStack;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Builder;
@@ -89,21 +78,14 @@ namespace AuthGuard
 
             services.AddMvc();
             //services.AddDddCore();
-            services.AddScoped<IDomainFactory, DomainFactory>();
-            services.AddScoped<IGuard, Guard>();
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
-            services.AddScoped<IUsersService, UsersService>();
-            services.AddScoped<ISupportWorkflowService, SupportWorkflowService>();
-            services.AddScoped<ITwoFactorsService, TwoFactorsService>();
-            services.AddScoped<IUserContext<Guid>, IdentityUserContext>();
             services.AddScoped<IClientStore, ClientsStore>();
             services.AddScoped<IRedirectUriValidator, AppRedirectUrlValidator>();
             services.AddScoped<ITokensService, TokensService>();
             services.AddScoped<ISecurityCodesService, SecurityCodesService>();
-            services.AddScoped<IPasswordlessWorkflowService, PasswordlessWorkflowService>();
             services.AddScoped<IPasswordsService, PasswordsService>();
 
             services.AddIdentityServer()

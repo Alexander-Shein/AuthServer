@@ -20,7 +20,7 @@ namespace AuthGuard.SL.Passwordless.Workflow
         readonly ApplicationDbContext context;
         readonly UserManager<ApplicationUser> userManager;
         readonly SignInManager<ApplicationUser> signInManager;
-        readonly IUsersService usersService;
+        readonly IUsersWorkflowService usersService;
 
         public PasswordlessWorkflowService(
             ISecurityCodesService securityCodesService,
@@ -28,7 +28,7 @@ namespace AuthGuard.SL.Passwordless.Workflow
             ISmsSender smsSender,
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager, IUsersService usersService)
+            SignInManager<ApplicationUser> signInManager, IUsersWorkflowService usersService)
         {
             this.securityCodesService = securityCodesService;
             this.emailSender = emailSender;

@@ -11,9 +11,9 @@ namespace AuthGuard.Api
     [Route("api/two-factor")]
     public class TwoFactorController : Controller
     {
-        readonly ITwoFactorsService twoFactorsService;
+        readonly ITwoFactorsWorkflowService twoFactorsService;
 
-        public TwoFactorController(ITwoFactorsService twoFactorsService)
+        public TwoFactorController(ITwoFactorsWorkflowService twoFactorsService)
         {
             this.twoFactorsService = twoFactorsService;
         }

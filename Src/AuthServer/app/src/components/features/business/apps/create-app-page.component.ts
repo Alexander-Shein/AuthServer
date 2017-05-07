@@ -1,10 +1,10 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {App} from "./models/app";
 import {AppsService} from "./services/apps.service";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {ExternalProvider} from "../../auth/external-log-in/models/external-provider";
-import {LocalAccountSettings} from "./models/local-account-settings";
+import {ExtendedAppIm} from "./models/extended-app-im";
+import {ExtendedAppVm} from "./models/extended-app-vm";
 
 
 @Component({
@@ -21,19 +21,17 @@ export class CreateAppPageComponent implements OnInit {
         private spinnerService: SpinnerService
     ) {}
 
-    public vm: App;
+    public vm: ExtendedAppIm;
     public externalProviders: ExternalProvider[] = [];
     public title: string = 'Create app';
 
     public ngOnInit(): void {
         this.vm = {
-            id: null,
             isActive: true,
             name: '',
             key: '',
             externalProviders: [],
             websiteUrl: '',
-            usersCount: 0,
             isLocalAccountEnabled: true,
             isRememberLogInEnabled: true,
             isSecurityQuestionsEnabled: false,
@@ -82,9 +80,9 @@ export class CreateAppPageComponent implements OnInit {
 
         this.appsService
             .post(this.vm)
-            .subscribe(() => {
+            .subscribe((vm: ExtendedAppVm) => {
                 this.router
-                    .navigate(['/business-apps/' + this.vm.name]);
+                    .navigate(['/business-apps/' + vm.id]);
             },
             () => this.spinnerService.hide());
     }

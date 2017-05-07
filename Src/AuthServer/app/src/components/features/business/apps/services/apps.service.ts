@@ -4,11 +4,12 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import {IAppsService} from "./i-apps.service";
-import {App} from "../models/app";
 import {AppVm} from "../models/app-vm";
 import {Consts} from "../../../../consts";
 import {ServiceBase} from "../../../../common/base.service";
 import {NotificationsService} from "angular2-notifications";
+import {ExtendedAppVm} from "../models/extended-app-vm";
+import {ExtendedAppIm} from "../models/extended-app-im";
 
 
 @Injectable()
@@ -23,7 +24,7 @@ export class AppsService extends ServiceBase implements IAppsService {
 
     private readonly apiUrl: string = 'http://localhost:5000/api/apps/';
 
-    public getAll(): Observable<App[]> {
+    public getAll(): Observable<ExtendedAppVm[]> {
 
         return this.http
             .get(this.apiUrl)
@@ -31,60 +32,26 @@ export class AppsService extends ServiceBase implements IAppsService {
             .catch((errors) => this.handleError(errors));
     }
 
-    public put(app: App): Observable<App> {
+    public put(id: string, app: ExtendedAppIm): Observable<ExtendedAppVm> {
         return this.http
-            .put(this.apiUrl, app)
+            .put(this.apiUrl + id, app)
             .map((res) => this.extractData(res))
             .catch((errors) => this.handleError(errors));
     }
 
-    public post(app: App): Observable<App> {
+    public post(app: ExtendedAppIm): Observable<ExtendedAppVm> {
         return this.http
             .post(this.apiUrl, app)
             .map((res) => this.extractData(res))
             .catch((errors) => this.handleError(errors));
     }
 
-    public get(name: string): Promise<App> {
-        return new Promise<App>((resolve) =>
-            setTimeout(() => resolve({
-                id: '1',
-                isActive: true,
-                name: name,
-                key: 'client-id',
-                externalProviders: [
-                    {
-                        id: "1",
-                        displayName: 'twitter',
-                        authenticationScheme: 'Twitter'
-                    },
-                    {
-                        id: "1",
-                        displayName: 'facebook',
-                        authenticationScheme: 'Facebook'
-                    }
-                ],
-                websiteUrl: 'http://localhost:8000',
-                usersCount: 435,
-                isLocalAccountEnabled: true,
-                isRememberLogInEnabled: false,
-                isSecurityQuestionsEnabled: false,
-                emailSettings: {
-                    isEnabled : true,
-                    isConfirmationRequired: true,
-                    isPasswordlessEnabled: true,
-                    isPasswordEnabled: true,
-                    isSearchRelatedProviderEnabled: true
-                },
-                phoneSettings: {
-                    isEnabled : true,
-                    isConfirmationRequired: true,
-                    isPasswordlessEnabled: true,
-                    isPasswordEnabled: true,
-                    isSearchRelatedProviderEnabled: true
-                }
-            }), 500)
-        );
+    public get(id: string): Observable<ExtendedAppVm> {
+
+        return this.http
+            .get(this.apiUrl + id)
+            .map((res) => this.extractData(res))
+            .catch((errors) => this.handleError(errors));
     }
 
     public remove(name: string): Promise<void> {

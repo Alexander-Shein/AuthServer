@@ -1,9 +1,9 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {App} from "./models/app";
 import {AppsService} from "./services/apps.service";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
 import {ExternalProvider} from "../../auth/external-log-in/models/external-provider";
+import {ExtendedAppVm} from "./models/extended-app-vm";
 
 
 @Component({
@@ -20,14 +20,14 @@ export class EditAppPageComponent implements OnInit {
         private spinnerService: SpinnerService
     ) { }
 
-    public vm: App;
+    public vm: ExtendedAppVm;
     public externalProviders: ExternalProvider[];
     public title: string = 'Edit app';
 
     public ngOnInit(): void {
         this.route
             .data
-            .subscribe((data: { app: App, externalProviders: ExternalProvider[] }) => {
+            .subscribe((data: { app: ExtendedAppVm, externalProviders: ExternalProvider[] }) => {
                 this.vm = data.app;
                 this.externalProviders = data.externalProviders;
                 this.removeSelectedExternalProviders();
@@ -56,10 +56,10 @@ export class EditAppPageComponent implements OnInit {
             .show();
 
         this.appsService
-            .put(this.vm)
+            .put(this.vm.id, this.vm)
             .subscribe(() => {
                 this.router
-                    .navigate(['/business-apps/' + this.vm.name]);
+                    .navigate(['/business-apps/' + this.vm.id]);
             },
             () => this.spinnerService.hide());
     }

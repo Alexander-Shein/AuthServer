@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AuthGuard.Api;
 using AuthGuard.BLL.Domain.Entities;
@@ -17,7 +16,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AuthGuard.Services.Users
 {
-    public class UsersService : IUsersService
+    public class UsersWorkflowService : IUsersWorkflowService
     {
         #region Private Members
 
@@ -31,7 +30,7 @@ namespace AuthGuard.Services.Users
 
         #endregion
 
-        public UsersService(
+        public UsersWorkflowService(
             ApplicationDbContext applicationDbContext,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
@@ -53,7 +52,7 @@ namespace AuthGuard.Services.Users
 
         public async Task<UserVm> GetCurrentUserAsync()
         {
-            var user = await context.Set<ApplicationUser>().FindAsync(userContext.Id);
+            var user = await context.Set<ApplicationUser>().FindAsync(userContext.Id.ToString());
 
             var vm = Map(user);
             return vm;
@@ -82,7 +81,7 @@ namespace AuthGuard.Services.Users
 
         public async Task<(UserVm User, OperationResult OperationResult)> UpdateAsync(UserIm im)
         {
-            var user = await context.Set<ApplicationUser>().FindAsync(userContext.Id);
+            var user = await context.Set<ApplicationUser>().FindAsync(userContext.Id.ToString());
 
             var putEmailResult = await UpdateEmailAsync(user, im.Email, im.EmailCode ?? -1);
 

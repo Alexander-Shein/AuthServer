@@ -1,12 +1,12 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
 import {SpinnerService} from "../../common/spinner/services/spinner.service";
-import {App} from "../business/apps/models/app";
 import {ConfirmationDialogComponent} from "../../common/pop-ups/confirmation-dialog.component";
 import {MdDialog} from "@angular/material";
 import {User} from "../auth/models/user";
 import {UsersService} from "../auth/services/users.service";
 import {UserIm} from "../auth/models/user-im";
+import {ExtendedAppVm} from "../business/apps/models/extended-app-vm";
 
 
 @Component({
@@ -23,11 +23,11 @@ export class DashboardPageComponent implements OnInit {
         private dialog: MdDialog) {}
 
     public user: User;
-    public apps: App[];
+    public apps: ExtendedAppVm[];
 
     public ngOnInit(): void {
         this.route.data
-            .subscribe((data: {user: User, apps: App[]}) => {
+            .subscribe((data: {user: User, apps: ExtendedAppVm[]}) => {
                 this.user = data.user;
                 this.apps = data.apps;
             });

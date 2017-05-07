@@ -11,9 +11,9 @@ namespace AuthGuard.Api
     [Route("api/[controller]")]
     public class UsersController : Controller
     {
-        private readonly IUsersService usersService;
+        private readonly IUsersWorkflowService usersService;
 
-        public UsersController(IUsersService usersService)
+        public UsersController(IUsersWorkflowService usersService)
         {
             this.usersService = usersService;
         }

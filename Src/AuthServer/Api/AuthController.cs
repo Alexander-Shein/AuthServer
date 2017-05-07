@@ -30,7 +30,7 @@ namespace AuthGuard.Api
         readonly IEmailSender emailSender;
         readonly ISmsSender smsSender;
         readonly ILogger logger;
-        readonly IUsersService usersService;
+        readonly IUsersWorkflowService usersService;
         readonly ApplicationDbContext context;
         readonly ISecurityCodesService securityCodesService;
 
@@ -43,7 +43,7 @@ namespace AuthGuard.Api
             IIdentityServerInteractionService interaction,
             IHttpContextAccessor httpContext,
             IClientStore clientStore,
-            IUsersService usersService,
+            IUsersWorkflowService usersService,
             ApplicationDbContext context,
             ISecurityCodesService securityCodesService)
         {

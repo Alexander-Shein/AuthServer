@@ -15,7 +15,7 @@ namespace AuthGuard.Services.Passwords
 {
     public class PasswordsService : IPasswordsService
     {
-        readonly IUsersService usersService;
+        readonly IUsersWorkflowService usersService;
         readonly ISecurityCodesService securityCodesService;
         readonly IEmailSender emailSender;
         readonly ISmsSender smsSender;
@@ -24,7 +24,7 @@ namespace AuthGuard.Services.Passwords
         readonly IUserContext<Guid> userContext;
         readonly SignInManager<ApplicationUser> signInManager;
 
-        public PasswordsService(IUsersService usersService, ISecurityCodesService securityCodesService, IEmailSender emailSender, ISmsSender smsSender, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IUserContext<Guid> userContext, SignInManager<ApplicationUser> signInManager)
+        public PasswordsService(IUsersWorkflowService usersService, ISecurityCodesService securityCodesService, IEmailSender emailSender, ISmsSender smsSender, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IUserContext<Guid> userContext, SignInManager<ApplicationUser> signInManager)
         {
             this.usersService = usersService;
             this.securityCodesService = securityCodesService;

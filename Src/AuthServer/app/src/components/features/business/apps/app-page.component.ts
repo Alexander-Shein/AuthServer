@@ -1,10 +1,10 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {App} from "./models/app";
 import {AppsService} from "./services/apps.service";
 import {MdDialog} from "@angular/material";
 import {ConfirmationDialogComponent} from "../../../common/pop-ups/confirmation-dialog.component";
 import {SpinnerService} from "../../../common/spinner/services/spinner.service";
+import {ExtendedAppVm} from "./models/extended-app-vm";
 
 
 @Component({
@@ -22,12 +22,12 @@ export class AppPageComponent implements OnInit {
         private spinnerService: SpinnerService
     ) {}
 
-    public vm: App;
+    public vm: ExtendedAppVm;
 
     public ngOnInit(): void {
         this.route
             .data
-            .subscribe((data: { app: App }) => {
+            .subscribe((data: {app: ExtendedAppVm}) => {
                 this.vm = data.app;
             });
     }

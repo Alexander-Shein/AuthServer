@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace AuthGuard.Services.TwoFactor
 {
-    public class TwoFactorsService : ITwoFactorsService
+    public class TwoFactorsWorkflowService : ITwoFactorsWorkflowService
     {
         readonly UserManager<ApplicationUser> userManager;
         readonly SignInManager<ApplicationUser> signInManager;
@@ -21,7 +21,7 @@ namespace AuthGuard.Services.TwoFactor
         readonly ISecurityCodesService securityCodesService;
         readonly ApplicationDbContext context;
 
-        public TwoFactorsService(
+        public TwoFactorsWorkflowService(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,

@@ -4,10 +4,11 @@ using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Services.Users.Models.Input;
 using AuthGuard.Services.Users.Models.View;
 using DddCore.Contracts.BLL.Errors;
+using DddCore.Contracts.SL.Services.Application;
 
 namespace AuthGuard.Services.Users
 {
-    public interface IUsersService
+    public interface IUsersWorkflowService : IWorkflowService
     {
         Task<ApplicationUser> GetUserByEmailOrPhoneAsync(string userName);
         Task<UserVm> GetCurrentUserAsync();

@@ -18,7 +18,7 @@ const appRoutes: Routes = [
             }
     },
     {
-        path: 'business-apps/:name',
+        path: 'business-apps/:id',
         component: AppPageComponent,
         resolve:
             {
@@ -26,7 +26,7 @@ const appRoutes: Routes = [
             }
     },
     {
-        path: 'business-apps/:name/edit',
+        path: 'business-apps/:id/edit',
         component: EditAppPageComponent,
         resolve:
             {
