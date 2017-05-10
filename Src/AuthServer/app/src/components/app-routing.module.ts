@@ -13,7 +13,14 @@ import {CurrentUserResolver} from "./features/auth/services/current-user-resolve
 const appRoutes = [
     {path: '', redirectTo: 'landing', pathMatch: 'full'},
     {path: 'landing', component: LandingPageComponent},
-    {path: 'contact', component: ContactPageComponent},
+    {
+        path: 'contact',
+        component: ContactPageComponent,
+        resolve:
+            {
+                user: CurrentUserResolver
+            }
+    },
     {
         path: 'dashboard',
         component: DashboardPageComponent,

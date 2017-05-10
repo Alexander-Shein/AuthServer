@@ -115,11 +115,14 @@ namespace AuthGuard.Services.Apps
         {
             var app = await appsRepository.ReadWithProvidersById(id);
 
-            if (app == null) return OperationResult.Succeed;
+            if (app == null)
+            {
+                return OperationResult.Failed(1, $"App with id '{id}' does not exist.");
+            }
 
             if (app.UserId != userContext.Id.ToString())
             {
-                return OperationResult.Failed(1, "App does not belong to the current user.");
+                return OperationResult.Failed(2, "App does not belong to the current user.");
             }
 
             app.BusinessRulesValidatorFactory = businessRulesValidatorFactory;

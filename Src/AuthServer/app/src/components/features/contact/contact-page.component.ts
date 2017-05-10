@@ -3,6 +3,8 @@ import {Message} from "./models/message";
 import {MessagesService} from "./services/messages.service";
 import {SpinnerService} from "../../common/spinner/services/spinner.service";
 import {AuthenticationService} from "../auth/services/authentication.service";
+import {ActivatedRoute} from "@angular/router";
+import {User} from "../auth/models/user";
 
 
 @Component({
@@ -13,11 +15,19 @@ import {AuthenticationService} from "../auth/services/authentication.service";
 export class ContactPageComponent {
 
     constructor(
+        private route: ActivatedRoute,
         private messagesService: MessagesService,
         private spinnerService: SpinnerService,
         private authenticationService: AuthenticationService
     ) {
         this.isLoggedIn = authenticationService.isLoggedIn();
+
+        this.route.data
+            .subscribe((data: {user: User}) => {
+                if(data.user) {
+                    this.im.fromEmail = data.user.email;
+                }
+            });
     }
 
     public isLoggedIn: boolean;
