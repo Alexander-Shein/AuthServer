@@ -16,4 +16,4 @@ import "angular2-notifications";
 import "bootstrap/scss/bootstrap-reboot.scss";
 import "bootstrap/scss/bootstrap.scss";
 import "bootstrap/scss/bootstrap-grid.scss";
-import "@angular/material/core/theming/prebuilt/indigo-pink.scss";
+import "@angular/material/prebuilt-themes/indigo-pink.css";

@@ -1,13 +1,11 @@
 ﻿using System.Threading.Tasks;
-using AuthGuard.Services.Users;
-using AuthGuard.Services.Users.Models.Input;
+using AuthGuard.SL.Users;
+using AuthGuard.SL.Users.Models.Input;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthGuard.Api
 {
-    [EnableCors("default")]
     [Route("api/[controller]")]
     public class UsersController : Controller
     {
@@ -30,18 +28,16 @@ namespace AuthGuard.Api
             return Ok();
         }
 
-        [HttpGet]
         [Authorize]
-        [Route("me")]
+        [HttpGet("me")]
         public async Task<IActionResult> GetCurrentUserAsync()
         {
             var user = await usersService.GetCurrentUserAsync();
             return Ok(user);
         }
 
-        [HttpPatch]
         [Authorize]
-        [Route("me")]
+        [HttpPatch("me")]
         public async Task<IActionResult> UpdateAsync([FromBody] UserIm im)
         {
             var result = await usersService.UpdateAsync(im);
@@ -54,9 +50,8 @@ namespace AuthGuard.Api
             return Ok(result.User);
         }
 
-        [HttpPost]
         [Authorize]
-        [Route("me/notifications/new-local-provider")]
+        [HttpPost("me/notifications/new-local-provider")]
         public async Task<IActionResult> SendCodeToAddLocalProvider([FromBody] UserNameIm im)
         {
             var result = await usersService.SendCodeToAddLocalProvider(im);
@@ -69,8 +64,7 @@ namespace AuthGuard.Api
             return Ok();
         }
 
-        [HttpPut]
-        [Route("me/providers/{provider}/confirmed")]
+        [HttpPut("me/providers/{provider}/confirmed")]
         public async Task<IActionResult> ConfirmAccountAsync([FromBody] ConfirmationCodeIm im, string provider)
         {
             var result = await usersService.ConfirmAccountAsync(new ConfirmAccountIm

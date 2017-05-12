@@ -4,7 +4,8 @@
   "scripts": {
     "start": "webpack-dev-server --inline --progress --port 8080",
     "test": "karma start",
-    "build": "rimraf dist && webpack --config config/webpack.prod.js --progress --profile --bail"
+    "build": "rimraf dist && webpack --config config/webpack.prod.js --progress --profile --bail",
+    "build-dev": "webpack --progress --watch"
   },
   "devDependencies": {
     "@types/jasmine": "~2.5.42",
@@ -47,21 +48,21 @@
     "@angular/common": "^4.1.1",
     "@angular/compiler": "^4.1.1",
     "@angular/compiler-cli": "^4.1.1",
-    "@angular/core": "^4.0.0",
-    "@angular/forms": "^4.0.0",
-    "@angular/http": "^4.0.0",
+    "@angular/core": "^4.1.1",
+    "@angular/forms": "^4.1.1",
+    "@angular/http": "^4.1.1",
     "@angular/material": "^2.0.0-beta.3",
-    "@angular/platform-browser": "^4.0.0",
-    "@angular/platform-browser-dynamic": "^4.0.0",
-    "@angular/platform-server": "^4.0.0",
-    "@angular/router": "^4.0.0",
+    "@angular/platform-browser": "^4.1.2",
+    "@angular/platform-browser-dynamic": "^4.1.2",
+    "@angular/platform-server": "^4.1.2",
+    "@angular/router": "^4.1.2",
     "angular2-notifications": "^0.4.53",
     "bootstrap": "^4.0.0-alpha.6",
     "core-js": "^2.4.1",
-    "google-libphonenumber": "^2.0.14",
+    "google-libphonenumber": "^2.0.15",
     "hammerjs": "^2.0.8",
-    "ng2-webstorage": "^1.5.1",
-    "rxjs": "^5.0.1",
+    "ng2-webstorage": "^1.8.0",
+    "rxjs": "^5.4.0",
     "zone.js": "^0.8.5"
   }
 }

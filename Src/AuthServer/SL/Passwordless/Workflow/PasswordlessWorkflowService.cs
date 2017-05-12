@@ -3,10 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
-using AuthGuard.Services;
-using AuthGuard.Services.Security;
-using AuthGuard.Services.Users;
 using AuthGuard.SL.Passwordless.Models;
+using AuthGuard.SL.Security;
+using AuthGuard.SL.Users;
 using DddCore.Contracts.BLL.Errors;
 using Microsoft.AspNetCore.Identity;
 

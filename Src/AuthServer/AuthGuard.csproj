@@ -9,25 +9,25 @@
     <Compile Remove="app\**" />
     <Compile Remove="Models\**" />
     <Compile Remove="Quickstart\**" />
-    <Compile Remove="Services\Account\**" />
+    <Compile Remove="SL\Account\**" />
     <Compile Remove="Views\**" />
     <Compile Remove="wwwroot\dist\**" />
     <Content Remove="app\**" />
     <Content Remove="Models\**" />
     <Content Remove="Quickstart\**" />
-    <Content Remove="Services\Account\**" />
+    <Content Remove="SL\Account\**" />
     <Content Remove="Views\**" />
     <Content Remove="wwwroot\dist\**" />
     <EmbeddedResource Remove="app\**" />
     <EmbeddedResource Remove="Models\**" />
     <EmbeddedResource Remove="Quickstart\**" />
-    <EmbeddedResource Remove="Services\Account\**" />
+    <EmbeddedResource Remove="SL\Account\**" />
     <EmbeddedResource Remove="Views\**" />
     <EmbeddedResource Remove="wwwroot\dist\**" />
     <None Remove="app\**" />
     <None Remove="Models\**" />
     <None Remove="Quickstart\**" />
-    <None Remove="Services\Account\**" />
+    <None Remove="SL\Account\**" />
     <None Remove="Views\**" />
     <None Remove="wwwroot\dist\**" />
   </ItemGroup>
@@ -59,9 +59,8 @@
     <PackageReference Include="Twilio" Version="5.4.0" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="PL\" />
-    <Folder Include="Services\TwoFactor\Contracts\" />
+    <Folder Include="SL\TwoFactor\Contracts\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.ServiceModel">

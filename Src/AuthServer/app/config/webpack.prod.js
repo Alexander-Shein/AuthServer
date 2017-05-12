@@ -4,10 +4,6 @@ let webpack = require('webpack'),
     commonConfig = require('./webpack.common.js'),
     helpers = require('./helpers.js');
 
-
-let path = require('path'),
-    _root = path.resolve(__dirname, '../..');
-
 const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
 
 module.exports = webpackMerge(commonConfig, {

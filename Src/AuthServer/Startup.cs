@@ -1,10 +1,10 @@
 ﻿using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
-using AuthGuard.Services;
-using AuthGuard.Services.Apps;
-using AuthGuard.Services.Passwords;
-using AuthGuard.Services.Security;
-using AuthGuard.Services.Tokens;
+using AuthGuard.SL;
+using AuthGuard.SL.Apps;
+using AuthGuard.SL.Passwords;
+using AuthGuard.SL.Security;
+using AuthGuard.SL.Tokens;
 using DddCore.Contracts.DAL;
 using DddCore.Crosscutting.DependencyInjection;
 using DddCore.SL.Services;

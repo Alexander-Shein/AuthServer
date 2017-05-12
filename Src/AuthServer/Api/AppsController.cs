@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AuthGuard.Services.Apps;
+using AuthGuard.SL.Apps;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using AuthGuard.Services.TwoFactor;
-using AuthGuard.Services.TwoFactor.Models.Input;
+using AuthGuard.SL.TwoFactor;
+using AuthGuard.SL.TwoFactor.Models.Input;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;

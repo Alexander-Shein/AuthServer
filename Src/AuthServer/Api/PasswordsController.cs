@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using AuthGuard.Services.Passwords;
 using AuthGuard.SL.Passwordless.Models;
+using AuthGuard.SL.Passwords;
 
 namespace AuthGuard.Api
 {
