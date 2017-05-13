@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
 using AuthGuard.SL;
+using AuthGuard.SL.Notifications;
 using AuthGuard.SL.Security;
 using AuthGuard.SL.Users;
 using DddCore.Contracts.BLL.Errors;
@@ -32,7 +33,7 @@ namespace AuthGuard.Api
         readonly ILogger logger;
         readonly IUsersWorkflowService usersService;
         readonly ApplicationDbContext context;
-        readonly ISecurityCodesService securityCodesService;
+        readonly ISecurityCodesEntityService securityCodesService;
 
         public AuthController(
             UserManager<ApplicationUser> userManager,
@@ -45,7 +46,7 @@ namespace AuthGuard.Api
             IClientStore clientStore,
             IUsersWorkflowService usersService,
             ApplicationDbContext context,
-            ISecurityCodesService securityCodesService)
+            ISecurityCodesEntityService securityCodesService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -105,7 +106,6 @@ namespace AuthGuard.Api
             if (result.Succeeded)
             {
                 var securityCode = SecurityCode.Generate(SecurityCodeAction.ConfirmAccount, SecurityCodeParameterName.UserId, user.Id);
-                securityCodesService.Insert(securityCode);
 
                 var code = securityCode.Code.ToString();
                 var callbackUrl = im.AccountConfirmationUrl.Replace("{code}", code);
@@ -118,14 +118,18 @@ namespace AuthGuard.Api
 
                 if (isEmail)
                 {
+                    securityCode.AddParameter(SecurityCodeParameterName.LocalProvider, LocalProvider.Email.ToString());
                     var email = await emailSender.SendEmailAsync(user.Email, Template.AccountConfirmation, parameters);
                     context.Set<Email>().Add(email);
                 }
                 else
                 {
+                    securityCode.AddParameter(SecurityCodeParameterName.LocalProvider, LocalProvider.Phone.ToString());
                     var sms = await smsSender.SendSmsAsync(user.PhoneNumber, Template.AccountConfirmation, parameters);
                     context.Set<Sms>().Add(sms);
                 }
+
+                securityCodesService.Insert(securityCode);
 
                 var signUpResult = new SignUpResultVm();
 

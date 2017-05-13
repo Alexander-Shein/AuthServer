@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
+using AuthGuard.DAL.Repositories.Security;
+using AuthGuard.SL.Notifications;
 using AuthGuard.SL.Passwordless.Models;
 using AuthGuard.SL.Security;
 using AuthGuard.SL.Users;
@@ -16,15 +18,16 @@ namespace AuthGuard.SL.Passwords
     public class PasswordsService : IPasswordsService
     {
         readonly IUsersWorkflowService usersService;
-        readonly ISecurityCodesService securityCodesService;
+        readonly ISecurityCodesEntityService securityCodesService;
         readonly IEmailSender emailSender;
         readonly ISmsSender smsSender;
         readonly ApplicationDbContext context;
         readonly UserManager<ApplicationUser> userManager;
         readonly IUserContext<Guid> userContext;
         readonly SignInManager<ApplicationUser> signInManager;
+        readonly ISecurityCodesRepository securityCodesRepository;
 
-        public PasswordsService(IUsersWorkflowService usersService, ISecurityCodesService securityCodesService, IEmailSender emailSender, ISmsSender smsSender, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IUserContext<Guid> userContext, SignInManager<ApplicationUser> signInManager)
+        public PasswordsService(IUsersWorkflowService usersService, ISecurityCodesEntityService securityCodesService, IEmailSender emailSender, ISmsSender smsSender, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IUserContext<Guid> userContext, SignInManager<ApplicationUser> signInManager, ISecurityCodesRepository securityCodesRepository)
         {
             this.usersService = usersService;
             this.securityCodesService = securityCodesService;
@@ -34,6 +37,7 @@ namespace AuthGuard.SL.Passwords
             this.userManager = userManager;
             this.userContext = userContext;
             this.signInManager = signInManager;
+            this.securityCodesRepository = securityCodesRepository;
         }
 
         public async Task<OperationResult> ForgotPasswordAsync(CallbackUrlAndUserNameIm im)
@@ -83,7 +87,7 @@ namespace AuthGuard.SL.Passwords
 
         public async Task<OperationResult> ResetPasswordAsync(ResetPasswordIm im)
         {
-            var securityCode = await securityCodesService.Get(im.Code);
+            var securityCode = await securityCodesRepository.ReadByCodeAsync(im.Code);
 
             if (securityCode == null || securityCode.SecurityCodeAction != SecurityCodeAction.ResetPassword)
             {

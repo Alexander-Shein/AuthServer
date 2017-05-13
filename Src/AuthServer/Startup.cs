@@ -2,11 +2,17 @@
 using AuthGuard.Data;
 using AuthGuard.SL;
 using AuthGuard.SL.Apps;
+using AuthGuard.SL.Notifications;
 using AuthGuard.SL.Passwords;
 using AuthGuard.SL.Security;
 using AuthGuard.SL.Tokens;
+using DddCore.Contracts.Crosscutting.ObjectMapper;
 using DddCore.Contracts.DAL;
+using DddCore.Contracts.DAL.DomainStack;
 using DddCore.Crosscutting.DependencyInjection;
+using DddCore.Crosscutting.ObjectMapper;
+using DddCore.Crosscutting.ObjectMapper.AutoMapper;
+using DddCore.DAL.DomainStack.EntityFramework.Context;
 using DddCore.SL.Services;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
@@ -68,6 +74,9 @@ namespace AuthGuard
                         .AllowAnyMethod();
                 });
             });
+            
+            services.AddScoped<IUnitOfWork>(x => x.GetService<ApplicationDbContext>());
+            services.AddScoped<IDataContext>(x => x.GetService<ApplicationDbContext>());
 
             var module = new DddCoreDiModuleInstaller();
 
@@ -76,16 +85,22 @@ namespace AuthGuard
                 .Bootstrap(module);
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
 
+            var mapper = new ObjectMapperBootstrapper()
+                .AddAutoMapperConfig()
+                .Bootstrap();
+
+            services.AddSingleton(mapper);
+
             services.AddMvc();
             //services.AddDddCore();
 
             // Add application services.
-            services.AddTransient<IEmailSender, AuthMessageSender>();
-            services.AddTransient<ISmsSender, AuthMessageSender>();
+            services.AddTransient<IEmailSender, NotificationsService>();
+            services.AddTransient<ISmsSender, NotificationsService>();
             services.AddScoped<IClientStore, ClientsStore>();
             services.AddScoped<IRedirectUriValidator, AppRedirectUrlValidator>();
             services.AddScoped<ITokensService, TokensService>();
-            services.AddScoped<ISecurityCodesService, SecurityCodesService>();
+            services.AddScoped<ISecurityCodesEntityService, SecurityCodesService>();
             services.AddScoped<IPasswordsService, PasswordsService>();
 
             services.AddIdentityServer()

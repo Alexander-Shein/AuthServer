@@ -1,47 +1,29 @@
-﻿using System.Threading.Tasks;
+﻿using System;
 using AuthGuard.BLL.Domain.Entities;
-using AuthGuard.Data;
-using Microsoft.EntityFrameworkCore;
+using AuthGuard.DAL.Repositories.Security;
+using DddCore.Contracts.BLL.Domain.Entities.Model;
+using DddCore.Contracts.SL.Services.Application.DomainStack;
+using DddCore.SL.Services.Application.DomainStack;
 
 namespace AuthGuard.SL.Security
 {
-    public class SecurityCodesService : ISecurityCodesService
+    public class SecurityCodesService : EntityService<SecurityCode, Guid>, ISecurityCodesEntityService
     {
-        readonly ApplicationDbContext context;
-
-        public SecurityCodesService(ApplicationDbContext context)
+        public SecurityCodesService(ISecurityCodesRepository securityCodesRepository, IGuard guard) : base(securityCodesRepository, guard)
         {
-            this.context = context;
         }
 
         public void Insert(SecurityCode securityCode)
         {
-            context.Set<SecurityCode>().Add(securityCode);
-
-            foreach (var securityCodeParameter in securityCode.Parameters)
-            {
-                context.Set<SecurityCodeParameter>().Add(securityCodeParameter);
-            }
-        }
-
-        public async Task<SecurityCode> Get(int code)
-        {
-            return await
-                context
-                .Set<SecurityCode>()
-                .Include(x => x.Parameters)
-                .FirstOrDefaultAsync(x => x.Code == code);
+            securityCode.WalkGraph(x => x.CrudState = CrudState.Added);
+            ValidateAndPersist(securityCode);
         }
 
         public void Delete(SecurityCode securityCode)
         {
             if (securityCode == null) return;
-            foreach (var securityCodeParameter in securityCode.Parameters)
-            {
-                context.Set<SecurityCodeParameter>().Remove(securityCodeParameter);
-            }
-
-            context.Set<SecurityCode>().Remove(securityCode);
+            securityCode.WalkGraph(x => x.CrudState = CrudState.Deleted);
+            ValidateAndPersist(securityCode);
         }
     }
 }

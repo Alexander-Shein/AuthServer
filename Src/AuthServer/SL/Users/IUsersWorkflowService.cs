@@ -13,7 +13,7 @@ namespace AuthGuard.SL.Users
         Task<ApplicationUser> GetUserByEmailOrPhoneAsync(string userName);
         Task<UserVm> GetCurrentUserAsync();
         Task<(UserVm User, OperationResult OperationResult)> UpdateAsync(UserIm im);
-        Task<OperationResult> ConfirmAccountAsync(ConfirmAccountIm im);
         Task<OperationResult> SendCodeToAddLocalProvider(UserNameIm im);
+        Task<bool> IsUserNameExistAsync(string userName);
     }
 }

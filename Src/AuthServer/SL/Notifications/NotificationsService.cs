@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
-using AuthGuard.Data;
+using DddCore.Contracts.BLL.Errors;
+using DddCore.DAL.DomainStack.EntityFramework.Context;
 using MailKit.Net.Smtp;
 using Microsoft.EntityFrameworkCore;
 using MimeKit;
@@ -10,16 +11,16 @@ using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
 
-namespace AuthGuard.SL
+namespace AuthGuard.SL.Notifications
 {
-    public class AuthMessageSender : IEmailSender, ISmsSender
+    public class NotificationsService : IEmailSender, ISmsSender, INotificationsService
     {
         const string AccountSid = "ACeaba8d4f6486f20a46db5db7c2fd3ddf";
         const string AuthToken = "61733dfbf99ac90b6add0cefa916602c";
 
-        private readonly ApplicationDbContext context;
+        readonly IDataContext context;
 
-        public AuthMessageSender(ApplicationDbContext context)
+        public NotificationsService(IDataContext context)
         {
             this.context = context;
         }
@@ -39,7 +40,7 @@ namespace AuthGuard.SL
             var email = emailTemplate.Render(toEmail, parameters);
             await SendEmailAsync(email);
 
-            context.Add(email);
+            context.Set<Email>().Add(email);
             return email;
         }
 
@@ -71,8 +72,29 @@ namespace AuthGuard.SL
 
             sms.IsSent = true;
 
-            context.Add(sms);
+            context.Set<Sms>().Add(sms);
             return sms;
+        }
+
+        public async Task<OperationResult> SendMessageAsync(string userName, Template template, IDictionary<string, string> parameters)
+        {
+            if (ApplicationUser.IsEmail(userName))
+            {
+                await SendEmailAsync(userName, template, parameters);
+            }
+            else
+            {
+                var phone = ApplicationUser.CleanPhoneNumber(userName);
+
+                if (!ApplicationUser.IsPhoneNumber(phone))
+                {
+                    return OperationResult.Failed(1, "Invalid userName.");
+                }
+
+                await SendSmsAsync(phone, template, parameters);
+            }
+
+            return OperationResult.Succeed;
         }
 
         #region Private Methods

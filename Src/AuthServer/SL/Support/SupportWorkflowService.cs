@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
+using AuthGuard.SL.Notifications;
 using DddCore.Contracts.BLL.Errors;
 
 namespace AuthGuard.SL.Support

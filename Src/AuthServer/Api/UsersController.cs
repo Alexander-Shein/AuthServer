@@ -17,11 +17,11 @@ namespace AuthGuard.Api
         }
 
         [HttpHead]
-        public async Task<IActionResult> IsUserNameExistsAsync(string userName)
+        public async Task<IActionResult> IsUserNameExistAsync(string userName)
         {
-            var user = await usersService.GetUserByEmailOrPhoneAsync(userName);
+            var isExist = await usersService.IsUserNameExistAsync(userName);
 
-            if (user == null)
+            if (!isExist)
             {
                 return NotFound();
             }
@@ -55,23 +55,6 @@ namespace AuthGuard.Api
         public async Task<IActionResult> SendCodeToAddLocalProvider([FromBody] UserNameIm im)
         {
             var result = await usersService.SendCodeToAddLocalProvider(im);
-
-            if (result.IsNotSucceed)
-            {
-                return BadRequest(result.Errors);
-            }
-
-            return Ok();
-        }
-
-        [HttpPut("me/providers/{provider}/confirmed")]
-        public async Task<IActionResult> ConfirmAccountAsync([FromBody] ConfirmationCodeIm im, string provider)
-        {
-            var result = await usersService.ConfirmAccountAsync(new ConfirmAccountIm
-            {
-                Code = im.Code,
-                Provider = provider
-            });
 
             if (result.IsNotSucceed)
             {

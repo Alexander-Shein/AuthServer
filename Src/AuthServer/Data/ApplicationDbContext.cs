@@ -1,178 +1,66 @@
-﻿using AuthGuard.BLL.Domain.Entities;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using AuthGuard.BLL.Domain.Entities;
+using DddCore.Contracts.BLL.Domain.Entities.Model;
+using DddCore.Contracts.DAL;
+using DddCore.Contracts.DAL.DomainStack;
+using DddCore.Crosscutting;
+using DddCore.DAL.DomainStack.EntityFramework;
+using DddCore.DAL.DomainStack.EntityFramework.Context;
+using DddCore.DAL.DomainStack.EntityFramework.Mapping;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace AuthGuard.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IDataContext, IUnitOfWork
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        readonly ConnectionStrings connectionStrings;
+
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IOptions<ConnectionStrings> connectionStrings)
             : base(options)
         {
+            this.connectionStrings = connectionStrings.Value;
         }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            base.OnModelCreating(builder);
+            optionsBuilder.UseSqlServer(connectionStrings.Oltp);
+            base.OnConfiguring(optionsBuilder);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
 
-            builder.Entity<Email>(b =>
+            var modules = AssemblyUtility.GetInstancesOf<IMappingModuleInstaller>().ToArray();
+            if (!modules.Any()) return;
+
+            var builder = new DddCoreModelBuilder(modelBuilder);
+
+            foreach (var mappingModuleInstaller in modules)
             {
-                b.HasKey(x => x.Id);
-                b.Property(x => x.Body);
-                b.Property(x => x.Subject);
-                b.Property(x => x.FromName);
-                b.Property(x => x.FromEmail);
-                b.Property(x => x.IsSent);
-                b.Property(x => x.ToEmail);
-                b.Property(x => x.CreatedAt);
-                b.HasOne(x => x.EmailTemplate).WithMany().HasForeignKey(c => c.EmailTemplateId);
+                mappingModuleInstaller.Install(builder);
+            }
+        }
 
-                b.Ignore(x => x.CrudState);
-                b.Ignore(x => x.Events);
-                b.Ignore(x => x.BusinessRulesValidatorFactory);
-                b.Ignore(x => x.DomainEventDispatcher);
+        public void SyncEntityState<T>(T entity) where T : class, ICrudState
+        {
+            Entry(entity).State = CrudStateHelper.ConvertState(entity.CrudState);
+        }
 
-                b.ToTable("Email");
-            });
+        public void Save()
+        {
+            SaveChanges();
+        }
 
-            builder.Entity<EmailTemplate>(b =>
-            {
-                b.HasKey(x => x.Id);
-                b.Property(x => x.FromNameTemplate);
-                b.Property(x => x.SubjectTemplate);
-                b.Property(x => x.BodyTemplate);
-                b.Property(x => x.FromEmail);
-                b.Property(x => x.IsActive);
-                b.Property(x => x.EmailBodyFormat).HasColumnName("EmailBodyFormatId");
-                b.Property(x => x.Template).HasColumnName("TemplateId");
-
-                b.Ignore(x => x.CrudState);
-                b.Ignore(x => x.Events);
-                b.Ignore(x => x.BusinessRulesValidatorFactory);
-                b.Ignore(x => x.DomainEventDispatcher);
-
-                b.ToTable("EmailTemplate");
-            });
-
-            builder.Entity<Sms>(b =>
-            {
-                b.HasKey(x => x.Id);
-                b.Property(x => x.FromPhoneNumber);
-                b.Property(x => x.Message);
-                b.Property(x => x.IsSent);
-                b.Property(x => x.ToPhoneNumber);
-                b.Property(x => x.CreatedAt);
-                b.HasOne(x => x.SmsTemplate).WithMany().HasForeignKey(c => c.SmsTemplateId);
-
-                b.Ignore(x => x.CrudState);
-                b.Ignore(x => x.Events);
-                b.Ignore(x => x.BusinessRulesValidatorFactory);
-                b.Ignore(x => x.DomainEventDispatcher);
-
-                b.ToTable("Sms");
-            });
-
-            builder.Entity<SmsTemplate>(b =>
-            {
-                b.HasKey(x => x.Id);
-                b.Property(x => x.FromPhoneNumber);
-                b.Property(x => x.MessageTemplate);
-                b.Property(x => x.IsActive);
-                b.Property(x => x.Template).HasColumnName("TemplateId");
-
-                b.Ignore(x => x.CrudState);
-                b.Ignore(x => x.Events);
-                b.Ignore(x => x.BusinessRulesValidatorFactory);
-                b.Ignore(x => x.DomainEventDispatcher);
-
-                b.ToTable("SmsTemplate");
-            });
-
-            builder.Entity<App>(b =>
-            {
-                b.HasKey(x => x.Id);
-                b.Property(x => x.UserId);
-
-                b.Property(x => x.IsActive);
-                b.Property(x => x.DisplayName);
-                b.Property(x => x.IsLocalAccountEnabled);
-                b.Property(x => x.Key);
-                b.Property(x => x.WebsiteUrl);
-                b.Property(x => x.CreatedAt);
-                b.Property(x => x.IsRememberLogInEnabled);
-                b.Property(x => x.UsersCount);
-                b.Property(x => x.IsEmailEnabled);
-                b.Property(x => x.IsEmailConfirmationRequired);
-                b.Property(x => x.IsEmailPasswordEnabled);
-                b.Property(x => x.IsEmailPasswordlessEnabled);
-                b.Property(x => x.IsEmailSearchRelatedProviderEnabled);
-
-                b.Property(x => x.IsPhoneEnabled);
-                b.Property(x => x.IsPhoneConfirmationRequired);
-                b.Property(x => x.IsPhonePasswordEnabled);
-                b.Property(x => x.IsPhonePasswordlessEnabled);
-
-                b.Ignore(x => x.CrudState);
-                b.Ignore(x => x.Events);
-                b.Ignore(x => x.BusinessRulesValidatorFactory);
-                b.Ignore(x => x.DomainEventDispatcher);
-
-                b.HasMany(x => x.ExternalProviders).WithOne().HasForeignKey(x => x.AppId);
-            });
-
-            builder.Entity<AppExternalProvider>(b =>
-            {
-                b.HasKey(x => x.Id);
-
-                b.Ignore(x => x.CrudState);
-                b.Ignore(x => x.Events);
-                b.Ignore(x => x.BusinessRulesValidatorFactory);
-                b.Ignore(x => x.DomainEventDispatcher);
-
-                b.HasOne(x => x.ExternalProvider).WithMany().HasForeignKey(x => x.ExternalProviderId);
-            });
-
-            builder.Entity<ExternalProvider>(b =>
-            {
-                b.HasKey(x => x.Id);
-                b.Property(x => x.DisplayName);
-                b.Property(x => x.AuthenticationScheme);
-
-                b.Ignore(x => x.CrudState);
-                b.Ignore(x => x.Events);
-                b.Ignore(x => x.BusinessRulesValidatorFactory);
-                b.Ignore(x => x.DomainEventDispatcher);
-            });
-
-            builder.Entity<SecurityCode>(b =>
-            {
-                b.HasKey(x => x.Id);
-                b.Property(x => x.Code);
-                b.Property(x => x.SecurityCodeAction).HasColumnName("SecurityCodeActionId");
-                b.HasMany(x => x.Parameters).WithOne().HasForeignKey(x => x.SecurityCodeId);
-
-                b.Ignore(x => x.CrudState);
-                b.Ignore(x => x.Events);
-                b.Ignore(x => x.BusinessRulesValidatorFactory);
-                b.Ignore(x => x.DomainEventDispatcher);
-            });
-
-            builder.Entity<SecurityCodeParameter>(b =>
-            {
-                b.HasKey(x => x.Id);
-                b.Property(x => x.Value);
-
-                b.Ignore(x => x.Name);
-                b.Property(x => x.NameString).HasColumnName("Name");
-
-                b.Ignore(x => x.CrudState);
-                b.Ignore(x => x.Events);
-                b.Ignore(x => x.BusinessRulesValidatorFactory);
-                b.Ignore(x => x.DomainEventDispatcher);
-            });
+        public async Task SaveAsync()
+        {
+            await SaveChangesAsync();
         }
     }
 }

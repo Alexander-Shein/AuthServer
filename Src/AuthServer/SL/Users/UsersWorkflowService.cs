@@ -6,11 +6,17 @@ using System.Threading.Tasks;
 using AuthGuard.Api;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
+using AuthGuard.DAL.QueryRepositories.Users;
+using AuthGuard.DAL.Repositories.Security;
+using AuthGuard.SL.Notifications;
 using AuthGuard.SL.Security;
 using AuthGuard.SL.Users.Models.Input;
 using AuthGuard.SL.Users.Models.View;
 using DddCore.Contracts.BLL.Errors;
+using DddCore.Contracts.Crosscutting.ObjectMapper;
 using DddCore.Contracts.Crosscutting.UserContext;
+using DddCore.Contracts.DAL.DomainStack;
+using DddCore.DAL.DomainStack.EntityFramework.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,13 +26,16 @@ namespace AuthGuard.SL.Users
     {
         #region Private Members
 
-        readonly ApplicationDbContext context;
+        readonly IDataContext context;
         readonly UserManager<ApplicationUser> userManager;
         readonly SignInManager<ApplicationUser> signInManager;
-        readonly ISecurityCodesService securityCodesService;
-        readonly ISmsSender smsSender;
-        readonly IEmailSender emailSender;
+        readonly ISecurityCodesEntityService securityCodesEntityService;
         readonly IUserContext<Guid> userContext;
+        readonly IUsersQueryRepository usersQueryRepository;
+        readonly ISecurityCodesRepository securityCodesRepository;
+        readonly IUnitOfWork unitOfWork;
+        readonly IObjectMapper objectMapper;
+        readonly INotificationsService notificationsService;
 
         #endregion
 
@@ -34,18 +43,24 @@ namespace AuthGuard.SL.Users
             ApplicationDbContext applicationDbContext,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ISecurityCodesService securityCodesService,
-            ISmsSender smsSender,
-            IEmailSender emailSender,
-            IUserContext<Guid> userContext)
+            ISecurityCodesEntityService securityCodesEntityService,
+            IUserContext<Guid> userContext,
+            IUsersQueryRepository usersQueryRepository,
+            ISecurityCodesRepository securityCodesRepository,
+            IUnitOfWork unitOfWork,
+            IObjectMapper objectMapper,
+            INotificationsService notificationsService)
         {
             this.context = applicationDbContext;
             this.userManager = userManager;
             this.signInManager = signInManager;
-            this.securityCodesService = securityCodesService;
-            this.smsSender = smsSender;
-            this.emailSender = emailSender;
+            this.securityCodesEntityService = securityCodesEntityService;
             this.userContext = userContext;
+            this.usersQueryRepository = usersQueryRepository;
+            this.securityCodesRepository = securityCodesRepository;
+            this.unitOfWork = unitOfWork;
+            this.objectMapper = objectMapper;
+            this.notificationsService = notificationsService;
         }
 
         #region Public Methods
@@ -53,8 +68,7 @@ namespace AuthGuard.SL.Users
         public async Task<UserVm> GetCurrentUserAsync()
         {
             var user = await context.Set<ApplicationUser>().FindAsync(userContext.Id.ToString());
-
-            var vm = Map(user);
+            var vm = objectMapper.Map<UserVm>(user);
             return vm;
         }
 
@@ -62,12 +76,13 @@ namespace AuthGuard.SL.Users
         {
             if (String.IsNullOrWhiteSpace(userName)) return null;
 
-            var isEmail = userName.Contains("@");
+            var isEmail = ApplicationUser.IsEmail(userName);
             Expression<Func<ApplicationUser, bool>> predicate;
 
             if (!isEmail)
             {
                 userName = ApplicationUser.CleanPhoneNumber(userName);
+                if (!ApplicationUser.IsPhoneNumber(userName)) return null;
                 predicate = x => x.PhoneNumber == userName;
             }
             else
@@ -83,206 +98,96 @@ namespace AuthGuard.SL.Users
         {
             var user = await context.Set<ApplicationUser>().FindAsync(userContext.Id.ToString());
 
-            var putEmailResult = await UpdateEmailAsync(user, im.Email, im.EmailCode ?? -1);
-
-            if (putEmailResult.IsNotSucceed)
+            if (im.EmailCode.HasValue)
             {
-                return (null, putEmailResult);
+                var result = await ProcessCode(im.EmailCode.Value, user.PutEmail);
+                if (result.IsNotSucceed) return (null, result);
             }
 
-            var putPhoneResult = await UpdatePhoneAsync(user, im.PhoneNumber, im.PhoneNumberCode ?? -1);
+            if (im.Email == String.Empty) user.DeleteEmail();
 
-            if (putPhoneResult.IsNotSucceed)
+            if (im.PhoneNumberCode.HasValue)
             {
-                return (null, putPhoneResult);
+                var result = await ProcessCode(im.PhoneNumberCode.Value, user.PutPhoneNumber);
+                if (result.IsNotSucceed) return (null, result);
             }
+
+            if (im.PhoneNumber == String.Empty) user.DeletePhone();
 
             if (im.IsTwoFactorEnabled.HasValue && user.TwoFactorEnabled != im.IsTwoFactorEnabled)
             {
                 var result = await userManager.SetTwoFactorEnabledAsync(user, im.IsTwoFactorEnabled.Value);
-                await signInManager.SignInAsync(user, isPersistent: false);
                 if (result.Succeeded)
                 {
                     user.TwoFactorEnabled = im.IsTwoFactorEnabled.Value;
                 }
                 else
                 {
-                    throw new ArgumentException(result.Errors.First().Description);
+                    return (null, OperationResult.Failed(2, result.Errors.First().Description));
                 }
             }
 
-            var vm = Map(user);
+            context.Set<ApplicationUser>().Update(user);
+            await unitOfWork.SaveAsync();
+            await signInManager.SignInAsync(user, isPersistent: true);
 
-            await context.SaveChangesAsync();
-
+            var vm = objectMapper.Map<UserVm>(user);
             return (vm, OperationResult.Succeed);
         }
 
         public async Task<OperationResult> SendCodeToAddLocalProvider(UserNameIm im)
         {
             var securityCode = SecurityCode.Generate(SecurityCodeAction.AddLocalProvider, SecurityCodeParameterName.UserName, im.UserName);
-            securityCodesService.Insert(securityCode);
-
-            var isEmail = im.UserName.Contains("@");
+            securityCode.AddParameter(SecurityCodeParameterName.UserName, im.UserName);
+            securityCode.AddParameter(SecurityCodeParameterName.UserId, userContext.Id.ToString());
+            securityCodesEntityService.Insert(securityCode);
 
             var parameters = new Dictionary<string, string>
             {
                 {"Code", securityCode.Code.ToString()}
             };
 
-            if (isEmail)
+            var result = await notificationsService.SendMessageAsync(im.UserName, Template.AddLocalProvider, parameters);
+
+            if (result.IsSucceed)
             {
-                await emailSender.SendEmailAsync(im.UserName, Template.AddLocalProvider, parameters);
-            }
-            else
-            {
-                var phone = ApplicationUser.CleanPhoneNumber(im.UserName);
-                await smsSender.SendSmsAsync(phone, Template.AddLocalProvider, parameters);
+                await unitOfWork.SaveAsync();
             }
 
-            await context.SaveChangesAsync();
-
-            return OperationResult.Succeed;
+            return result;
         }
 
-        public async Task<OperationResult> ConfirmAccountAsync(ConfirmAccountIm im)
+        public async Task<bool> IsUserNameExistAsync(string userName)
         {
-            var securityCode = await securityCodesService.Get(im.Code);
+            if (String.IsNullOrWhiteSpace(userName)) return false;
 
-            if (securityCode == null || securityCode.SecurityCodeAction != SecurityCodeAction.ConfirmAccount)
+            if (ApplicationUser.IsEmail(userName))
             {
-                return OperationResult.Failed(1, "Invalid code.");
+                return await usersQueryRepository.IsUserWithEmailExist(userName);
             }
 
-            //if (securityCode.ExpiredAt > DateTime.Now)
-            //{
-            //    securityCodesService.Delete(securityCode);
-            //    await applicationDbContext.SaveChangesAsync();
-            //    return OperationResult.FailedResult(2, "Code is expired.");
-            //}
+            var phone = ApplicationUser.CleanPhoneNumber(userName);
 
-            var user = await userManager.FindByIdAsync(securityCode.GetParameterValue(SecurityCodeParameterName.UserId));
-
-            if (String.Equals(im.Provider, "Email", StringComparison.OrdinalIgnoreCase))
+            if (ApplicationUser.IsPhoneNumber(phone))
             {
-                user.EmailConfirmed = true;
-            }
-            else if (String.Equals(im.Provider, "Phone", StringComparison.OrdinalIgnoreCase))
-            {
-                user.PhoneNumberConfirmed = true;
-            }
-            else
-            {
-                return OperationResult.Failed(3, $"Provider with name '{im.Provider}' is not valid.");
+                return await usersQueryRepository.IsUserWithPhoneExist(phone);
             }
 
-            securityCodesService.Delete(securityCode);
-            context.Update(user);
-            await context.SaveChangesAsync();
-            await signInManager.SignInAsync(user, isPersistent: true);
-
-            return OperationResult.Succeed;
+            return false;
         }
 
         #endregion
 
         #region Private Methods
 
-        private async Task<OperationResult> UpdatePhoneAsync(ApplicationUser user, string phone, int code)
+        public async Task<OperationResult> ProcessCode(int code, Func<SecurityCode, OperationResult> callback)
         {
-            if (phone == null) return OperationResult.Succeed;
+            var securityCode = await securityCodesRepository.ReadByCodeAsync(code);
+            if (securityCode == null) return OperationResult.Failed(1, "Invalid code.");
+            securityCodesEntityService.Delete(securityCode);
 
-            var userHasPhone = !String.IsNullOrEmpty(user.PhoneNumber);
-
-            if (phone == String.Empty)
-            {
-                if (userHasPhone)
-                {
-                    user.DeletePhone();
-                }
-            }
-            else
-            {
-                if (String.Equals(user.PhoneNumber, phone, StringComparison.OrdinalIgnoreCase))
-                {
-                    return OperationResult.Succeed;
-                }
-
-                var securityCode = await securityCodesService.Get(code);
-                securityCodesService.Delete(securityCode);
-                
-
-                if (
-                    securityCode == null ||
-                    !String.Equals(securityCode.GetParameterValue(SecurityCodeParameterName.UserName), phone, StringComparison.OrdinalIgnoreCase))
-                {
-                    return OperationResult.Failed(1, "Invalid code.");
-                }
-
-                user.PutConfirmedPhone(phone);
-            }
-
-            context.Update(user);
-            return OperationResult.Succeed;
-        }
-
-        private async Task<OperationResult> UpdateEmailAsync(ApplicationUser user, string email, int code)
-        {
-            if (email == null) return OperationResult.Succeed;
-
-            var userHasEmail = !String.IsNullOrEmpty(user.Email);
-
-            if (email == String.Empty)
-            {
-                if (userHasEmail)
-                {
-                    user.DeleteEmail();
-                }
-            }
-            else
-            {
-                if (String.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase))
-                {
-                    return OperationResult.Succeed;
-                }
-
-                var securityCode = await securityCodesService.Get(code);
-                securityCodesService.Delete(securityCode);
-
-                if (
-                    securityCode == null ||
-                    !String.Equals(securityCode.GetParameterValue(SecurityCodeParameterName.UserName), email, StringComparison.OrdinalIgnoreCase))
-                {
-                    return OperationResult.Failed(1, "Invalid code.");
-                }
-
-                user.PutConfirmedEmail(email);
-            }
-
-            context.Update(user);
-            return OperationResult.Succeed;
-        }
-
-        private UserVm Map(ApplicationUser user)
-        {
-            var vm = new UserVm
-            {
-                Id = new Guid(user.Id),
-                Email = user.Email,
-                IsEmailConfirmed = user.EmailConfirmed,
-                PhoneNumber = user.PhoneNumber,
-                IsPhoneNumberConfirmed = user.PhoneNumberConfirmed,
-                IsTwoFactorEnabled = user.TwoFactorEnabled,
-                HasPassword = !String.IsNullOrEmpty(user.PasswordHash),
-                ExternalProviders = user.Logins.Select(x => new UserExternalProviderVm
-                {
-                    Key = x.ProviderKey,
-                    AuthenticationScheme = x.LoginProvider,
-                    DisplayName = x.ProviderDisplayName
-                })
-            };
-
-            return vm;
+            var result = callback(securityCode);
+            return result;
         }
 
         #endregion

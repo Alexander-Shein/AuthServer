@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
 
-namespace AuthGuard.SL
+namespace AuthGuard.SL.Notifications
 {
     public interface ISmsSender
     {

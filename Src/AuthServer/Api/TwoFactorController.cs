@@ -18,7 +18,6 @@ namespace AuthGuard.Api
             this.twoFactorsService = twoFactorsService;
         }
 
-        [Authorize]
         [HttpGet("providers")]
         public async Task<IActionResult> GetTwoFactorProviders()
         {
@@ -31,7 +30,6 @@ namespace AuthGuard.Api
             return Ok(result.Providers);
         }
 
-        [Authorize]
         [HttpPost("codes")]
         public async Task<IActionResult> SendCode([FromBody] TwoFactorProviderIm im)
         {

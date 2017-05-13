@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
+using AuthGuard.DAL.Repositories.Security;
+using AuthGuard.SL.Notifications;
 using AuthGuard.SL.Passwordless.Models;
 using AuthGuard.SL.Security;
 using AuthGuard.SL.Users;
@@ -13,21 +15,22 @@ namespace AuthGuard.SL.Passwordless.Workflow
 {
     public class PasswordlessWorkflowService : IPasswordlessWorkflowService
     {
-        readonly ISecurityCodesService securityCodesService;
+        readonly ISecurityCodesEntityService securityCodesService;
         readonly IEmailSender emailSender;
         readonly ISmsSender smsSender;
         readonly ApplicationDbContext context;
         readonly UserManager<ApplicationUser> userManager;
         readonly SignInManager<ApplicationUser> signInManager;
         readonly IUsersWorkflowService usersService;
+        readonly ISecurityCodesRepository securityCodesRepository;
 
         public PasswordlessWorkflowService(
-            ISecurityCodesService securityCodesService,
+            ISecurityCodesEntityService securityCodesService,
             IEmailSender emailSender,
             ISmsSender smsSender,
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager, IUsersWorkflowService usersService)
+            SignInManager<ApplicationUser> signInManager, IUsersWorkflowService usersService, ISecurityCodesRepository securityCodesRepository)
         {
             this.securityCodesService = securityCodesService;
             this.emailSender = emailSender;
@@ -36,6 +39,7 @@ namespace AuthGuard.SL.Passwordless.Workflow
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.usersService = usersService;
+            this.securityCodesRepository = securityCodesRepository;
         }
 
         public async Task<OperationResult> SendLogInLinkAsync(CallbackUrlAndUserNameIm im)
@@ -113,7 +117,7 @@ namespace AuthGuard.SL.Passwordless.Workflow
 
         public async Task<OperationResult> SignUpAsync(CodeIm im)
         {
-            var securityCode = await securityCodesService.Get(im.Code);
+            var securityCode = await securityCodesRepository.ReadByCodeAsync(im.Code);
 
             if (securityCode == null || securityCode.SecurityCodeAction != SecurityCodeAction.PasswordlessSignUp)
             {
@@ -170,7 +174,7 @@ namespace AuthGuard.SL.Passwordless.Workflow
 
         public async Task<OperationResult> LogInAsync(CodeIm im)
         {
-            var securityCode = await securityCodesService.Get(im.Code);
+            var securityCode = await securityCodesRepository.ReadByCodeAsync(im.Code);
 
             if (securityCode == null || securityCode.SecurityCodeAction != SecurityCodeAction.PasswordlessLogIn)
             {

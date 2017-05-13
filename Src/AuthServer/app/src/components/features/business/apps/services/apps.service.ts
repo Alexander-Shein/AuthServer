@@ -57,15 +57,12 @@ export class AppsService extends ServiceBase implements IAppsService {
     public remove(id: string): Observable<void> {
         return this.http
             .delete(this.apiUrl + id)
-            .catch((errors) => this.handleError(errors));;
+            .catch((errors) => this.handleError(errors));
     }
 
     public getByUrl(redirectUrl: string): Observable<AppVm> {
-        let params = new URLSearchParams();
-        params.set(Consts.RedirectUrl, redirectUrl);
-
         return this.http
-                    .get(this.apiUrl + 'search', { search: params })
+                    .get(this.apiUrl + 'search?returnUrl=' + encodeURIComponent(redirectUrl || ''))
                     .map((res) => this.extractData(res))
                     .catch((error) => this.handleError(error));
     }
