@@ -49,19 +49,5 @@ namespace AuthGuard.Api
 
             return Ok(result.User);
         }
-
-        [Authorize]
-        [HttpPost("me/notifications/new-local-provider")]
-        public async Task<IActionResult> SendCodeToAddLocalProvider([FromBody] UserNameIm im)
-        {
-            var result = await usersService.SendCodeToAddLocalProvider(im);
-
-            if (result.IsNotSucceed)
-            {
-                return BadRequest(result.Errors);
-            }
-
-            return Ok();
-        }
     }
 }

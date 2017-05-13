@@ -61,41 +61,6 @@ namespace AuthGuard.SL.TwoFactor
             return (providers, OperationResult.Succeed);
         }
 
-        public async Task<OperationResult> SendCodeAsync(TwoFactorProviderIm im)
-        {
-            var provider = im.Key;
-
-            var user = await signInManager.GetTwoFactorAuthenticationUserAsync();
-            if (user == null)
-            {
-                return OperationResult.Failed(1, "User is not logged in for 2 factor validation.");
-            }
-
-            var securityCode = SecurityCode.Generate(SecurityCodeAction.TwoFactorVerification, SecurityCodeParameterName.UserId, user.Id);
-            securityCode.AddParameter(SecurityCodeParameterName.LocalProvider, im.Key);
-
-            securityCodesService.Insert(securityCode);
-
-            var parameters = new Dictionary<string, string>
-            {
-                {"Code", securityCode.Code.ToString()}
-            };
-
-            if (String.Equals(provider, "Email", StringComparison.OrdinalIgnoreCase))
-            {
-                await emailSender.SendEmailAsync(await userManager.GetEmailAsync(user), Template.TwoFactorCode, parameters);
-            }
-
-            if (String.Equals(provider, "Phone", StringComparison.OrdinalIgnoreCase))
-            {
-                await smsSender.SendSmsAsync(await userManager.GetPhoneNumberAsync(user), Template.TwoFactorCode, parameters);
-            }
-
-            await context.SaveChangesAsync();
-
-            return OperationResult.Succeed;
-        }
-
         public async Task<OperationResult> VerifyCode(TwoFactorVerificationIm im)
         {
             var user = await signInManager.GetTwoFactorAuthenticationUserAsync();

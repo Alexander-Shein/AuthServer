@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using AuthGuard.Api;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.SL.Users.Models.Input;
 using AuthGuard.SL.Users.Models.View;
@@ -13,7 +12,6 @@ namespace AuthGuard.SL.Users
         Task<ApplicationUser> GetUserByEmailOrPhoneAsync(string userName);
         Task<UserVm> GetCurrentUserAsync();
         Task<(UserVm User, OperationResult OperationResult)> UpdateAsync(UserIm im);
-        Task<OperationResult> SendCodeToAddLocalProvider(UserNameIm im);
         Task<bool> IsUserNameExistAsync(string userName);
     }
 }

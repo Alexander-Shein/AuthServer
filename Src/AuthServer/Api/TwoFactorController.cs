@@ -30,19 +30,6 @@ namespace AuthGuard.Api
             return Ok(result.Providers);
         }
 
-        [HttpPost("codes")]
-        public async Task<IActionResult> SendCode([FromBody] TwoFactorProviderIm im)
-        {
-            var result = await twoFactorsService.SendCodeAsync(im);
-
-            if (result.IsNotSucceed)
-            {
-                return BadRequest(result.Errors);
-            }
-
-            return Ok();
-        }
-
         [Authorize]
         [HttpPost("verified")]
         public async Task<IActionResult> VerifyCode([FromBody] TwoFactorVerificationIm im)

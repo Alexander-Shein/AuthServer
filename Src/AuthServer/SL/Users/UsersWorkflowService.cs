@@ -1,14 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using AuthGuard.Api;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
 using AuthGuard.DAL.QueryRepositories.Users;
 using AuthGuard.DAL.Repositories.Security;
-using AuthGuard.SL.Notifications;
 using AuthGuard.SL.Security;
 using AuthGuard.SL.Users.Models.Input;
 using AuthGuard.SL.Users.Models.View;
@@ -35,7 +32,6 @@ namespace AuthGuard.SL.Users
         readonly ISecurityCodesRepository securityCodesRepository;
         readonly IUnitOfWork unitOfWork;
         readonly IObjectMapper objectMapper;
-        readonly INotificationsService notificationsService;
 
         #endregion
 
@@ -48,8 +44,7 @@ namespace AuthGuard.SL.Users
             IUsersQueryRepository usersQueryRepository,
             ISecurityCodesRepository securityCodesRepository,
             IUnitOfWork unitOfWork,
-            IObjectMapper objectMapper,
-            INotificationsService notificationsService)
+            IObjectMapper objectMapper)
         {
             this.context = applicationDbContext;
             this.userManager = userManager;
@@ -60,7 +55,6 @@ namespace AuthGuard.SL.Users
             this.securityCodesRepository = securityCodesRepository;
             this.unitOfWork = unitOfWork;
             this.objectMapper = objectMapper;
-            this.notificationsService = notificationsService;
         }
 
         #region Public Methods
@@ -135,28 +129,6 @@ namespace AuthGuard.SL.Users
             return (vm, OperationResult.Succeed);
         }
 
-        public async Task<OperationResult> SendCodeToAddLocalProvider(UserNameIm im)
-        {
-            var securityCode = SecurityCode.Generate(SecurityCodeAction.AddLocalProvider, SecurityCodeParameterName.UserName, im.UserName);
-            securityCode.AddParameter(SecurityCodeParameterName.UserName, im.UserName);
-            securityCode.AddParameter(SecurityCodeParameterName.UserId, userContext.Id.ToString());
-            securityCodesEntityService.Insert(securityCode);
-
-            var parameters = new Dictionary<string, string>
-            {
-                {"Code", securityCode.Code.ToString()}
-            };
-
-            var result = await notificationsService.SendMessageAsync(im.UserName, Template.AddLocalProvider, parameters);
-
-            if (result.IsSucceed)
-            {
-                await unitOfWork.SaveAsync();
-            }
-
-            return result;
-        }
-
         public async Task<bool> IsUserNameExistAsync(string userName)
         {
             if (String.IsNullOrWhiteSpace(userName)) return false;
@@ -180,7 +152,7 @@ namespace AuthGuard.SL.Users
 
         #region Private Methods
 
-        public async Task<OperationResult> ProcessCode(int code, Func<SecurityCode, OperationResult> callback)
+        async Task<OperationResult> ProcessCode(int code, Func<SecurityCode, OperationResult> callback)
         {
             var securityCode = await securityCodesRepository.ReadByCodeAsync(code);
             if (securityCode == null) return OperationResult.Failed(1, "Invalid code.");

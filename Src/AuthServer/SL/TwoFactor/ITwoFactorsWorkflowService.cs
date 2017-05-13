@@ -10,7 +10,6 @@ namespace AuthGuard.SL.TwoFactor
     public interface ITwoFactorsWorkflowService : IWorkflowService
     {
         Task<(IEnumerable<TwoFactorProviderVm> Providers, OperationResult OperationResult)> GetTwoFactorProvidersAsync();
-        Task<OperationResult> SendCodeAsync(TwoFactorProviderIm im);
         Task<OperationResult> VerifyCode(TwoFactorVerificationIm im);
     }
 }
