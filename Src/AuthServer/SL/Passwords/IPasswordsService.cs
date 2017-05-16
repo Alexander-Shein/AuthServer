@@ -1,10 +1,11 @@
 ﻿using System.Threading.Tasks;
 using AuthGuard.SL.Passwordless.Models;
 using DddCore.Contracts.BLL.Errors;
+using DddCore.Contracts.SL.Services.Application;
 
 namespace AuthGuard.SL.Passwords
 {
-    public interface IPasswordsService
+    public interface IPasswordsService : IWorkflowService
     {
         Task<OperationResult> ForgotPasswordAsync(CallbackUrlAndUserNameIm im);
         Task<OperationResult> ResetPasswordAsync(ResetPasswordIm im);

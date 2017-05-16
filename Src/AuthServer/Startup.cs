@@ -1,12 +1,7 @@
 ﻿using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
-using AuthGuard.SL;
 using AuthGuard.SL.Apps;
 using AuthGuard.SL.Notifications;
-using AuthGuard.SL.Passwords;
-using AuthGuard.SL.Security;
-using AuthGuard.SL.Tokens;
-using DddCore.Contracts.Crosscutting.ObjectMapper;
 using DddCore.Contracts.DAL;
 using DddCore.Contracts.DAL.DomainStack;
 using DddCore.Crosscutting.DependencyInjection;
@@ -14,7 +9,6 @@ using DddCore.Crosscutting.ObjectMapper;
 using DddCore.Crosscutting.ObjectMapper.AutoMapper;
 using DddCore.DAL.DomainStack.EntityFramework.Context;
 using DddCore.SL.Services;
-using IdentityServer4.Stores;
 using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -97,17 +91,16 @@ namespace AuthGuard
             // Add application services.
             services.AddTransient<IEmailSender, NotificationsService>();
             services.AddTransient<ISmsSender, NotificationsService>();
-            services.AddScoped<IClientStore, ClientsStore>();
+            //services.AddScoped<IClientStore, ClientsStore>();
             services.AddScoped<IRedirectUriValidator, AppRedirectUrlValidator>();
-            services.AddScoped<ITokensService, TokensService>();
-            services.AddScoped<ISecurityCodesEntityService, SecurityCodesService>();
-            services.AddScoped<IPasswordsService, PasswordsService>();
+            //services.AddScoped<ITokensService, TokensService>();
 
             services.AddIdentityServer()
                 .AddTemporarySigningCredential()
-                .AddInMemoryPersistedGrants()
-                .AddInMemoryIdentityResources(Config.GetIdentityResources())
-                .AddInMemoryApiResources(Config.GetApiResources())
+                .AddConfigurationStore(builder =>
+                    builder.UseSqlServer("Server=(local);Database=IdentityServer4.Quickstart.AspNetIdentity;Trusted_Connection=True;MultipleActiveResultSets=true"))
+                .AddOperationalStore(builder =>
+                    builder.UseSqlServer("Server=(local);Database=IdentityServer4.Quickstart.AspNetIdentity;Trusted_Connection=True;MultipleActiveResultSets=true"))
                 .AddAspNetIdentity<ApplicationUser>();
         }
 

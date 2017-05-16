@@ -17,7 +17,6 @@ namespace AuthGuard.SL.Apps
     public class AppsEntityService : EntityService<App, Guid>, IAppsEntityService
     {
         readonly IAppsRepository appsRepository;
-        readonly IDomainFactory domainFactory;
         readonly IUserContext<Guid> userContext;
         readonly IDomainEventDispatcher domainEventDispatcher;
         readonly IBusinessRulesValidatorFactory businessRulesValidatorFactory;
@@ -25,13 +24,11 @@ namespace AuthGuard.SL.Apps
         public AppsEntityService(
             IAppsRepository repository,
             IGuard guard,
-            IDomainFactory domainFactory,
             IUserContext<Guid> userContext,
             IDomainEventDispatcher domainEventDispatcher,
-            IBusinessRulesValidatorFactory businessRulesValidatorFactory) : base(repository, guard)
+            IBusinessRulesValidatorFactory businessRulesValidatorFactory) : base(repository, guard, businessRulesValidatorFactory, domainEventDispatcher)
         {
             appsRepository = repository;
-            this.domainFactory = domainFactory;
             this.userContext = userContext;
             this.domainEventDispatcher = domainEventDispatcher;
             this.businessRulesValidatorFactory = businessRulesValidatorFactory;
@@ -43,9 +40,11 @@ namespace AuthGuard.SL.Apps
 
             if (app == null)
             {
-                app = domainFactory.Create<App, Guid>();
-                app.UserId = userContext.Id.ToString();
-                app.CrudState = CrudState.Added;
+                app = new App
+                {
+                    UserId = userContext.Id.ToString(),
+                    CrudState = CrudState.Added
+                };
             }
             else
             {
@@ -90,16 +89,15 @@ namespace AuthGuard.SL.Apps
 
             foreach (var p in newProviders)
             {
-                var externalProvider = domainFactory.Create<AppExternalProvider, Guid>();
-                externalProvider.AppId = app.Id;
-                externalProvider.ExternalProviderId = p.Id;
-                externalProvider.CrudState = CrudState.Added;
+                var externalProvider = new AppExternalProvider
+                {
+                    AppId = app.Id,
+                    ExternalProviderId = p.Id,
+                    CrudState = CrudState.Added
+                };
 
                 app.ExternalProviders.Add(externalProvider);
             }
-
-            app.BusinessRulesValidatorFactory = businessRulesValidatorFactory;
-            app.DomainEventDispatcher = domainEventDispatcher;
 
             var result = ValidateAndPersist(app);
 
@@ -124,9 +122,6 @@ namespace AuthGuard.SL.Apps
             {
                 return OperationResult.Failed(2, "App does not belong to the current user.");
             }
-
-            app.BusinessRulesValidatorFactory = businessRulesValidatorFactory;
-            app.DomainEventDispatcher = domainEventDispatcher;
 
             app.WalkGraph(x => x.CrudState = CrudState.Deleted);
             appsRepository.Persist(app);

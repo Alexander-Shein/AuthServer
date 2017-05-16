@@ -76,5 +76,8 @@
     <Build Include="Tables\SecurityCodeAction.sql" />
     <Build Include="Tables\SecurityCodeParameter.sql" />
     <Build Include="Tables\ExternalProviderSetting.sql" />
+    <Build Include="Tables\IdentityResource.sql" />
+    <Build Include="Tables\IdentityResourceClaim.sql" />
+    <Build Include="Tables\IdentityClaim.sql" />
   </ItemGroup>
 </Project>

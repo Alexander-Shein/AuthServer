@@ -36,9 +36,9 @@
     <Content Include="wwwroot\**\*.*" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DddCore" Version="1.2.15" />
-    <PackageReference Include="DddCore.Contracts" Version="1.2.7" />
-    <PackageReference Include="DddCore.Crosscutting.ObjectMapper.AutoMapper" Version="1.0.1" />
+    <PackageReference Include="DddCore" Version="1.2.17" />
+    <PackageReference Include="DddCore.Contracts" Version="1.2.9" />
+    <PackageReference Include="DddCore.Crosscutting.ObjectMapper.AutoMapper" Version="1.0.2" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="1.0.1" />
     <PackageReference Include="MailKit" Version="1.16.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />

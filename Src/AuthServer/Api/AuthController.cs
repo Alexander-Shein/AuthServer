@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.Data;
-using AuthGuard.SL;
 using AuthGuard.SL.Notifications;
 using AuthGuard.SL.Security;
 using AuthGuard.SL.Users;

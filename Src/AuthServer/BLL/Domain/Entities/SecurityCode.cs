@@ -60,5 +60,12 @@ namespace AuthGuard.BLL.Domain.Entities
             var rdm = new Random();
             return rdm.Next(Min, Max);
         }
+
+        public static SecurityCode GenerateAddLocalProvider(string userName, Guid userId)
+        {
+            var code = Generate(SecurityCodeAction.AddLocalProvider, SecurityCodeParameterName.UserName, userName);
+            code.AddParameter(SecurityCodeParameterName.UserId, userId.ToString());
+            return code;
+        }
     }
 }

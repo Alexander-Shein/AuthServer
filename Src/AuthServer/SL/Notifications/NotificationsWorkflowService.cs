@@ -33,11 +33,9 @@ namespace AuthGuard.SL.Notifications
             this.signInManager = signInManager;
         }
 
-        public async Task<OperationResult> SendAddLocalProviderNotification(UserNameIm im)
+        public async Task<OperationResult> SendAddLocalProviderNotificationAsync(UserNameIm im)
         {
-            var securityCode = SecurityCode.Generate(SecurityCodeAction.AddLocalProvider, SecurityCodeParameterName.UserName, im.UserName);
-            securityCode.AddParameter(SecurityCodeParameterName.UserName, im.UserName);
-            securityCode.AddParameter(SecurityCodeParameterName.UserId, userContext.Id.ToString());
+            var securityCode = SecurityCode.GenerateAddLocalProvider(im.UserName, userContext.Id);
             securityCodesEntityService.Insert(securityCode);
 
             var parameters = new Dictionary<string, string>
@@ -55,7 +53,7 @@ namespace AuthGuard.SL.Notifications
             return result;
         }
 
-        public async Task<OperationResult> SendTwoFactorNotification(LocalProviderIm im)
+        public async Task<OperationResult> SendTwoFactorNotificationAsync(LocalProviderIm im)
         {
             var user = await signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
