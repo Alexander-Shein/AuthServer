@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Models;
 
@@ -21,7 +22,9 @@ namespace AuthGuard
             return new List<ApiResource>
             {
                 new ApiResource("api1", "My API"),
-                new ApiResource("api2.read_only", "My API 2")
+                new ApiResource("api2.read_only", "My API 2", new List<string>
+                {
+                })
             };
         }
 

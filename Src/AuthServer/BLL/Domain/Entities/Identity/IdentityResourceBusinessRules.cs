@@ -8,7 +8,8 @@ namespace AuthGuard.BLL.Domain.Entities.Identity
     {
         public IdentityResourceBusinessRules()
         {
-            RuleFor(x => x.CrudState).Equal(CrudState.Unchanged)
+            RuleFor(x => x.CrudState)
+                .Equal(CrudState.Unchanged)
                 .When(x => x.IsReadOnly)
                 .WithMessage("Cannot modify readonly identity resource.");
 

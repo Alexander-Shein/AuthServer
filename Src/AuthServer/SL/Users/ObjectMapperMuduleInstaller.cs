@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace AuthGuard.SL.Users
 {
-    public class ObjectMapperMuduleInstaller : IObjectMapperModuleInstaller
+    public class IdentityObjectMapperModuleInstaller : IObjectMapperModuleInstaller
     {
         public void Install(IObjectMapperConfig config)
         {

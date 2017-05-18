@@ -79,5 +79,8 @@
     <Build Include="Tables\IdentityResource.sql" />
     <Build Include="Tables\IdentityResourceClaim.sql" />
     <Build Include="Tables\IdentityClaim.sql" />
+    <Build Include="Tables\ApiResource.sql" />
+    <Build Include="Tables\ApiScope.sql" />
+    <Build Include="Tables\ApiScopeClaim.sql" />
   </ItemGroup>
 </Project>

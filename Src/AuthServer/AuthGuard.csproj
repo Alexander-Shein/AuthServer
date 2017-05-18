@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="PL\" />
+    <Folder Include="SL\Identity\Contracts\" />
     <Folder Include="SL\TwoFactor\Contracts\" />
   </ItemGroup>
   <ItemGroup>
