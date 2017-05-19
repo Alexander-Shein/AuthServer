@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[ClientScope]
+(
+	[Id]		[UNIQUEIDENTIFIER] NOT NULL,
+	[ClientId]	[UNIQUEIDENTIFIER] NOT NULL,
+	[Scope]		[NVARCHAR](200) NOT NULL DEFAULT(''),
+	CONSTRAINT [PK_ClientScope_Id] PRIMARY KEY CLUSTERED([Id] ASC),
+	CONSTRAINT [FK_ClientScope_ClientId_Client_Id] FOREIGN KEY([ClientId]) REFERENCES [dbo].[Client] ([Id])
+)

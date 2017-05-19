@@ -1,6 +1,7 @@
 ﻿CREATE TABLE [dbo].[ApiResource]
 (
 	[Id]			[UNIQUEIDENTIFIER]	NOT NULL,
+	[OwnerUserId]	[UNIQUEIDENTIFIER]	NOT NULL,
 	[Description]	[NVARCHAR](1000)	NOT NULL DEFAULT(''),
 	[DisplayName]	[NVARCHAR](200)		NOT NULL DEFAULT(''),
 	[IsEnabled]		[BIT]				NOT NULL DEFAULT(1),
@@ -8,5 +9,6 @@
 	[Secret]		[NVARCHAR](2000)	NOT NULL DEFAULT(''),
 	[Ts]			[ROWVERSION]		NOT NULL,
 	CONSTRAINT [PK_ApiResource_Id] PRIMARY KEY CLUSTERED ([Id] ASC),
+	CONSTRAINT [FK_ApiResource_UserId_User_Id] FOREIGN KEY([OwnerUserId]) REFERENCES [dbo].[User] ([Id]),
 	CONSTRAINT [IDX_ApiResource_Name_U_N] UNIQUE NONCLUSTERED ([Name] ASC)
 )

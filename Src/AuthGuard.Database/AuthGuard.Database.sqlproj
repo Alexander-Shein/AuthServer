@@ -66,12 +66,12 @@
     <Build Include="Tables\EmailBodyFormat.sql" />
     <Build Include="Tables\SmsTemplate.sql" />
     <Build Include="Tables\Sms.sql" />
-    <Build Include="Tables\App.sql">
+    <Build Include="Tables\Client.sql">
       <CopyToOutputDirectory>DoNotCopy</CopyToOutputDirectory>
     </Build>
     <Build Include="Tables\ExternalProvider.sql" />
-    <Build Include="Tables\AppExternalProvider.sql" />
-    <Build Include="Tables\AspNetUsers.sql" />
+    <Build Include="Tables\ClientExternalProvider.sql" />
+    <Build Include="Tables\User.sql" />
     <Build Include="Tables\SecurityCode.sql" />
     <Build Include="Tables\SecurityCodeAction.sql" />
     <Build Include="Tables\SecurityCodeParameter.sql" />
@@ -82,5 +82,9 @@
     <Build Include="Tables\ApiResource.sql" />
     <Build Include="Tables\ApiScope.sql" />
     <Build Include="Tables\ApiScopeClaim.sql" />
+    <Build Include="Tables\ClientScope.sql" />
+    <Build Include="Tables\ClientClaim.sql" />
+    <Build Include="Tables\GrantType.sql" />
+    <Build Include="Tables\ClientGrantType.sql" />
   </ItemGroup>
 </Project>
