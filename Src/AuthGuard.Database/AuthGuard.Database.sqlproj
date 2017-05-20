@@ -92,5 +92,7 @@
     <Build Include="Tables\Role.sql" />
     <Build Include="Tables\RoleClaim.sql" />
     <Build Include="Tables\UserRole.sql" />
+    <Build Include="Tables\AccessTokenType.sql" />
+    <Build Include="Tables\TokenExpirationType.sql" />
   </ItemGroup>
 </Project>

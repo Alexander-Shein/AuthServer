@@ -1,0 +1,7 @@
+﻿CREATE TABLE [dbo].[AccessTokenType]
+(
+	[Id]	INT				NOT NULL IDENTITY(1,1),
+	[Name]	NVARCHAR(100)		NOT NULL DEFAULT(''),
+	CONSTRAINT [PK_AccessTokenType_Id] PRIMARY KEY CLUSTERED([Id] ASC),
+	CONSTRAINT [IDX_AccessTokenType_Name_U_N] UNIQUE NONCLUSTERED ([Name] ASC)
+)
