@@ -1,0 +1,9 @@
+﻿CREATE TABLE [dbo].[UserClaim]
+(
+	[Id]			INT IDENTITY(1,1) NOT NULL,
+	[UserId]		UNIQUEIDENTIFIER NOT NULL,
+	[ClaimType]		NVARCHAR(MAX) NULL,
+	[ClaimValue]	NVARCHAR(MAX) NULL,
+	CONSTRAINT [PK_UserClaim_Id] PRIMARY KEY CLUSTERED ([Id] ASC),
+	CONSTRAINT [FK_UserClaim_UserId_User_Id] FOREIGN KEY([UserId]) REFERENCES [dbo].[User] ([Id])
+)

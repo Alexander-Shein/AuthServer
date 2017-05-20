@@ -1,0 +1,9 @@
+﻿CREATE TABLE [dbo].[RoleClaim]
+(
+	[Id]			INT IDENTITY(1,1) NOT NULL,
+	[RoleId]		UNIQUEIDENTIFIER NOT NULL,
+	[ClaimType]		NVARCHAR(MAX) NULL,
+	[ClaimValue]	NVARCHAR(MAX) NULL,
+	CONSTRAINT [PK_RoleClaim_Id] PRIMARY KEY CLUSTERED ([Id] ASC),
+	CONSTRAINT [FK_RoleClaim_RoleId_Role_Id] FOREIGN KEY([RoleId]) REFERENCES [dbo].[Role] ([Id])
+)

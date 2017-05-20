@@ -86,5 +86,11 @@
     <Build Include="Tables\ClientClaim.sql" />
     <Build Include="Tables\GrantType.sql" />
     <Build Include="Tables\ClientGrantType.sql" />
+    <Build Include="Tables\UserToken.sql" />
+    <Build Include="Tables\UserLogin.sql" />
+    <Build Include="Tables\UserClaim.sql" />
+    <Build Include="Tables\Role.sql" />
+    <Build Include="Tables\RoleClaim.sql" />
+    <Build Include="Tables\UserRole.sql" />
   </ItemGroup>
 </Project>
