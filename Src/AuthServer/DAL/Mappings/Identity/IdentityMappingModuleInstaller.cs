@@ -1,7 +1,8 @@
+using System;
 using AuthGuard.BLL.Domain.Entities.Identity;
 using DddCore.DAL.DomainStack.EntityFramework.Mapping;
 
-namespace AuthGuard.DAL
+namespace AuthGuard.DAL.Mappings.Identity
 {
     public class IdentityMappingModuleInstaller : IMappingModuleInstaller
     {
@@ -10,16 +11,18 @@ namespace AuthGuard.DAL
             config.Entity<IdentityClaim>();
 
             config
-                .Entity<IdentityResourceClaim>()
-                .HasOne(x => x.IdentityClaim)
-                .WithMany()
-                .HasForeignKey(x => x.IdentityClaimId);
+                .Entity<IdentityResourceClaim>(c =>
+                {
+                    c.Property<Guid>("IdentityClaimId");
+                    c.Property<Guid>("IdentityResourceId");
+                    c.HasOne(x => x.IdentityClaim).WithMany().HasForeignKey("IdentityClaimId");
+                });
 
             config
                 .Entity<IdentityResource>()
                 .HasMany(x => x.Claims)
                 .WithOne()
-                .HasForeignKey(x => x.IdentityResourceId);
+                .HasForeignKey("IdentityResourceId");
         }
     }
 }

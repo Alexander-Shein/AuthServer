@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace AuthGuard.DAL.QueryRepositories.Identity.Dtos
+namespace AuthGuard.DAL.QueryRepositories.ApiResources.Dtos
 {
-    public class IdentityClaimDto
+    public class ApiScopeClaimDto
     {
         public Guid Id { get; set; }
         public string Type { get; set; }
         public string Description { get; set; }
-        public bool IsReadOnly { get; set; }
     }
 }

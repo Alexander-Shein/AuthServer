@@ -6,6 +6,7 @@ namespace AuthGuard.BLL.Domain.Entities.Identity
     public class IdentityClaim : GuidEntityBase, IReadOnly, IEnabled, IRowVersion
     {
         public string Type { get; set; }
+        public string Description { get; set; }
         public bool IsReadOnly { get; set; }
         public bool IsEnabled { get; set; }
         public byte[] Ts { get; set; }
