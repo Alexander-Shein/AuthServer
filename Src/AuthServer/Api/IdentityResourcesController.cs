@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AuthGuard.Api
 {
-    [Route("api/[controller]")]
+    [Route("api/identity-resources")]
     public class IdentityResourcesController : Controller
     {
         readonly IIdentityResourcesWorkflowService workflowService;
