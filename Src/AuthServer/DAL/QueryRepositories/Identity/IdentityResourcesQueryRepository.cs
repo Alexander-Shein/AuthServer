@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using AuthGuard.DAL.QueryRepositories.Identity.Dtos;
 using DddCore.Contracts.DAL;
@@ -19,6 +20,11 @@ namespace AuthGuard.DAL.QueryRepositories.Identity
         }
 
         public Task<IEnumerable<IdentityClaimDto>> GetIdentityClaimsAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<bool> IsUniqueAsync(string name, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();
         }

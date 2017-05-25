@@ -13,9 +13,8 @@ namespace AuthGuard.DAL.Mappings.Identity
             config
                 .Entity<IdentityResourceClaim>(c =>
                 {
-                    c.Property<Guid>("IdentityClaimId");
                     c.Property<Guid>("IdentityResourceId");
-                    c.HasOne(x => x.IdentityClaim).WithMany().HasForeignKey("IdentityClaimId");
+                    c.HasOne(x => x.IdentityClaim).WithMany().HasForeignKey(x => x.IdentityClaimId);
                 });
 
             config

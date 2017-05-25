@@ -7,7 +7,7 @@ using FluentValidation;
 
 namespace AuthGuard.BLL.Domain.Entities
 {
-    public class App : GuidAggregateRootEntityBase, ICreatedAt
+    public class App : GuidAggregateRootBase, ICreatedAt
     {
         string displayName;
         string key;

@@ -3,7 +3,7 @@ using DddCore.BLL.Domain.Entities.GuidEntities;
 
 namespace AuthGuard.BLL.Domain.Entities
 {
-    public class Sms : GuidAggregateRootEntityBase
+    public class Sms : GuidAggregateRootBase
     {
         public Guid SmsTemplateId { get; set; }
         public string Message { get; set; }

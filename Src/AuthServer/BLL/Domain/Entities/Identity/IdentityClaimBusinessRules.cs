@@ -1,5 +1,5 @@
 using DddCore.BLL.Domain.Entities.BusinessRules;
-using DddCore.Contracts.BLL.Domain.Entities.Model;
+using DddCore.Contracts.BLL.Domain.Entities.State;
 using FluentValidation;
 
 namespace AuthGuard.BLL.Domain.Entities.Identity
@@ -22,8 +22,7 @@ namespace AuthGuard.BLL.Domain.Entities.Identity
 
             RuleFor(x => x.Description)
                 .NotNull()
-                .NotEmpty()
-                .Length(2, 1000);
+                .Length(0, 1000);
         }
     }
 }

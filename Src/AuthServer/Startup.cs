@@ -95,13 +95,16 @@ namespace AuthGuard
             services.AddScoped<IRedirectUriValidator, AppRedirectUrlValidator>();
             //services.AddScoped<ITokensService, TokensService>();
 
-            //services.AddIdentityServer()
-            //    .AddTemporarySigningCredential()
-            //    .AddConfigurationStore(builder =>
-            //        builder.UseSqlServer("Server=(local);Database=IdentityServer4.Quickstart.AspNetIdentity;Trusted_Connection=True;MultipleActiveResultSets=true"))
-            //    .AddOperationalStore(builder =>
-            //        builder.UseSqlServer("Server=(local);Database=IdentityServer4.Quickstart.AspNetIdentity;Trusted_Connection=True;MultipleActiveResultSets=true"))
-            //    .AddAspNetIdentity<ApplicationUser>();
+            services.AddIdentityServer()
+                .AddTemporarySigningCredential()
+                .AddInMemoryPersistedGrants()
+                .AddInMemoryIdentityResources(Config.GetIdentityResources())
+                .AddInMemoryClients(Config.GetClients());
+            //.AddConfigurationStore(builder =>
+            //    builder.UseSqlServer("Server=(local);Database=IdentityServer4.Quickstart.AspNetIdentity;Trusted_Connection=True;MultipleActiveResultSets=true"))
+            //.AddOperationalStore(builder =>
+            //    builder.UseSqlServer("Server=(local);Database=IdentityServer4.Quickstart.AspNetIdentity;Trusted_Connection=True;MultipleActiveResultSets=true"))
+            //.AddAspNetIdentity<ApplicationUser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

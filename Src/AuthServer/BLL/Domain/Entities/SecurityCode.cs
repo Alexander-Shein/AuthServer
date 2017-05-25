@@ -5,7 +5,7 @@ using DddCore.BLL.Domain.Entities.GuidEntities;
 
 namespace AuthGuard.BLL.Domain.Entities
 {
-    public class SecurityCode : GuidAggregateRootEntityBase
+    public class SecurityCode : GuidAggregateRootBase
     {
         const int Min = 1000;
         const int Max = 9999;

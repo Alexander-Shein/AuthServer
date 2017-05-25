@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace AuthGuard.DAL.QueryRepositories.ApiResources.Dtos
 {
     public class ApiResourceDto
     {
+        public Guid Id { get; set; }
         public string Description { get; set; }
         public bool IsEnabled { get; set; }
         public string DisplayName { get; set; }

@@ -5,16 +5,16 @@ using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.DAL.Repositories.Apps;
 using DddCore.Contracts.BLL.Domain.Entities;
 using DddCore.Contracts.BLL.Domain.Entities.BusinessRules;
-using DddCore.Contracts.BLL.Domain.Entities.Model;
+using DddCore.Contracts.BLL.Domain.Entities.State;
 using DddCore.Contracts.BLL.Domain.Events;
 using DddCore.Contracts.BLL.Errors;
 using DddCore.Contracts.Crosscutting.UserContext;
 using DddCore.Contracts.SL.Services.Application.DomainStack;
-using DddCore.SL.Services.Application.DomainStack;
+using DddCore.Contracts.SL.Services.Infrastructure;
 
 namespace AuthGuard.SL.Apps
 {
-    public class AppsEntityService : EntityService<App, Guid>, IAppsEntityService
+    public class AppsEntityService : IAppsEntityService, IInfrastructureService
     {
         readonly IAppsRepository appsRepository;
         readonly IUserContext<Guid> userContext;
@@ -23,10 +23,9 @@ namespace AuthGuard.SL.Apps
 
         public AppsEntityService(
             IAppsRepository repository,
-            IGuard guard,
             IUserContext<Guid> userContext,
             IDomainEventDispatcher domainEventDispatcher,
-            IBusinessRulesValidatorFactory businessRulesValidatorFactory) : base(repository, guard, businessRulesValidatorFactory, domainEventDispatcher)
+            IBusinessRulesValidatorFactory businessRulesValidatorFactory)
         {
             appsRepository = repository;
             this.userContext = userContext;
@@ -36,7 +35,7 @@ namespace AuthGuard.SL.Apps
 
         public async Task<(App App, OperationResult OperationResult)> PutAsync(Guid id, ExtendedAppIm im)
         {
-            var app = await appsRepository.ReadByIdAsync(id);
+            var app = await appsRepository.GetByIdAsync(id);
 
             if (app == null)
             {
@@ -99,7 +98,8 @@ namespace AuthGuard.SL.Apps
                 app.ExternalProviders.Add(externalProvider);
             }
 
-            var result = ValidateAndPersist(app);
+            var result = app.Validate(businessRulesValidatorFactory);
+            appsRepository.Persist(app);
 
             if (result.IsSucceed)
             {

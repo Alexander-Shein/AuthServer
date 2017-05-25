@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
 using DddCore.Contracts.Crosscutting.UserContext;
@@ -18,7 +17,8 @@ namespace AuthGuard.DAL.Repositories.Security
         public async Task<SecurityCode> ReadByCodeAsync(int code)
         {
             return await
-                EntityFrameworkQueryableExtensions.Include<SecurityCode, ICollection<SecurityCodeParameter>>(GetDbSet(), x => x.Parameters)
+                GetDbSet()
+                    .Include(x => x.Parameters)
                     .FirstOrDefaultAsync(x => x.Code == code);
         }
     }

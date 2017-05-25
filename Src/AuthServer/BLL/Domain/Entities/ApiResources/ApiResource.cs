@@ -5,7 +5,7 @@ using DddCore.BLL.Domain.Entities.GuidEntities;
 
 namespace AuthGuard.BLL.Domain.Entities.ApiResources
 {
-    public class ApiResource : GuidAggregateRootEntityBase, IEnabled, IRowVersion, IDisplayName
+    public class ApiResource : GuidAggregateRootBase, IEnabled, IRowVersion, IDisplayName
     {
         public Guid OwnerUserId { get; set; }
         public string Description { get; set; }

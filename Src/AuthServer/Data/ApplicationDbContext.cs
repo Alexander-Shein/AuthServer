@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using AuthGuard.BLL.Domain.Entities;
-using DddCore.Contracts.BLL.Domain.Entities.Model;
+using DddCore.Contracts.BLL.Domain.Entities.State;
 using DddCore.Contracts.DAL;
 using DddCore.Contracts.DAL.DomainStack;
 using DddCore.Crosscutting;

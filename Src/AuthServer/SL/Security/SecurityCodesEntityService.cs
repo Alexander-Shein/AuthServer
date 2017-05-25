@@ -1,36 +1,43 @@
-﻿using System;
-using AuthGuard.BLL.Domain.Entities;
+﻿using AuthGuard.BLL.Domain.Entities;
 using AuthGuard.DAL.Repositories.Security;
 using DddCore.Contracts.BLL.Domain.Entities.BusinessRules;
-using DddCore.Contracts.BLL.Domain.Entities.Model;
-using DddCore.Contracts.BLL.Domain.Events;
-using DddCore.Contracts.SL.Services.Application.DomainStack;
-using DddCore.SL.Services.Application.DomainStack;
+using DddCore.Contracts.BLL.Domain.Entities.State;
+using DddCore.Contracts.SL.Services.Infrastructure;
 
 namespace AuthGuard.SL.Security
 {
-    public class SecurityCodesEntityService : EntityService<SecurityCode, Guid>, ISecurityCodesEntityService
+    public class SecurityCodesEntityService : ISecurityCodesEntityService, IInfrastructureService
     {
+        readonly IBusinessRulesValidatorFactory businessRulesValidatorFactory;
+        readonly ISecurityCodesRepository securityCodesRepository;
+
         public SecurityCodesEntityService(
             ISecurityCodesRepository securityCodesRepository,
-            IGuard guard,
-            IBusinessRulesValidatorFactory businessRulesValidatorFactory,
-            IDomainEventDispatcher domainEventDispatcher)
-            : base(securityCodesRepository, guard, businessRulesValidatorFactory, domainEventDispatcher)
+            IBusinessRulesValidatorFactory businessRulesValidatorFactory)
         {
+            this.securityCodesRepository = securityCodesRepository;
+            this.businessRulesValidatorFactory = businessRulesValidatorFactory;
         }
 
         public void Insert(SecurityCode securityCode)
         {
             securityCode.WalkGraph(x => x.CrudState = CrudState.Added);
-            ValidateAndPersist(securityCode);
+
+            if (securityCode.Validate(businessRulesValidatorFactory).IsSucceed)
+            {
+                securityCodesRepository.Persist(securityCode);
+            }
         }
 
         public void Delete(SecurityCode securityCode)
         {
             if (securityCode == null) return;
             securityCode.WalkGraph(x => x.CrudState = CrudState.Deleted);
-            ValidateAndPersist(securityCode);
+
+            if (securityCode.Validate(businessRulesValidatorFactory).IsSucceed)
+            {
+                securityCodesRepository.Persist(securityCode);
+            }
         }
     }
 }

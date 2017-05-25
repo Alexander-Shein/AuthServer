@@ -4,7 +4,7 @@ using DddCore.Contracts.BLL.Domain.Entities.Audit.At;
 
 namespace AuthGuard.BLL.Domain.Entities
 {
-    public class Email : GuidAggregateRootEntityBase, ICreatedAt
+    public class Email : GuidAggregateRootBase, ICreatedAt
     {
         public Guid EmailTemplateId { get; set; }
         public string ToEmail { get; set; }

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using AuthGuard.BLL.Domain.Entities;
-using DddCore.Contracts.SL.Services.Application.DomainStack;
+﻿using AuthGuard.BLL.Domain.Entities;
 
 namespace AuthGuard.SL.Security
 {
-    public interface ISecurityCodesEntityService : IEntityService<SecurityCode, Guid>
+    public interface ISecurityCodesEntityService
     {
         void Insert(SecurityCode securityCode);
         void Delete(SecurityCode securityCode);

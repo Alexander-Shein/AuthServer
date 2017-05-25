@@ -21,14 +21,28 @@ namespace AuthGuard.Api
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAsync(Guid id, [FromBody] IdentityResourceIm im)
         {
-            var result = await workflowService.PutAsync(id, im);
+            var result = await workflowService.CreateOrUpdateAsync(id, im);
 
             if (result.OperationResult.IsNotSucceed)
             {
                 return BadRequest(result.OperationResult.Errors);
             }
 
-            return Ok(result.IdentityResource);
+            return Ok(result.Vm);
+        }
+
+        [Authorize]
+        [HttpPost("")]
+        public async Task<IActionResult> PostAsync([FromBody] IdentityResourceIm im)
+        {
+            var result = await workflowService.CreateAsync(im);
+
+            if (result.OperationResult.IsNotSucceed)
+            {
+                return BadRequest(result.OperationResult.Errors);
+            }
+
+            return Ok(result.Vm);
         }
 
         [Authorize]
