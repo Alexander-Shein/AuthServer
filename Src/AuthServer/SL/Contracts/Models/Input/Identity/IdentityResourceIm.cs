@@ -12,6 +12,6 @@ namespace AuthGuard.SL.Contracts.Models.Input.Identity
         public bool ShowInDiscoveryDocument { get; set; }
         public bool IsEnabled { get; set; }
 
-        public IEnumerable<IdentityResourceClaimIm> Claims { get; set; }
+        public IEnumerable<IdentityClaimIm> Claims { get; set; }
     }
 }

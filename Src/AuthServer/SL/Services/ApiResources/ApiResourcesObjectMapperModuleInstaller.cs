@@ -4,7 +4,7 @@ using AuthGuard.SL.Contracts.Models.View.ApiServices;
 using DddCore.Contracts.Crosscutting.ObjectMapper;
 using DddCore.Contracts.Crosscutting.ObjectMapper.Base;
 
-namespace AuthGuard.SL.Services.ApiServices
+namespace AuthGuard.SL.Services.ApiResources
 {
     public class ApiResourcesObjectMapperModuleInstaller : IObjectMapperModuleInstaller
     {
@@ -42,9 +42,9 @@ namespace AuthGuard.SL.Services.ApiServices
 
             config.Bind<ApiScopeClaim, ApiScopeClaimVm>(c =>
             {
-                c.Bind(x => x.IdentityClaim.Id, x => x.Id);
-                c.Bind(x => x.IdentityClaim.Type, x => x.Type);
-                c.Bind(x => x.IdentityClaim.Description, x => x.Description);
+                c.Bind(x => x.Id, x => x.IdentityClaim.Id);
+                c.Bind(x => x.Type, x => x.IdentityClaim.Type);
+                c.Bind(x => x.Description, x => x.IdentityClaim.Description);
             });
 
             config.Bind<ApiScope, ApiScopeVm>(c =>

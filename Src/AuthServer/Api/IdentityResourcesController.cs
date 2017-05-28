@@ -17,7 +17,6 @@ namespace AuthGuard.Api
             this.workflowService = workflowService;
         }
 
-        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAsync(Guid id, [FromBody] IdentityResourceIm im)
         {
@@ -30,8 +29,7 @@ namespace AuthGuard.Api
 
             return Ok(result.Vm);
         }
-
-        [Authorize]
+        
         [HttpPost("")]
         public async Task<IActionResult> PostAsync([FromBody] IdentityResourceIm im)
         {
@@ -42,7 +40,20 @@ namespace AuthGuard.Api
                 return BadRequest(result.OperationResult.Errors);
             }
 
-            return Ok(result.Vm);
+            return Created(String.Empty, result.Vm);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletAsync(Guid id)
+        {
+            var result = await workflowService.DeleteAsync(id);
+
+            if (result.IsNotSucceed)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return Ok();
         }
 
         [Authorize]

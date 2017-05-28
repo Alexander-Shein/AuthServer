@@ -4,7 +4,7 @@ using DddCore.BLL.Domain.Entities.GuidEntities;
 
 namespace AuthGuard.BLL.Domain.Entities.Identity
 {
-    public class IdentityClaim : GuidEntityBase, IReadOnly, IEnabled, IRowVersion
+    public class IdentityClaim : GuidAggregateRootBase, IReadOnly, IEnabled, IRowVersion
     {
         string description = String.Empty;
         public string Description
@@ -17,7 +17,7 @@ namespace AuthGuard.BLL.Domain.Entities.Identity
         public string Type
         {
             get => type;
-            set => type = value?.Trim()?.ToLower();
+            set => type = value?.Trim().ToLower();
         }
 
         public bool IsReadOnly { get; set; }

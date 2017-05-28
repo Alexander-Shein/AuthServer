@@ -8,7 +8,10 @@ namespace AuthGuard.DAL.Mappings.Identity
     {
         public void Install(IModelBuilder config)
         {
-            config.Entity<IdentityClaim>();
+            config.Entity<IdentityClaim>(c =>
+            {
+                c.Property(x => x.Ts).IsRowVersion();
+            });
 
             config
                 .Entity<IdentityResourceClaim>(c =>
@@ -18,10 +21,12 @@ namespace AuthGuard.DAL.Mappings.Identity
                 });
 
             config
-                .Entity<IdentityResource>()
-                .HasMany(x => x.Claims)
-                .WithOne()
-                .HasForeignKey("IdentityResourceId");
+                .Entity<IdentityResource>(c =>
+                {
+                    c.Property(x => x.Ts).IsRowVersion();
+                    c.HasMany(x => x.Claims).WithOne().HasForeignKey("IdentityResourceId");
+                    c.Ignore(x => x.IsNameChanged);
+                });
         }
     }
 }

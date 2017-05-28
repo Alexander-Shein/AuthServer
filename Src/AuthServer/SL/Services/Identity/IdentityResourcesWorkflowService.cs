@@ -9,7 +9,6 @@ using AuthGuard.SL.Contracts.Identity;
 using AuthGuard.SL.Contracts.Models.Input.Identity;
 using AuthGuard.SL.Contracts.Models.View.Identity;
 using DddCore.Contracts.BLL.Domain.Entities.BusinessRules;
-using DddCore.Contracts.BLL.Domain.Entities.State;
 using DddCore.Contracts.BLL.Errors;
 using DddCore.Contracts.Crosscutting.ObjectMapper;
 using DddCore.Contracts.DAL.DomainStack;
@@ -50,33 +49,39 @@ namespace AuthGuard.SL.Services.Identity
             return dtos.Select(objectMapper.Map<IdentityClaimVm>);
         }
 
-        public Task<(IdentityResourceVm Vm, OperationResult OperationResult)> CreateOrUpdateAsync(Guid id, IdentityResourceIm im)
+        public async Task<(IdentityResourceVm Vm, OperationResult OperationResult)> CreateOrUpdateAsync(Guid id, IdentityResourceIm im)
         {
-            throw new NotImplementedException();
-            /*
-            var putResult = await identityResourcesEntityService.PutAsync(id, im);
-            if (putResult.OperationResult.IsNotSucceed)
-            {
-                return (null, putResult.OperationResult);
-            }
+            if (im == null) return (null, OperationResult.Failed(AuthErrors.NullInputModel));
 
+            var identityResource = identityResourcesRepository.GetById(id);
+            if (identityResource == null) return await CreateAsync(im);
+            identityResource.DeleteClaims();
+            identityResourcesRepository.Persist(identityResource);
+
+            objectMapper.Map(im, identityResource);
+            identityResource.Update();
+
+            var validationResult = identityResource.Validate(businessRulesValidatorFactory);
+            if (validationResult.IsNotSucceed) return (null, validationResult);
+
+            identityResourcesRepository.Persist(identityResource);
             await unitOfWork.SaveAsync();
-            return (objectMapper.Map<IdentityResourceVm>(putResult.IdentityResource), putResult.OperationResult);*/
+
+            return (objectMapper.Map<IdentityResourceVm>(identityResource), OperationResult.Succeed);
         }
 
-        public Task<OperationResult> DeleteAsync(Guid id)
+        public async Task<OperationResult> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var identityResource = identityResourcesRepository.GetById(id);
+            if (identityResource == null) return OperationResult.Succeed;
 
-            /*
-            var result = await identityResourcesEntityService.DeleteAsync(id);
+            identityResource.Delete();
+            var validationResult = identityResource.Validate(businessRulesValidatorFactory);
+            if (validationResult.IsNotSucceed) return validationResult;
 
-            if (result.IsSucceed)
-            {
-                await unitOfWork.SaveAsync();
-            }
-
-            return result;*/
+            identityResourcesRepository.Persist(identityResource);
+            await unitOfWork.SaveAsync();
+            return OperationResult.Succeed;
         }
 
         public async Task<(IdentityResourceVm Vm, OperationResult OperationResult)> CreateAsync(IdentityResourceIm im)
@@ -84,14 +89,12 @@ namespace AuthGuard.SL.Services.Identity
             if (im == null) return (null,  OperationResult.Failed(AuthErrors.NullInputModel));
 
             var identityResource = objectMapper.Map<IdentityResource>(im);
-            identityResource.WalkGraph(x => x.CrudState = CrudState.Added);
+            identityResource.Create();
 
-            var validationResult = await identityResource.ValidateAsync(businessRulesValidatorFactory);
-
+            var validationResult = identityResource.Validate(businessRulesValidatorFactory);
             if (validationResult.IsNotSucceed) return (null, validationResult);
 
             identityResourcesRepository.Persist(identityResource);
-
             await unitOfWork.SaveAsync();
 
             return (objectMapper.Map<IdentityResourceVm>(identityResource), OperationResult.Succeed);

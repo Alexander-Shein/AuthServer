@@ -5,10 +5,8 @@ using AuthGuard.SL.Notifications;
 using DddCore.Contracts.DAL;
 using DddCore.Contracts.DAL.DomainStack;
 using DddCore.Crosscutting.DependencyInjection;
-using DddCore.Crosscutting.ObjectMapper;
 using DddCore.Crosscutting.ObjectMapper.AutoMapper;
 using DddCore.DAL.DomainStack.EntityFramework.Context;
-using DddCore.SL.Services;
 using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -72,21 +70,11 @@ namespace AuthGuard
             services.AddScoped<IUnitOfWork>(x => x.GetService<ApplicationDbContext>());
             services.AddScoped<IDataContext>(x => x.GetService<ApplicationDbContext>());
 
-            var module = new DddCoreDiModuleInstaller();
-
-            new DiBootstrapper()
-                .AddConfig(services)
-                .Bootstrap(module);
-            services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
-
-            var mapper = new ObjectMapperBootstrapper()
-                .AddAutoMapperConfig()
-                .Bootstrap();
-
-            services.AddSingleton(mapper);
-
+            services.AddDddCore();
+            services.AddAutoMapper();
             services.AddMvc();
-            //services.AddDddCore();
+
+            services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
 
             // Add application services.
             services.AddTransient<IEmailSender, NotificationsService>();
